@@ -2,7 +2,10 @@
   "name": "image-scanner-with-trivy",
   "repository": {
     "type": "git",
-    "url": "https://github.com/24818752+go-to-k/image-scanner-with-trivy.git"
+    "url": "https://github.com/go-to-k/image-scanner-with-trivy"
+  },
+  "bin": {
+    "0": "./assets"
   },
   "scripts": {
     "build": "npx projen build",
@@ -26,7 +29,9 @@
     "unbump": "npx projen unbump",
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
-    "projen": "npx projen"
+    "projen": "npx projen",
+    "integ:deploy": "npx cdk deploy --app='./lib/integ.js'",
+    "integ:destroy": "npx cdk destroy --app='./lib/integ.js'"
   },
   "author": {
     "name": "go-to-k",
@@ -35,22 +40,26 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",
-    "@types/node": "^16",
-    "@typescript-eslint/eslint-plugin": "^5",
-    "@typescript-eslint/parser": "^5",
-    "aws-cdk-lib": "2.1.0",
+    "@types/node": "^18",
+    "@typescript-eslint/eslint-plugin": "^6",
+    "@typescript-eslint/parser": "^6",
+    "aws-cdk-lib": "2.28.0",
     "constructs": "10.0.5",
     "eslint": "^8",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-node": "^0.3.9",
     "eslint-import-resolver-typescript": "^3.6.0",
     "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.6.4",
     "jest-junit": "^15",
     "jsii": "~5.0.0",
     "jsii-diff": "^1.88.0",
     "jsii-docgen": "^9.1.2",
     "jsii-pacmak": "^1.88.0",
+    "jsii-rosetta": "~5.0.0",
     "npm-check-updates": "^16",
+    "prettier": "^3.0.3",
     "projen": "^0.73.11",
     "standard-version": "^9",
     "ts-jest": "^29.1.1",
@@ -58,12 +67,24 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.1.0",
+    "aws-cdk-lib": "^2.28.0",
     "constructs": "^10.0.5"
   },
   "keywords": [
-    "cdk"
+    "aws",
+    "aws-cdk",
+    "cdk",
+    "container",
+    "docker",
+    "ecr",
+    "ecs",
+    "fargate",
+    "security",
+    "trivy"
   ],
+  "engines": {
+    "node": ">= 18.0.0"
+  },
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "version": "0.0.0",
