@@ -69,7 +69,7 @@ export class ImageScannerWithTrivy extends Construct {
     const { imageUri, repository, ignoreUnfixed, severity } = props;
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
-      uuid: '662deedd-2d01-1bd0-45de-8d80b1bffe38',
+      uuid: '470b6343-d267-f753-226c-1e99f09f319a',
       lambdaPurpose: 'Custom::ImageScannerWithTrivyCustomResourceLambda',
       runtime: Runtime.FROM_IMAGE,
       handler: Handler.FROM_IMAGE,
