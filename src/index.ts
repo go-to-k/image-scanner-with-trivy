@@ -77,6 +77,7 @@ export class ImageScannerWithTrivy extends Construct {
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
       retryAttempts: 0,
+      memorySize: 3008, // Maximum memory size for Default AWS account
     });
     repository.grantPull(customResourceLambda);
 

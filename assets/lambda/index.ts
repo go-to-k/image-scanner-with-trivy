@@ -18,10 +18,9 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   if (requestType === 'Create' || requestType === 'Update') {
     const ignoreUnfixedOptions = ignoreUnfixed ? '--ignore-unfixed' : '';
     const severityOptions = severity.length ? `--severity=${severity.join(',')}` : '';
-    // FIXME: Logs are interrupted in the middle.
-    // --timeout in trivy?
-    // spawnSync timeout?
     const response = spawnSync(
+      // TODO: decrease memory usage (e.g. output for spawnSync. Or Json format.)
+      // `/opt/trivy/trivy image -f json --no-progress --exit-code 1 ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
       `/opt/trivy/trivy image --no-progress --exit-code 1 ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
       {
         shell: true,
@@ -34,7 +33,8 @@ export const handler: CdkCustomResourceHandler = async function (event) {
 
     if (response.status !== 0)
       throw new Error(
-        `Image Scanner returned fatal errors. You may have vulnerabilities. See logs.`,
+        // TODO: Format
+        `Error: ${response.error},\nOutput: ${response.output},\nSignal: ${response.signal},\nStatus: ${response.status}.\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`,
       );
   }
 
