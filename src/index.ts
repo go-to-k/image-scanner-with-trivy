@@ -85,7 +85,10 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    const imageScannerProperties: { [key: string]: string | string[] | boolean } = {};
+    // TODO: Disable Rules params
+    // aquasecurity.github.io/trivy/v0.45/docs/scanner/secret/#disable-rules
+
+    https: const imageScannerProperties: { [key: string]: string | string[] | boolean } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = imageUri;
     imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false; // TODO: boolean or string ?
