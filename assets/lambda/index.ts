@@ -8,6 +8,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const imageUri = event.ResourceProperties.imageUri as string;
   const ignoreUnfixed = event.ResourceProperties.ignoreUnfixed as boolean; // TODO: boolean or string ?
   const severity = event.ResourceProperties.severity as string[];
+  const scanners = event.ResourceProperties.scanners as string[];
   const exitCode = event.ResourceProperties.exitCode as number;
   const exitOnEol = event.ResourceProperties.exitOnEol as number;
 
@@ -20,12 +21,13 @@ export const handler: CdkCustomResourceHandler = async function (event) {
 
   if (requestType === 'Create' || requestType === 'Update') {
     const ignoreUnfixedOptions = ignoreUnfixed ? '--ignore-unfixed' : '';
-    const severityOptions = severity.length ? `--severity=${severity.join(',')}` : '';
+    const severityOptions = severity.length ? `--severity ${severity.join(',')}` : '';
+    const scannersOptions = scanners.length ? `--scanners ${severity.join(',')}` : '';
     const exitCodeOptions = exitCode ? `--exit-code ${exitCode}` : '';
     const exitOnEolOptions = exitOnEol ? `--exit-on-eol ${exitOnEol}` : '';
 
     const response = spawnSync(
-      `/opt/trivy image --no-progress ${exitCodeOptions} ${exitOnEolOptions} ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
+      `/opt/trivy image --no-progress ${exitCodeOptions} ${exitOnEolOptions} ${severityOptions} ${scannersOptions} ${ignoreUnfixedOptions} ${imageUri}`,
       {
         shell: true,
       },

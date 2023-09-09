@@ -24,6 +24,18 @@ export enum Severity {
   CRITICAL = 'CRITICAL',
 }
 
+/**
+ * Enum for Scanners
+ *
+ * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
+ */
+export enum Scanners {
+  VULN = 'vuln',
+  CONFIG = 'config',
+  SECRET = 'secret',
+  LICENSE = 'license',
+}
+
 export interface ImageScannerWithTrivyProps {
   /**
    * Image URI for scan target.
@@ -62,6 +74,20 @@ export interface ImageScannerWithTrivyProps {
   readonly severity?: Severity[];
 
   /**
+   * Enable/Disable Scanners
+   *
+   * You can enable/disable scanners with the `scanners`.
+   *
+   * For example, container image scanning enables vulnerability (VULN) and secret scanners (SECRET) by default.
+   * If you don't need secret scanning, it can be disabled by specifying Scanners.VULN only.
+   *
+   * @default [Scanners.VULN,Scanners.SECRET]
+   *
+   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
+   */
+  readonly scanners?: Scanners[];
+
+  /**
    * Exit Code
    *
    * Use the `exitCode` option if you want to exit with a non-zero exit code.
@@ -95,7 +121,7 @@ export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
     super(scope, id);
 
-    const { imageUri, repository, ignoreUnfixed, severity, exitCode, exitOnEol } = props;
+    const { imageUri, repository, ignoreUnfixed, severity, scanners, exitCode, exitOnEol } = props;
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: '470b6343-d267-f753-226c-1e99f09f319a',
@@ -116,13 +142,13 @@ export class ImageScannerWithTrivy extends Construct {
     });
 
     // TODO: parameters for .trivyignore (creating the file in Lambda, based on string array from props)
-    // TODO: --security-checks vuln
     // TODO: --platform=linux/arm64
     const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = imageUri;
     imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false; // TODO: boolean or string ?
     imageScannerProperties.severity = severity ?? [Severity.CRITICAL];
+    imageScannerProperties.scanners = scanners ?? [];
     imageScannerProperties.exitCode = exitCode ?? 1;
     imageScannerProperties.exitOnEol = exitOnEol ?? 1;
 
