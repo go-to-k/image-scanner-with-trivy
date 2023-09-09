@@ -61,6 +61,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
   bin: {
     0: './assets',
   },
+  githubOptions: {
+    pullRequestLintOptions: {
+      semanticTitleOptions: {
+        types: ['feat', 'fix', 'chore', 'docs', 'test', 'refactor', 'ci'],
+      },
+    },
+  },
   // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // devDeps: [],             /* Build dependencies for this module. */

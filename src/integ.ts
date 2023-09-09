@@ -11,7 +11,12 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
   platform: Platform.LINUX_ARM64,
 });
 
-new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy4', {
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+});
+
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
   imageUri: image.imageUri,
   repository: image.repository,
   ignoreUnfixed: false,
@@ -19,7 +24,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy4', {
   scanners: [Scanners.VULN, Scanners.SECRET],
   exitCode: 1,
   exitOnEol: 1,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
+  trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01', 'generic-unwanted-rule'],
   memorySize: 3008,
   platform: 'linux/arm64',
 });
