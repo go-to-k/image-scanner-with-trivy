@@ -21,7 +21,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         ],
         "Code": {
           "ImageUri": {
-            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:38ef3f9349d561061b80aa476bc1789fe6568f604dd6b8a9af100e729a69e2cb",
+            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:81545a70461d1e74eba9366a56f1d2759ed6b9017cb074e0468495a88ec64690",
           },
         },
         "MemorySize": 3008,
@@ -130,6 +130,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         "exitCode": 1,
         "exitOnEol": 1,
         "ignoreUnfixed": true,
+        "imageConfigScanners": [],
         "imageUri": "imageUri",
         "scanners": [
           "vuln",

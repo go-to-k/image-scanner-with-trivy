@@ -36,6 +36,16 @@ export enum Scanners {
   LICENSE = 'license',
 }
 
+/**
+ * Enum for ImageConfigScanners
+ *
+ * @see https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata
+ */
+export enum ImageConfigScanners {
+  CONFIG = 'config',
+  SECRET = 'secret',
+}
+
 export interface ImageScannerWithTrivyProps {
   /**
    * Image URI for scan target.
@@ -90,6 +100,23 @@ export interface ImageScannerWithTrivyProps {
    * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
    */
   readonly scanners?: Scanners[];
+
+  /**
+   * Enum for ImageConfigScanners
+   *
+   * Container images have configuration. docker inspect and `docker history` show the information according to the configuration.
+   * Trivy scans the configuration of container images for
+   *
+   * - Misconfigurations
+   * - Secrets
+   *
+   * They are disabled by default. You can enable them with `imageConfigScanners`.
+   *
+   * @default []
+   *
+   * @see https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata
+   */
+  readonly imageConfigScanners?: ImageConfigScanners[];
 
   /**
    * Exit Code
@@ -153,7 +180,34 @@ export interface ImageScannerWithTrivyProps {
    * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore
    */
   readonly trivyIgnore?: string[];
+
+  /**
+   * Custom Resource Memory Size (MB)
+   *
+   * You can specify between `3008` and `10240`.
+   *
+   * If this Construct execution terminates abnormally due to SIGKILL, try a larger size.
+   *
+   * Default value (`3008` MB) is Maximum memory size for default AWS account without quota limit increase.
+   *
+   * @default 3008
+   */
+  readonly memorySize?: number;
+
+  /**
+   * Scan Image on a specific Architecture and OS
+   *
+   * By default, Trivy loads an image on a `linux/amd64` machine.
+   *
+   * To customize this, pass a `platform` argument in the format OS/Architecture for the image, such as `linux/arm64`
+   *
+   * @default -
+   */
+  readonly platform?: string;
 }
+
+// Maximum memory size for default AWS account without quota limit increase
+const DEFAULT_MEMORY_SIZE = 3008;
 
 export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
@@ -165,10 +219,19 @@ export class ImageScannerWithTrivy extends Construct {
       ignoreUnfixed,
       severity,
       scanners,
+      imageConfigScanners,
       exitCode,
       exitOnEol,
       trivyIgnore,
+      memorySize,
+      platform,
     } = props;
+
+    if (memorySize) {
+      if (memorySize < 3008 || memorySize > 10240) {
+        throw new Error('You can specify between `3008` and `10240` for `memorySize`.');
+      }
+    }
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: '470b6343-d267-f753-226c-1e99f09f319a',
@@ -179,8 +242,7 @@ export class ImageScannerWithTrivy extends Construct {
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
       retryAttempts: 0,
-      // TODO: add LargeMemory option for props?
-      memorySize: 3008, // Maximum memory size for Default AWS account without quota limit increase
+      memorySize: memorySize ?? DEFAULT_MEMORY_SIZE,
     });
     repository.grantPull(customResourceLambda);
 
@@ -188,16 +250,17 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    // TODO: --platform=linux/arm64
     const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = imageUri;
     imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false;
     imageScannerProperties.severity = severity ?? [Severity.CRITICAL];
     imageScannerProperties.scanners = scanners ?? [];
+    imageScannerProperties.imageConfigScanners = imageConfigScanners ?? [];
     imageScannerProperties.exitCode = exitCode ?? 1;
     imageScannerProperties.exitOnEol = exitOnEol ?? 1;
     imageScannerProperties.trivyIgnore = trivyIgnore ?? [];
+    imageScannerProperties.platform = platform ?? '';
 
     new CustomResource(this, 'Default', {
       resourceType: 'Custom::ImageScannerWithTrivy',

@@ -18,6 +18,8 @@ const getTemplate = (): Template => {
     exitCode: 1,
     exitOnEol: 1,
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
+    memorySize: 3008,
+    platform: 'linux/arm64',
   });
   return Template.fromStack(stack);
 };
