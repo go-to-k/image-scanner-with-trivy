@@ -182,13 +182,13 @@ export interface ImageScannerWithTrivyProps {
   readonly trivyIgnore?: string[];
 
   /**
-   * Custom Resource Memory Size (MB)
+   * Memory Size (MB) for Scanner Lambda
    *
    * You can specify between `3008` and `10240`.
    *
    * If this Construct execution terminates abnormally due to SIGKILL, try a larger size.
    *
-   * Default value (`3008` MB) is Maximum memory size for default AWS account without quota limit increase.
+   * Default value (`3008` MB) is Maximum Lambda memory size for default AWS account without quota limit increase.
    *
    * @default 3008
    */
@@ -206,7 +206,7 @@ export interface ImageScannerWithTrivyProps {
   readonly platform?: string;
 }
 
-// Maximum memory size for default AWS account without quota limit increase
+// Maximum Lambda memory size for default AWS account without quota limit increase
 const DEFAULT_MEMORY_SIZE = 3008;
 
 export class ImageScannerWithTrivy extends Construct {

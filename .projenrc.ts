@@ -3,8 +3,7 @@ import { TrailingComma, Transform } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'go-to-k',
   authorAddress: '24818752+go-to-k@users.noreply.github.com',
-  // TODO: major version
-  // majorVersion: 1,
+  majorVersion: 1,
   minNodeVersion: '18.0.0',
   cdkVersion: '2.95.1',
   defaultReleaseBranch: 'main',
