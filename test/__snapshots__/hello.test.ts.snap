@@ -21,7 +21,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         ],
         "Code": {
           "ImageUri": {
-            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:c5a197c7533fa452eff72ead736092a040b6312ca52de1cd198e1d80aa2c6faf",
+            "Fn::Sub": "registry.hub.docker.com/library/busybox",
           },
         },
         "MemorySize": 3008,

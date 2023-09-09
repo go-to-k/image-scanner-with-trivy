@@ -3,6 +3,9 @@ module.exports = {
   serialize: (val: string) => {
     return `"${val
       .replace(/([A-Fa-f0-9]{64}.zip)/, 'HASH-REPLACED.zip')
-      .replace(/[0-9]{12}.dkr.ecr.*[0-9a-zA-Z]$/, 'registry.hub.docker.com/library/busybox')}"`;
+      .replace(
+        /\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}.*:[a-z0-9]*/,
+        'registry.hub.docker.com/library/busybox',
+      )}"`;
   },
 };
