@@ -19,22 +19,19 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     const ignoreUnfixedOptions = ignoreUnfixed ? '--ignore-unfixed' : '';
     const severityOptions = severity.length ? `--severity=${severity.join(',')}` : '';
     const response = spawnSync(
-      // TODO: decrease memory usage (e.g. output for spawnSync. Or Json format.)
-      // `/opt/trivy/trivy image -f json --no-progress --exit-code 1 ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
-      `/opt/trivy/trivy image --no-progress --exit-code 1 ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
+      `/opt/trivy image --no-progress --exit-code 1 ${severityOptions} ${ignoreUnfixedOptions} ${imageUri}`,
       {
         shell: true,
       },
     );
 
     console.log('imageUri: ' + imageUri);
-    console.log('stdout:\n' + response.stdout?.toString());
     console.log('stderr:\n' + response.stderr?.toString());
+    console.log('stdout:\n' + response.stdout?.toString());
 
     if (response.status !== 0)
       throw new Error(
-        // TODO: Format
-        `Error: ${response.error},\nOutput: ${response.output},\nSignal: ${response.signal},\nStatus: ${response.status}.\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`,
+        `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${response.status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`,
       );
   }
 

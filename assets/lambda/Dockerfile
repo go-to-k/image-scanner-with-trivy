@@ -27,7 +27,6 @@ WORKDIR /
 
 COPY dist/index.js /var/task/index.js
 
-# Including LICENSE, README.md and a contrib directory
-COPY --from=trivy /trivy /opt/trivy
+COPY --from=trivy /trivy/trivy /opt
 
 CMD ["index.handler"]

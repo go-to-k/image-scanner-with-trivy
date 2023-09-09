@@ -77,7 +77,8 @@ export class ImageScannerWithTrivy extends Construct {
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
       retryAttempts: 0,
-      memorySize: 3008, // Maximum memory size for Default AWS account
+      // TODO: add LargeMemory option for props?
+      memorySize: 3008, // Maximum memory size for Default AWS account without quota limit increase
     });
     repository.grantPull(customResourceLambda);
 
@@ -88,6 +89,8 @@ export class ImageScannerWithTrivy extends Construct {
     // TODO: Disable Rules params
     // aquasecurity.github.io/trivy/v0.45/docs/scanner/secret/#disable-rules
 
+    // TODO: --security-checks vuln
+    // TODO: --platform=linux/arm64
     const imageScannerProperties: { [key: string]: string | string[] | boolean } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = imageUri;

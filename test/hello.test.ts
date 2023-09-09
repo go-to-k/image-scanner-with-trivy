@@ -18,6 +18,7 @@ const getTemplate = (): Template => {
   return Template.fromStack(stack);
 };
 
+// TODO: add test cases for each parameter
 describe('Fine-grained Assertions Tests', () => {
   const template = getTemplate();
 
