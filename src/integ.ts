@@ -6,6 +6,7 @@ import { ImageScannerWithTrivy, Severity } from '.';
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyStack');
 
+// TODO: add test cases for each parameter
 const image = new DockerImageAsset(stack, 'DockerImage', {
   directory: resolve(__dirname, '../assets/lambda'),
   platform: Platform.LINUX_ARM64,
