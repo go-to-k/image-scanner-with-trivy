@@ -128,6 +128,7 @@ const imageScannerWithTrivyProps: ImageScannerWithTrivyProps = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.memorySize">memorySize</a></code> | <code>number</code> | Custom Resource Memory Size (MB). |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.platform">platform</a></code> | <code>string</code> | Scan Image on a specific Architecture and OS. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
@@ -261,6 +262,23 @@ You can specify between `3008` and `10240`.
 If this Construct execution terminates abnormally due to SIGKILL, try a larger size.
 
 Default value (`3008` MB) is Maximum memory size for default AWS account without quota limit increase.
+
+---
+
+##### `platform`<sup>Optional</sup> <a name="platform" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.platform"></a>
+
+```typescript
+public readonly platform: string;
+```
+
+- *Type:* string
+- *Default:* 
+
+Scan Image on a specific Architecture and OS.
+
+By default, Trivy loads an image on a `linux/amd64` machine.
+
+To customize this, pass a `platform` argument in the format OS/Architecture for the image, such as `linux/arm64`
 
 ---
 
