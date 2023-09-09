@@ -1,4 +1,6 @@
 import { spawnSync } from 'child_process';
+import { createWriteStream } from 'fs';
+import path from 'path';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
 
 export const handler: CdkCustomResourceHandler = async function (event) {
@@ -11,6 +13,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const scanners = event.ResourceProperties.scanners as string[];
   const exitCode = event.ResourceProperties.exitCode as number;
   const exitOnEol = event.ResourceProperties.exitOnEol as number;
+  const trivyIgnore = event.ResourceProperties.trivyIgnore as string[];
 
   if (!addr || !imageUri) throw new Error('addr and imageUri are required.');
 
@@ -25,8 +28,14 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     const scannersOptions = scanners.length ? `--scanners ${scanners.join(',')}` : '';
     const exitCodeOptions = exitCode ? `--exit-code ${exitCode}` : '';
     const exitOnEolOptions = exitOnEol ? `--exit-on-eol ${exitOnEol}` : '';
+    const trivyIgnoreOptions = trivyIgnore.length ? '--ignorefile /tmp/.trivyignore' : '';
 
-    const cmd = `/opt/trivy image --no-progress ${exitCodeOptions} ${exitOnEolOptions} ${severityOptions} ${scannersOptions} ${ignoreUnfixedOptions} ${imageUri}`;
+    if (trivyIgnore.length) {
+      console.log('trivyignore: ' + JSON.stringify(trivyIgnore));
+      makeTrivyIgnoreFile(trivyIgnore);
+    }
+
+    const cmd = `/opt/trivy image --no-progress ${exitCodeOptions} ${exitOnEolOptions} ${severityOptions} ${scannersOptions} ${ignoreUnfixedOptions} ${trivyIgnoreOptions} ${imageUri}`;
     console.log('command: ' + cmd);
     console.log('imageUri: ' + imageUri);
 
@@ -44,4 +53,15 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   }
 
   return funcResponse;
+};
+
+const makeTrivyIgnoreFile = (trivyIgnore: string[]) => {
+  const trivyIgnoreFilePath = path.join('/tmp', '.trivyignore');
+  const trivyIgnoreFile = createWriteStream(trivyIgnoreFilePath);
+
+  trivyIgnore.forEach((line) => {
+    trivyIgnoreFile.write(line + '\n');
+  });
+
+  trivyIgnoreFile.end();
 };

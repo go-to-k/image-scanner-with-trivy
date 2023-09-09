@@ -21,7 +21,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         ],
         "Code": {
           "ImageUri": {
-            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:d61815e3ecc26f2f63dd7ca0cf217c3b7aa6958e449e49c7d362f87bb36ff584",
+            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:38ef3f9349d561061b80aa476bc1789fe6568f604dd6b8a9af100e729a69e2cb",
           },
         },
         "MemorySize": 3008,
@@ -138,6 +138,10 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         "severity": [
           "CRITICAL",
           "HIGH",
+        ],
+        "trivyIgnore": [
+          "CVE-2023-37920",
+          "CVE-2019-14697 exp:2023-01-01",
         ],
       },
       "Type": "Custom::ImageScannerWithTrivy",

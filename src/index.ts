@@ -54,6 +54,8 @@ export interface ImageScannerWithTrivyProps {
    *
    * To hide unfixed/unfixable vulnerabilities, you can use the `--ignore-unfixed` flag.
    *
+   * @default false
+   *
    * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities
    */
   readonly ignoreUnfixed?: boolean;
@@ -67,7 +69,9 @@ export interface ImageScannerWithTrivyProps {
    * The severity depends on the compile option, the default configuration, etc. NVD doesn't know how the vendor distributes the software.
    * Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor scores over NVD.
    *
-   * @default [Severity.CRITICAL] - It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
+   * It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
+   *
+   * @default [Severity.CRITICAL]
    *
    * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection
    */
@@ -81,7 +85,7 @@ export interface ImageScannerWithTrivyProps {
    * For example, container image scanning enables vulnerability (VULN) and secret scanners (SECRET) by default.
    * If you don't need secret scanning, it can be disabled by specifying Scanners.VULN only.
    *
-   * @default [Scanners.VULN,Scanners.SECRET]
+   * @default [Security.VULN,Scanners.SECRET]
    *
    * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
    */
@@ -94,7 +98,9 @@ export interface ImageScannerWithTrivyProps {
    *
    * You can specify 0 if you do not want to exit even when vulnerabilities are detected.
    *
-   * @default 1 - It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   * It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   *
+   * @default 1
    *
    * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code
    */
@@ -110,18 +116,59 @@ export interface ImageScannerWithTrivyProps {
    * An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
    * `exitOnEol` can fail scanning on EOL OS with a non-zero code.
    *
-   * @default 1 - It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   * It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   *
+   * @default 1
    *
    * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol
    */
   readonly exitOnEol?: number;
+
+  /**
+   * By Finding IDs
+   *
+   * The ignore rules written to the .trivyignore in trivy.
+   * Put each line you write in the file into one element of the array.
+   *
+   * @example
+   *     $ cat .trivyignore
+   *     # Accept the risk
+   *     CVE-2018-14618
+   *
+   *     # Accept the risk until 2023-01-01
+   *     CVE-2019-14697 exp:2023-01-01
+   *
+   *     # No impact in our settings
+   *     CVE-2019-1543
+   *
+   *     # Ignore misconfigurations
+   *     AVD-DS-0002
+   *
+   *     # Ignore secrets
+   *     generic-unwanted-rule
+   *     aws-account-id
+   *
+   * @default []
+   *
+   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore
+   */
+  readonly trivyIgnore?: string[];
 }
 
 export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
     super(scope, id);
 
-    const { imageUri, repository, ignoreUnfixed, severity, scanners, exitCode, exitOnEol } = props;
+    const {
+      imageUri,
+      repository,
+      ignoreUnfixed,
+      severity,
+      scanners,
+      exitCode,
+      exitOnEol,
+      trivyIgnore,
+    } = props;
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: '470b6343-d267-f753-226c-1e99f09f319a',
@@ -141,7 +188,6 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    // TODO: parameters for .trivyignore (creating the file in Lambda, based on string array from props)
     // TODO: --platform=linux/arm64
     const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
     imageScannerProperties.addr = this.node.addr;
@@ -151,6 +197,7 @@ export class ImageScannerWithTrivy extends Construct {
     imageScannerProperties.scanners = scanners ?? [];
     imageScannerProperties.exitCode = exitCode ?? 1;
     imageScannerProperties.exitOnEol = exitOnEol ?? 1;
+    imageScannerProperties.trivyIgnore = trivyIgnore ?? [];
 
     new CustomResource(this, 'Default', {
       resourceType: 'Custom::ImageScannerWithTrivy',
