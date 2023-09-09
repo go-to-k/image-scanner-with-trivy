@@ -213,22 +213,8 @@ export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
     super(scope, id);
 
-    const {
-      imageUri,
-      repository,
-      ignoreUnfixed,
-      severity,
-      scanners,
-      imageConfigScanners,
-      exitCode,
-      exitOnEol,
-      trivyIgnore,
-      memorySize,
-      platform,
-    } = props;
-
-    if (memorySize) {
-      if (memorySize < 3008 || memorySize > 10240) {
+    if (props.memorySize) {
+      if (props.memorySize < 3008 || props.memorySize > 10240) {
         throw new Error('You can specify between `3008` and `10240` for `memorySize`.');
       }
     }
@@ -242,9 +228,9 @@ export class ImageScannerWithTrivy extends Construct {
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
       retryAttempts: 0,
-      memorySize: memorySize ?? DEFAULT_MEMORY_SIZE,
+      memorySize: props.memorySize ?? DEFAULT_MEMORY_SIZE,
     });
-    repository.grantPull(customResourceLambda);
+    props.repository.grantPull(customResourceLambda);
 
     const imageScannerProvider = new Provider(this, 'Provider', {
       onEventHandler: customResourceLambda,
@@ -252,15 +238,15 @@ export class ImageScannerWithTrivy extends Construct {
 
     const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
     imageScannerProperties.addr = this.node.addr;
-    imageScannerProperties.imageUri = imageUri;
-    imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false;
-    imageScannerProperties.severity = severity ?? [Severity.CRITICAL];
-    imageScannerProperties.scanners = scanners ?? [];
-    imageScannerProperties.imageConfigScanners = imageConfigScanners ?? [];
-    imageScannerProperties.exitCode = exitCode ?? 1;
-    imageScannerProperties.exitOnEol = exitOnEol ?? 1;
-    imageScannerProperties.trivyIgnore = trivyIgnore ?? [];
-    imageScannerProperties.platform = platform ?? '';
+    imageScannerProperties.imageUri = props.imageUri;
+    imageScannerProperties.ignoreUnfixed = props.ignoreUnfixed ?? false;
+    imageScannerProperties.severity = props.severity ?? [Severity.CRITICAL];
+    imageScannerProperties.scanners = props.scanners ?? [];
+    imageScannerProperties.imageConfigScanners = props.imageConfigScanners ?? [];
+    imageScannerProperties.exitCode = props.exitCode ?? 1;
+    imageScannerProperties.exitOnEol = props.exitOnEol ?? 1;
+    imageScannerProperties.trivyIgnore = props.trivyIgnore ?? [];
+    imageScannerProperties.platform = props.platform ?? '';
 
     new CustomResource(this, 'Default', {
       resourceType: 'Custom::ImageScannerWithTrivy',
