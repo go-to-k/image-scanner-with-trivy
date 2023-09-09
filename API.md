@@ -123,7 +123,10 @@ const imageScannerWithTrivyProps: ImageScannerWithTrivyProps = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitCode">exitCode</a></code> | <code>number</code> | Exit Code. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
 
 ---
@@ -154,6 +157,47 @@ Because of grantPull to CustomResourceLambda.
 
 ---
 
+##### `exitCode`<sup>Optional</sup> <a name="exitCode" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitCode"></a>
+
+```typescript
+public readonly exitCode: number;
+```
+
+- *Type:* number
+- *Default:* 1 - It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+
+Exit Code.
+
+Use the `exitCode` option if you want to exit with a non-zero exit code.
+
+You can specify 0 if you do not want to exit even when vulnerabilities are detected.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code)
+
+---
+
+##### `exitOnEol`<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitOnEol"></a>
+
+```typescript
+public readonly exitOnEol: number;
+```
+
+- *Type:* number
+- *Default:* 1 - It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+
+Exit on EOL.
+
+Sometimes you may surprisingly get 0 vulnerabilities in an old image:
+ - Enabling --ignore-unfixed option while all packages have no fixed versions.
+ - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
+
+An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
+`exitOnEol` can fail scanning on EOL OS with a non-zero code.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol)
+
+---
+
 ##### `ignoreUnfixed`<sup>Optional</sup> <a name="ignoreUnfixed" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.ignoreUnfixed"></a>
 
 ```typescript
@@ -170,6 +214,26 @@ To hide unfixed/unfixable vulnerabilities, you can use the `--ignore-unfixed` fl
 
 ---
 
+##### `scanners`<sup>Optional</sup> <a name="scanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners"></a>
+
+```typescript
+public readonly scanners: Scanners[];
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]
+- *Default:* [Scanners.VULN,Scanners.SECRET]
+
+Enable/Disable Scanners.
+
+You can enable/disable scanners with the `scanners`.
+
+For example, container image scanning enables vulnerability (VULN) and secret scanners (SECRET) by default.
+If you don't need secret scanning, it can be disabled by specifying Scanners.VULN only.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners)
+
+---
+
 ##### `severity`<sup>Optional</sup> <a name="severity" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity"></a>
 
 ```typescript
@@ -177,7 +241,7 @@ public readonly severity: Severity[];
 ```
 
 - *Type:* <a href="#image-scanner-with-trivy.Severity">Severity</a>[]
-- *Default:* [] - The default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
+- *Default:* [Severity.CRITICAL] - It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
 
 Severity Selection.
 
@@ -187,7 +251,7 @@ Using CVE-2023-0464 as an example, while it is rated as "HIGH" in NVD, Red Hat h
 The severity depends on the compile option, the default configuration, etc. NVD doesn't know how the vendor distributes the software.
 Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor scores over NVD.
 
-> [https://aquasecurity.github.io/trivy/v0.45/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/v0.45/docs/scanner/vulnerability/#severity-selection)
+> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection)
 
 ---
 
@@ -195,11 +259,48 @@ Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor 
 
 ## Enums <a name="Enums" id="Enums"></a>
 
+### Scanners <a name="Scanners" id="image-scanner-with-trivy.Scanners"></a>
+
+Enum for Scanners.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners)
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.Scanners.VULN">VULN</a></code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.Scanners.CONFIG">CONFIG</a></code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.Scanners.SECRET">SECRET</a></code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.Scanners.LICENSE">LICENSE</a></code> | *No description.* |
+
+---
+
+##### `VULN` <a name="VULN" id="image-scanner-with-trivy.Scanners.VULN"></a>
+
+---
+
+
+##### `CONFIG` <a name="CONFIG" id="image-scanner-with-trivy.Scanners.CONFIG"></a>
+
+---
+
+
+##### `SECRET` <a name="SECRET" id="image-scanner-with-trivy.Scanners.SECRET"></a>
+
+---
+
+
+##### `LICENSE` <a name="LICENSE" id="image-scanner-with-trivy.Scanners.LICENSE"></a>
+
+---
+
+
 ### Severity <a name="Severity" id="image-scanner-with-trivy.Severity"></a>
 
 Enum for Severity Selection.
 
-> [https://aquasecurity.github.io/trivy/v0.45/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/v0.45/docs/scanner/vulnerability/#severity-selection)
+> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection)
 
 #### Members <a name="Members" id="Members"></a>
 

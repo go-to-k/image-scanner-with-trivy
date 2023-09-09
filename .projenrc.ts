@@ -6,7 +6,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // TODO: major version
   // majorVersion: 1,
   minNodeVersion: '18.0.0',
-  cdkVersion: '2.28.0',
+  cdkVersion: '2.94.0',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
   name: 'image-scanner-with-trivy',
