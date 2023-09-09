@@ -48,6 +48,10 @@ const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
 ecrDeployment.node.addDependency(imageScanner);
 ```
 
+## API Reference
+
+API Reference is [here](./API.md#api-reference-).
+
 # API Reference <a name="API Reference" id="api-reference"></a>
 
 ## Constructs <a name="Constructs" id="Constructs"></a>

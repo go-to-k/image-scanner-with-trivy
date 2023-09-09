@@ -47,3 +47,7 @@ const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
 });
 ecrDeployment.node.addDependency(imageScanner);
 ```
+
+## API Reference
+
+API Reference is [here](./API.md#api-reference-).
