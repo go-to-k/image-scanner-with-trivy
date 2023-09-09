@@ -8,7 +8,7 @@ If it detects vulnerabilities, it can **prevent the image from being pushed to t
 
 Since it takes an `imageUri` for ECR as an argument, it can also be used to **simply scan an existing image in the repository**.
 
-## trivy
+## Trivy
 
 [Trivy](https://github.com/aquasecurity/trivy) is a comprehensive and versatile security scanner.
 
@@ -40,7 +40,7 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   repository: image.repository,
 });
 
-// By adding addDependency, if the vulnerabilities are detected by ImageScannerWithtrivy, the following ECRDeployment will not be executed, deployment will fail.
+// By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
 const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
   src: new DockerImageName(image.imageUri),
   dest: new DockerImageName(`${repository.repositoryUri}:latest`),
