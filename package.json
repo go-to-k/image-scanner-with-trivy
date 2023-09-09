@@ -30,8 +30,9 @@
     "upgrade": "npx projen upgrade",
     "watch": "npx projen watch",
     "projen": "npx projen",
-    "integ:deploy": "npx cdk deploy --app='./lib/integ.js'",
-    "integ:destroy": "npx cdk destroy --app='./lib/integ.js'"
+    "cdk": "cdk",
+    "integ:deploy": "cdk deploy --app='./lib/integ.js'",
+    "integ:destroy": "cdk destroy --app='./lib/integ.js'"
   },
   "author": {
     "name": "go-to-k",
@@ -43,7 +44,7 @@
     "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
-    "aws-cdk-lib": "2.94.0",
+    "aws-cdk-lib": "2.95.1",
     "constructs": "10.0.5",
     "eslint": "^8",
     "eslint-config-prettier": "^9.0.0",
@@ -67,7 +68,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.94.0",
+    "aws-cdk-lib": "^2.95.1",
     "constructs": "^10.0.5"
   },
   "keywords": [

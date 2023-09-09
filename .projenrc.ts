@@ -6,7 +6,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // TODO: major version
   // majorVersion: 1,
   minNodeVersion: '18.0.0',
-  cdkVersion: '2.94.0',
+  cdkVersion: '2.95.1',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
   name: 'image-scanner-with-trivy',
@@ -56,8 +56,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // packageName: undefined,  /* The "name" in package.json. */
 });
 project.tsconfigDev.addInclude('assets/lambda/**/*.ts');
-project.setScript('integ:deploy', "npx cdk deploy --app='./lib/integ.js'");
-project.setScript('integ:destroy', "npx cdk destroy --app='./lib/integ.js'");
+project.setScript('cdk', 'cdk');
+project.setScript('integ:deploy', "cdk deploy --app='./lib/integ.js'");
+project.setScript('integ:destroy', "cdk destroy --app='./lib/integ.js'");
 project.projectBuild.compileTask.prependExec(
   'yarn install --non-interactive --frozen-lockfile && yarn build',
   {
