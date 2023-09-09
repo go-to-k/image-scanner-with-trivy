@@ -21,7 +21,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
         ],
         "Code": {
           "ImageUri": {
-            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:cb9ee7cbff9c5af2b93cd5d875dbb67683901e1edb5204b2341e2b8138eb00bf",
+            "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:d61815e3ecc26f2f63dd7ca0cf217c3b7aa6958e449e49c7d362f87bb36ff584",
           },
         },
         "MemorySize": 3008,
@@ -153,7 +153,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "f2d30cfc360482320a52a4fcde8a70f3569df79ab30be24650fda58eb60052cf.zip",
+          "S3Key": "HASH-REPLACED.zip",
         },
         "Description": "AWS CDK resource provider framework - onEvent (TestStack/ImageScannerWithTrivy/Provider)",
         "Environment": {

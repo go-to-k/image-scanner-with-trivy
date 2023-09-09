@@ -146,7 +146,7 @@ export class ImageScannerWithTrivy extends Construct {
     const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = imageUri;
-    imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false; // TODO: boolean or string ?
+    imageScannerProperties.ignoreUnfixed = ignoreUnfixed ?? false;
     imageScannerProperties.severity = severity ?? [Severity.CRITICAL];
     imageScannerProperties.scanners = scanners ?? [];
     imageScannerProperties.exitCode = exitCode ?? 1;

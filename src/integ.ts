@@ -14,7 +14,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy4', {
   imageUri: image.imageUri,
   repository: image.repository,
-  ignoreUnfixed: true,
+  ignoreUnfixed: false,
   severity: [Severity.CRITICAL],
   scanners: [Scanners.VULN, Scanners.SECRET],
   exitCode: 1,

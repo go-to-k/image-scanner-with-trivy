@@ -1,5 +1,5 @@
 import { awscdk } from 'projen';
-import { TrailingComma } from 'projen/lib/javascript';
+import { TrailingComma, Transform } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'go-to-k',
   authorAddress: '24818752+go-to-k@users.noreply.github.com',
@@ -32,6 +32,18 @@ const project = new awscdk.AwsCdkConstructLibrary({
       'test/*.snapshot/**/*',
       '*.d.ts',
     ],
+  },
+  jestOptions: {
+    configFilePath: 'jest.config.json',
+    jestConfig: {
+      testEnvironment: 'node',
+      roots: ['<rootDir>/test'],
+      testMatch: ['**/*.test.ts'],
+      transform: {
+        '^.+\\.tsx?$': new Transform('ts-jest'),
+      },
+      snapshotSerializers: ['<rootDir>/test/snapshot-plugin.ts'],
+    },
   },
   license: 'Apache-2.0',
   keywords: [
