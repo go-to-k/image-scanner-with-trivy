@@ -86,9 +86,8 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    // TODO: Disable Rules params
-    // aquasecurity.github.io/trivy/v0.45/docs/scanner/secret/#disable-rules
-
+    // TODO: parameters for .trivyignore (creating the file in Lambda, based on string array from props)
+    // TODO: exit codes
     // TODO: --security-checks vuln
     // TODO: --platform=linux/arm64
     const imageScannerProperties: { [key: string]: string | string[] | boolean } = {};
