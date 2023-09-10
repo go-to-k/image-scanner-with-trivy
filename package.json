@@ -1,5 +1,6 @@
 {
   "name": "image-scanner-with-trivy",
+  "description": "Scan container images with Trivy in CDK deployment",
   "repository": {
     "type": "git",
     "url": "https://github.com/go-to-k/image-scanner-with-trivy"

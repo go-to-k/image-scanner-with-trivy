@@ -11,6 +11,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   name: 'image-scanner-with-trivy',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/go-to-k/image-scanner-with-trivy',
+  description: 'Scan container images with Trivy in CDK deployment',
   prettier: true,
   prettierOptions: {
     settings: {

@@ -2,7 +2,7 @@
 
 ## What is
 
-This is an AWS CDK Construct that allows you to **scan a container image in CDK deployment layer with trivy**.
+This is an AWS CDK Construct that allows you to **scan container images with Trivy in CDK deployment layer**.
 
 If it detects vulnerabilities, it can **prevent the image from being pushed to the ECR for the application**.
 
