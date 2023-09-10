@@ -1,7 +1,8 @@
 import { spawnSync } from 'child_process';
-import { createWriteStream } from 'fs';
-import path from 'path';
+import { writeFileSync } from 'fs';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
+
+const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
 interface ScannerProps {
   addr: string;
@@ -65,19 +66,13 @@ const makeOptions = (props: ScannerProps): string[] => {
     options.push(`--image-config-scanners ${props.imageConfigScanners.join(',')}`);
   if (props.exitCode) options.push(`--exit-code ${props.exitCode}`);
   if (props.exitOnEol) options.push(`--exit-on-eol ${props.exitOnEol}`);
-  if (props.trivyIgnore.length) options.push('--ignorefile /tmp/.trivyignore');
+  if (props.trivyIgnore.length) options.push(`--ignorefile ${TRIVY_IGNORE_FILE_PATH}`);
   if (props.platform) options.push(`--platform ${props.platform}`);
 
   return options;
 };
 
 const makeTrivyIgnoreFile = (trivyIgnore: string[]) => {
-  const trivyIgnoreFilePath = path.join('/tmp', '.trivyignore');
-  const trivyIgnoreFile = createWriteStream(trivyIgnoreFilePath);
-
-  trivyIgnore.forEach((line) => {
-    trivyIgnoreFile.write(line + '\n');
-  });
-
-  trivyIgnoreFile.end();
+  const ignoreLines = trivyIgnore.join('\n');
+  writeFileSync(TRIVY_IGNORE_FILE_PATH, ignoreLines, 'utf-8');
 };

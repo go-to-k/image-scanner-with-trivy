@@ -14,6 +14,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
   imageUri: image.imageUri,
   repository: image.repository,
+  trivyIgnore: ['CVE-2023-37920'],
 });
 
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
