@@ -34,7 +34,7 @@ const image = new DockerImageAsset(this, 'DockerImage', {
   directory: resolve(__dirname, './'),
 });
 
-// Please grant the necessary options on a case-by-case basis.
+// Add properties you want for trivy options (ignoreUnfixed, severity, scanners, trivyIgnore, etc).
 const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
