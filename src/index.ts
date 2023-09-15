@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { CustomResource, Duration } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
+import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import {
   Architecture,
   AssetCode,
@@ -224,7 +225,9 @@ export class ImageScannerWithTrivy extends Construct {
       lambdaPurpose: 'Custom::ImageScannerWithTrivyCustomResourceLambda',
       runtime: Runtime.FROM_IMAGE,
       handler: Handler.FROM_IMAGE,
-      code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda')),
+      code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
+        platform: Platform.LINUX_ARM64,
+      }),
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
       retryAttempts: 0,
