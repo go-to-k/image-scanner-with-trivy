@@ -4,7 +4,7 @@
 
 The detail blog is [here](https://dev.to/aws-builders/container-image-scanning-with-trivy-in-aws-cdk-151h).
 
-To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://aquasecurity.github.io/trivy/latest/ecosystem/ide/)!
+To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://aquasecurity.github.io/trivy/latest/ecosystem/ide/#image-scanner-with-trivy-community)!
 
 ## What is
 
