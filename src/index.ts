@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { CustomResource, Duration } from 'aws-cdk-lib';
+import { CustomResource, Duration, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import {
@@ -214,7 +214,7 @@ export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
     super(scope, id);
 
-    if (props.memorySize) {
+    if (props.memorySize && !Token.isUnresolved(props.memorySize)) {
       if (props.memorySize < 3008 || props.memorySize > 10240) {
         throw new Error('You can specify between `3008` and `10240` for `memorySize`.');
       }
