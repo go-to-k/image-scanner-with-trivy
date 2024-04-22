@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { App, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { ImageScannerWithTrivy, Scanners, Severity } from '.';
+import { ImageScannerWithTrivy, Scanners, Severity } from '../src';
 
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyStack');

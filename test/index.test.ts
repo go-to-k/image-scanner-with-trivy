@@ -24,7 +24,7 @@ const getTemplate = (): Template => {
   return Template.fromStack(stack);
 };
 
-describe('Fine-grained Assertions Tests', () => {
+describe('ImageScannerWithTrivy', () => {
   const template = getTemplate();
 
   test('Snapshot test', () => {
@@ -33,5 +33,31 @@ describe('Fine-grained Assertions Tests', () => {
 
   test('ImageScannerWithTrivy created', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivy', 1);
+  });
+
+  test('throws if memorySize > 10240', () => {
+    const app = new App();
+    const stack = new Stack(app, 'TestStack');
+
+    expect(() => {
+      new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository', {}),
+        memorySize: 10241,
+      });
+    }).toThrowError(/You can specify between \`3008\` and \`10240\` for \`memorySize\`, got 10241/);
+  });
+
+  test('throws if memorySize < 3008', () => {
+    const app = new App();
+    const stack = new Stack(app, 'TestStack');
+
+    expect(() => {
+      new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository', {}),
+        memorySize: 3007,
+      });
+    }).toThrowError(/You can specify between \`3008\` and \`10240\` for \`memorySize\`, got 3007/);
   });
 });
