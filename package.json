@@ -32,8 +32,8 @@
     "watch": "npx projen watch",
     "projen": "npx projen",
     "cdk": "cdk",
-    "integ:deploy": "cdk deploy --app='./lib/integ.js'",
-    "integ:destroy": "cdk destroy --app='./lib/integ.js'"
+    "integ:deploy": "cdk deploy --app='./test/integ.js'",
+    "integ:destroy": "cdk destroy --app='./test/integ.js'"
   },
   "author": {
     "name": "go-to-k",

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
+exports[`ImageScannerWithTrivy Snapshot test 1`] = `
 {
   "Parameters": {
     "BootstrapVersion": {
@@ -117,7 +117,7 @@ exports[`Fine-grained Assertions Tests Snapshot test 1`] = `
       "Type": "AWS::ECR::Repository",
       "UpdateReplacePolicy": "Retain",
     },
-    "ImageScannerWithTrivy": {
+    "ImageScannerWithTrivyD5118C38": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "ServiceToken": {
