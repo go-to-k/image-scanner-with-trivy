@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { CustomResource, Duration, Token } from 'aws-cdk-lib';
+import { CustomResource, Duration, Size, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import {
@@ -236,6 +236,7 @@ export class ImageScannerWithTrivy extends Construct {
       timeout: Duration.seconds(900),
       retryAttempts: 0,
       memorySize: props.memorySize ?? DEFAULT_MEMORY_SIZE,
+      ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update DB: /tmp/trivy/db/trivy.db
     });
     props.repository.grantPull(customResourceLambda);
 
