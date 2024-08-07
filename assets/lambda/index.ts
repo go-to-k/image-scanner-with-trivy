@@ -18,6 +18,7 @@ interface CloudWatchLogsOutput {
   logGroupName: string;
 }
 
+// Tagged union type of output configurations for scan logs.
 type ScanLogsOutput = CloudWatchLogsOutput;
 
 interface ScannerProps {
