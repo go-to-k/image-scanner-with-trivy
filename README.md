@@ -29,7 +29,7 @@ npm install image-scanner-with-trivy
 - CDK Code
 
 ```ts
-import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
 
 const repository = new Repository(this, 'ImageRepository', {
   removalPolicy: RemovalPolicy.DESTROY,
@@ -44,6 +44,8 @@ const image = new DockerImageAsset(this, 'DockerImage', {
 const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
+  // If you output the scan logs to other than the default log group, you can specify this option.
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs(new LogGroup(stack, 'LogGroup')),
 });
 
 // By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
