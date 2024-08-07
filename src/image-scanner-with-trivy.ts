@@ -9,6 +9,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
+import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 
@@ -45,6 +46,31 @@ export enum Scanners {
 export enum ImageConfigScanners {
   CONFIG = 'config',
   SECRET = 'secret',
+}
+
+/**
+ * Represents the output of the scan logs.
+ */
+export abstract class ScanLogsOutput {
+  /**
+   * Scan logs output to CloudWatch Logs log group.
+   */
+  public static cloudWatchLogs(logGroup: ILogGroup): ScanLogsOutput {
+    return {
+      type: 'cloudWatchLogs',
+      logGroupName: logGroup.logGroupName,
+    };
+  }
+
+  /**
+   * The type of the scan logs output.
+   */
+  public abstract readonly type: 'cloudWatchLogs';
+
+  /**
+   * The name of the logGroup.
+   */
+  public abstract readonly logGroupName?: string;
 }
 
 export interface ImageScannerWithTrivyProps {
@@ -205,6 +231,19 @@ export interface ImageScannerWithTrivyProps {
    * @default -
    */
   readonly platform?: string;
+
+  /**
+   * Configuration for scan logs output
+   *
+   * By default, scan logs are output to default log group created by Scanner Lambda.
+   *
+   * Specify this if you want to send scan logs to other than the default log group.
+   *
+   * Currently, only `cloudWatchLogs` is supported.
+   *
+   * @default - scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
+   */
+  readonly scanLogsOutput?: ScanLogsOutput;
 }
 
 // Maximum Lambda memory size for default AWS account without quota limit increase
@@ -244,7 +283,9 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
+    const imageScannerProperties: {
+      [key: string]: string | string[] | boolean | number | ScanLogsOutput;
+    } = {};
     imageScannerProperties.addr = this.node.addr;
     imageScannerProperties.imageUri = props.imageUri;
     imageScannerProperties.ignoreUnfixed = props.ignoreUnfixed ?? false;
@@ -255,6 +296,10 @@ export class ImageScannerWithTrivy extends Construct {
     imageScannerProperties.exitOnEol = props.exitOnEol ?? 1;
     imageScannerProperties.trivyIgnore = props.trivyIgnore ?? [];
     imageScannerProperties.platform = props.platform ?? '';
+
+    if (props.scanLogsOutput) {
+      imageScannerProperties.output = props.scanLogsOutput;
+    }
 
     new CustomResource(this, 'Resource', {
       resourceType: 'Custom::ImageScannerWithTrivy',

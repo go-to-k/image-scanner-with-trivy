@@ -1,7 +1,8 @@
 import { App, Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
-import { ImageScannerWithTrivy, Scanners, Severity } from '../src';
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
 
 const getTemplate = (): Template => {
   const app = new App();
@@ -20,6 +21,7 @@ const getTemplate = (): Template => {
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
     platform: 'linux/arm64',
+    scanLogsOutput: ScanLogsOutput.cloudWatchLogs(new LogGroup(stack, 'LogGroup')),
   });
   return Template.fromStack(stack);
 };
@@ -33,6 +35,17 @@ describe('ImageScannerWithTrivy', () => {
 
   test('ImageScannerWithTrivy created', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivy', 1);
+  });
+
+  test('correctly sets scanLogsOutput settings', () => {
+    template.hasResourceProperties('Custom::ImageScannerWithTrivy', {
+      output: {
+        type: 'cloudWatchLogs',
+        logGroupName: {
+          Ref: 'LogGroupF5B46931',
+        },
+      },
+    });
   });
 
   test('throws if memorySize > 10240', () => {

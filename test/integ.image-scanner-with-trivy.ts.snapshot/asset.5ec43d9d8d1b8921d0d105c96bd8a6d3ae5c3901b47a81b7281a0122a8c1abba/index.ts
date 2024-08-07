@@ -114,12 +114,12 @@ const outputScanLogsToCWLogs = async (
   output: CloudWatchLogsOutput,
   imageUri: string,
 ) => {
-  // LogStream name must satisfy regular expression pattern: `[^:*]*`.
-  // So, we can't use `:` in logStreamName.
+  // LogStream name must satisfy regular expression pattern: `[^:*]*`
+  // we can't use `:` in logStreamName so replace it with `-`
   const [uri, tag] = imageUri.split(':');
   const logStreamName = tag ? `uri=${uri},tag=${tag}` : `uri=${uri}`;
 
-  // Ensure log stream exists before putting log events.
+  // Ensure log stream exists
   try {
     await cwClient.send(
       new CreateLogStreamCommand({
@@ -128,12 +128,13 @@ const outputScanLogsToCWLogs = async (
       }),
     );
   } catch (e) {
-    // If the log stream already exists, ignore the error.
+    // If the log stream already exists, ignore the error
     if (e instanceof ResourceAlreadyExistsException) {
       console.log(
         `Log stream ${logStreamName} already exists in log group ${output.logGroupName}.`,
       );
     } else {
+      // Re-throw the error if it's not the expected exception
       throw e;
     }
   }
@@ -145,11 +146,11 @@ const outputScanLogsToCWLogs = async (
     logEvents: [
       {
         timestamp,
-        message: 'stderr:\n' + response.stderr.toString(),
+        message: response.stderr.toString(),
       },
       {
         timestamp,
-        message: 'stdout:\n' + response.stdout.toString(),
+        message: response.stdout.toString(),
       },
     ],
   };

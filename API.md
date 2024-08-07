@@ -185,6 +185,7 @@ const imageScannerWithTrivyProps: ImageScannerWithTrivyProps = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.platform">platform</a></code> | <code>string</code> | Scan Image on a specific Architecture and OS. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanLogsOutput">scanLogsOutput</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a></code> | Configuration for scan logs output. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
@@ -338,6 +339,25 @@ To customize this, pass a `platform` argument in the format OS/Architecture for 
 
 ---
 
+##### `scanLogsOutput`<sup>Optional</sup> <a name="scanLogsOutput" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanLogsOutput"></a>
+
+```typescript
+public readonly scanLogsOutput: ScanLogsOutput;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a>
+- *Default:* scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
+
+Configuration for scan logs output.
+
+By default, scan logs are output to default log group created by Scanner Lambda.
+
+Specify this if you want to send scan logs to other than the default log group.
+
+Currently, only `cloudWatchLogs` is supported.
+
+---
+
 ##### `scanners`<sup>Optional</sup> <a name="scanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners"></a>
 
 ```typescript
@@ -420,6 +440,83 @@ Put each line you write in the file into one element of the array.
     aws-account-id
 ```
 
+
+## Classes <a name="Classes" id="Classes"></a>
+
+### ScanLogsOutput <a name="ScanLogsOutput" id="image-scanner-with-trivy.ScanLogsOutput"></a>
+
+Represents the output of the scan logs.
+
+#### Initializers <a name="Initializers" id="image-scanner-with-trivy.ScanLogsOutput.Initializer"></a>
+
+```typescript
+import { ScanLogsOutput } from 'image-scanner-with-trivy'
+
+new ScanLogsOutput()
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+
+---
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs">cloudWatchLogs</a></code> | Scan logs output to CloudWatch Logs log group. |
+
+---
+
+##### `cloudWatchLogs` <a name="cloudWatchLogs" id="image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs"></a>
+
+```typescript
+import { ScanLogsOutput } from 'image-scanner-with-trivy'
+
+ScanLogsOutput.cloudWatchLogs(logGroup: ILogGroup)
+```
+
+Scan logs output to CloudWatch Logs log group.
+
+###### `logGroup`<sup>Required</sup> <a name="logGroup" id="image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs.parameter.logGroup"></a>
+
+- *Type:* aws-cdk-lib.aws_logs.ILogGroup
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.property.type">type</a></code> | <code>string</code> | The type of the scan logs output. |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.property.logGroupName">logGroupName</a></code> | <code>string</code> | The name of the logGroup. |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="image-scanner-with-trivy.ScanLogsOutput.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+The type of the scan logs output.
+
+---
+
+##### `logGroupName`<sup>Optional</sup> <a name="logGroupName" id="image-scanner-with-trivy.ScanLogsOutput.property.logGroupName"></a>
+
+```typescript
+public readonly logGroupName: string;
+```
+
+- *Type:* string
+
+The name of the logGroup.
+
+---
 
 
 

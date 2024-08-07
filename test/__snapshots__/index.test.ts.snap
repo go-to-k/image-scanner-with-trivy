@@ -135,6 +135,12 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
         "ignoreUnfixed": true,
         "imageConfigScanners": [],
         "imageUri": "imageUri",
+        "output": {
+          "logGroupName": {
+            "Ref": "LogGroupF5B46931",
+          },
+          "type": "cloudWatchLogs",
+        },
         "platform": "linux/arm64",
         "scanners": [
           "vuln",
@@ -259,6 +265,14 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "LogGroupF5B46931": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
     },
   },
   "Rules": {
