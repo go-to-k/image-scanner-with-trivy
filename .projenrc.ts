@@ -71,7 +71,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   },
   tsconfigDev: {
     compilerOptions: {},
-    exclude: ['test/*.integ.snapshot'],
+    exclude: ['test/integ.*.snapshot'],
   },
   devDeps: ['@aws-cdk/integ-runner@2.95.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.95.1-alpha.0'],
   // deps: [],                /* Runtime dependencies of this module. */
