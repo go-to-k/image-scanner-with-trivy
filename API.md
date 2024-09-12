@@ -165,6 +165,79 @@ The tree node.
 
 ## Structs <a name="Structs" id="Structs"></a>
 
+### CloudWatchLogsOutput <a name="CloudWatchLogsOutput" id="image-scanner-with-trivy.CloudWatchLogsOutput"></a>
+
+Output configuration for scan logs to CloudWatch Logs.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.CloudWatchLogsOutput.Initializer"></a>
+
+```typescript
+import { CloudWatchLogsOutput } from 'image-scanner-with-trivy'
+
+const cloudWatchLogsOutput: CloudWatchLogsOutput = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutput.property.logGroupName">logGroupName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutput.property.type">type</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `logGroupName`<sup>Required</sup> <a name="logGroupName" id="image-scanner-with-trivy.CloudWatchLogsOutput.property.logGroupName"></a>
+
+```typescript
+public readonly logGroupName: string;
+```
+
+- *Type:* string
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="image-scanner-with-trivy.CloudWatchLogsOutput.property.type"></a>
+
+```typescript
+public readonly type: string;
+```
+
+- *Type:* string
+
+---
+
+### CloudWatchLogsOutputOptions <a name="CloudWatchLogsOutputOptions" id="image-scanner-with-trivy.CloudWatchLogsOutputOptions"></a>
+
+Configuration for scan logs output to CloudWatch Logs log group.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.CloudWatchLogsOutputOptions.Initializer"></a>
+
+```typescript
+import { CloudWatchLogsOutputOptions } from 'image-scanner-with-trivy'
+
+const cloudWatchLogsOutputOptions: CloudWatchLogsOutputOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.logGroup">logGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The log group to output scan logs. |
+
+---
+
+##### `logGroup`<sup>Required</sup> <a name="logGroup" id="image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.logGroup"></a>
+
+```typescript
+public readonly logGroup: ILogGroup;
+```
+
+- *Type:* aws-cdk-lib.aws_logs.ILogGroup
+
+The log group to output scan logs.
+
+---
+
 ### ImageScannerWithTrivyProps <a name="ImageScannerWithTrivyProps" id="image-scanner-with-trivy.ImageScannerWithTrivyProps"></a>
 
 #### Initializer <a name="Initializer" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.Initializer"></a>
@@ -443,6 +516,146 @@ Put each line you write in the file into one element of the array.
 ```
 
 
+### ScannerCustomResourceProps <a name="ScannerCustomResourceProps" id="image-scanner-with-trivy.ScannerCustomResourceProps"></a>
+
+Lambda function event object for Scanner Custom Resource.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.ScannerCustomResourceProps.Initializer"></a>
+
+```typescript
+import { ScannerCustomResourceProps } from 'image-scanner-with-trivy'
+
+const scannerCustomResourceProps: ScannerCustomResourceProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.addr">addr</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.exitCode">exitCode</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.imageConfigScanners">imageConfigScanners</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.imageUri">imageUri</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.platform">platform</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.scanners">scanners</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.severity">severity</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScannerCustomResourceProps.property.output">output</a></code> | <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutput">CloudWatchLogsOutput</a></code> | *No description.* |
+
+---
+
+##### `addr`<sup>Required</sup> <a name="addr" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.addr"></a>
+
+```typescript
+public readonly addr: string;
+```
+
+- *Type:* string
+
+---
+
+##### `exitCode`<sup>Required</sup> <a name="exitCode" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.exitCode"></a>
+
+```typescript
+public readonly exitCode: number;
+```
+
+- *Type:* number
+
+---
+
+##### `exitOnEol`<sup>Required</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.exitOnEol"></a>
+
+```typescript
+public readonly exitOnEol: number;
+```
+
+- *Type:* number
+
+---
+
+##### `ignoreUnfixed`<sup>Required</sup> <a name="ignoreUnfixed" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.ignoreUnfixed"></a>
+
+```typescript
+public readonly ignoreUnfixed: string;
+```
+
+- *Type:* string
+
+---
+
+##### `imageConfigScanners`<sup>Required</sup> <a name="imageConfigScanners" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.imageConfigScanners"></a>
+
+```typescript
+public readonly imageConfigScanners: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `imageUri`<sup>Required</sup> <a name="imageUri" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.imageUri"></a>
+
+```typescript
+public readonly imageUri: string;
+```
+
+- *Type:* string
+
+---
+
+##### `platform`<sup>Required</sup> <a name="platform" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.platform"></a>
+
+```typescript
+public readonly platform: string;
+```
+
+- *Type:* string
+
+---
+
+##### `scanners`<sup>Required</sup> <a name="scanners" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.scanners"></a>
+
+```typescript
+public readonly scanners: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `severity`<sup>Required</sup> <a name="severity" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.severity"></a>
+
+```typescript
+public readonly severity: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `trivyIgnore`<sup>Required</sup> <a name="trivyIgnore" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.trivyIgnore"></a>
+
+```typescript
+public readonly trivyIgnore: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `output`<sup>Optional</sup> <a name="output" id="image-scanner-with-trivy.ScannerCustomResourceProps.property.output"></a>
+
+```typescript
+public readonly output: CloudWatchLogsOutput;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.CloudWatchLogsOutput">CloudWatchLogsOutput</a>
+
+---
+
 ## Classes <a name="Classes" id="Classes"></a>
 
 ### ScanLogsOutput <a name="ScanLogsOutput" id="image-scanner-with-trivy.ScanLogsOutput"></a>
@@ -462,6 +675,19 @@ new ScanLogsOutput()
 
 ---
 
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.bind">bind</a></code> | *No description.* |
+
+---
+
+##### `bind` <a name="bind" id="image-scanner-with-trivy.ScanLogsOutput.bind"></a>
+
+```typescript
+public bind(): CloudWatchLogsOutput
+```
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -476,49 +702,17 @@ new ScanLogsOutput()
 ```typescript
 import { ScanLogsOutput } from 'image-scanner-with-trivy'
 
-ScanLogsOutput.cloudWatchLogs(logGroup: ILogGroup)
+ScanLogsOutput.cloudWatchLogs(options: CloudWatchLogsOutputOptions)
 ```
 
 Scan logs output to CloudWatch Logs log group.
 
-###### `logGroup`<sup>Required</sup> <a name="logGroup" id="image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs.parameter.logGroup"></a>
+###### `options`<sup>Required</sup> <a name="options" id="image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs.parameter.options"></a>
 
-- *Type:* aws-cdk-lib.aws_logs.ILogGroup
-
----
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.property.type">type</a></code> | <code>string</code> | The type of the scan logs output. |
-| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.property.logGroupName">logGroupName</a></code> | <code>string</code> | The name of the logGroup. |
+- *Type:* <a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions">CloudWatchLogsOutputOptions</a>
 
 ---
 
-##### `type`<sup>Required</sup> <a name="type" id="image-scanner-with-trivy.ScanLogsOutput.property.type"></a>
-
-```typescript
-public readonly type: string;
-```
-
-- *Type:* string
-
-The type of the scan logs output.
-
----
-
-##### `logGroupName`<sup>Optional</sup> <a name="logGroupName" id="image-scanner-with-trivy.ScanLogsOutput.property.logGroupName"></a>
-
-```typescript
-public readonly logGroupName: string;
-```
-
-- *Type:* string
-
-The name of the logGroup.
-
----
 
 
 
@@ -545,6 +739,23 @@ Enum for ImageConfigScanners.
 
 
 ##### `SECRET` <a name="SECRET" id="image-scanner-with-trivy.ImageConfigScanners.SECRET"></a>
+
+---
+
+
+### ScanLogsOutputType <a name="ScanLogsOutputType" id="image-scanner-with-trivy.ScanLogsOutputType"></a>
+
+Enum for ScanLogsOutputType.
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutputType.CLOUDWATCH_LOGS">CLOUDWATCH_LOGS</a></code> | *No description.* |
+
+---
+
+##### `CLOUDWATCH_LOGS` <a name="CLOUDWATCH_LOGS" id="image-scanner-with-trivy.ScanLogsOutputType.CLOUDWATCH_LOGS"></a>
 
 ---
 
