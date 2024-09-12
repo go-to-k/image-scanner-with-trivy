@@ -10,7 +10,7 @@ import {
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
 import {
   ScanLogsOutputOptions,
-  CloudWatchLogsOutput,
+  CloudWatchLogsOutputOptions,
   ScannerCustomResourceProps,
 } from '../../src/types';
 
@@ -95,7 +95,7 @@ const outputScanLogs = async (
 
 const outputScanLogsToCWLogs = async (
   response: SpawnSyncReturns<Buffer>,
-  output: CloudWatchLogsOutput,
+  output: CloudWatchLogsOutputOptions,
   imageUri: string,
 ) => {
   // LogStream name must satisfy regular expression pattern: `[^:*]*`.
