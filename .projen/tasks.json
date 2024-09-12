@@ -233,7 +233,7 @@
           "spawn": "eslint"
         },
         {
-          "exec": "yarn tsc -p tsconfig.dev.json && yarn integ"
+          "exec": "yarn integ"
         }
       ]
     },
