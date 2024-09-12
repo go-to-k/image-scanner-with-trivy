@@ -1,7 +1,7 @@
 /**
  * Output configuration for scan logs to CloudWatch Logs.
  */
-export interface CloudWatchLogsOutput {
+export interface CloudWatchLogsOutputOptions {
   readonly type: 'cloudWatchLogs';
   readonly logGroupName: string;
 }
@@ -9,7 +9,7 @@ export interface CloudWatchLogsOutput {
 /**
  * Tagged union type of output configurations for scan logs.
  */
-export type ScanLogsOutputOptions = CloudWatchLogsOutput;
+export type ScanLogsOutputOptions = CloudWatchLogsOutputOptions;
 
 /**
  * Lambda function event object for Scanner Custom Resource.

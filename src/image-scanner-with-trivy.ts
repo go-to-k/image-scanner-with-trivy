@@ -12,7 +12,11 @@ import {
 import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
-import { ScanLogsOutputOptions, ScannerCustomResourceProps } from './types';
+import {
+  ScanLogsOutputOptions,
+  CloudWatchLogsOutputOptions,
+  ScannerCustomResourceProps,
+} from './types';
 
 /**
  * Enum for Severity Selection
@@ -59,16 +63,11 @@ export enum ScanLogsOutputType {
 /**
  * Configuration for scan logs output to CloudWatch Logs log group.
  */
-export interface CloudWatchLogsOutputOptions {
+export interface CloudWatchLogsOutputProps {
   /**
    * The log group to output scan logs.
    */
   readonly logGroup: ILogGroup;
-}
-
-interface CloudWatchLogsOutput {
-  type: 'cloudWatchLogs';
-  logGroupName: string;
 }
 
 /**
@@ -78,7 +77,7 @@ export abstract class ScanLogsOutput {
   /**
    * Scan logs output to CloudWatch Logs log group.
    */
-  public static cloudWatchLogs(options: CloudWatchLogsOutputOptions): ScanLogsOutput {
+  public static cloudWatchLogs(options: CloudWatchLogsOutputProps): ScanLogsOutput {
     return new CloudWatchLogsOutput(options);
   }
 
@@ -91,16 +90,13 @@ class CloudWatchLogsOutput extends ScanLogsOutput {
    */
   private readonly logGroup: ILogGroup;
 
-  constructor(options: CloudWatchLogsOutputOptions) {
+  constructor(options: CloudWatchLogsOutputProps) {
     super();
 
     this.logGroup = options.logGroup;
   }
 
-  public bind(): {
-    type: 'cloudWatchLogs';
-    logGroupName: string;
-  } {
+  public bind(): CloudWatchLogsOutputOptions {
     return {
       type: ScanLogsOutputType.CLOUDWATCH_LOGS,
       logGroupName: this.logGroup.logGroupName,
