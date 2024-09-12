@@ -8,38 +8,19 @@ import {
   ResourceAlreadyExistsException,
 } from '@aws-sdk/client-cloudwatch-logs';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
+import {
+  ScanLogsOutputOptions,
+  CloudWatchLogsOutput,
+  ScannerCustomResourceProps,
+} from '../../src/types';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
 const cwClient = new CloudWatchLogsClient();
 
-interface CloudWatchLogsOutput {
-  type: 'cloudWatchLogs';
-  logGroupName: string;
-}
-
-/**
- * Tagged union type of output configurations for scan logs.
- */
-type ScanLogsOutput = CloudWatchLogsOutput;
-
-interface ScannerProps {
-  addr: string;
-  imageUri: string;
-  ignoreUnfixed: string;
-  severity: string[];
-  scanners: string[];
-  imageConfigScanners: string[];
-  exitCode: number;
-  exitOnEol: number;
-  trivyIgnore: string[];
-  platform: string;
-  output?: ScanLogsOutput;
-}
-
 export const handler: CdkCustomResourceHandler = async function (event) {
   const requestType = event.RequestType;
-  const props = event.ResourceProperties as unknown as ScannerProps;
+  const props = event.ResourceProperties as unknown as ScannerCustomResourceProps;
 
   if (!props.addr || !props.imageUri) throw new Error('addr and imageUri are required.');
 
@@ -75,7 +56,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   return funcResponse;
 };
 
-const makeOptions = (props: ScannerProps): string[] => {
+const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   const options: string[] = [];
 
   if (props.ignoreUnfixed === 'true') options.push('--ignore-unfixed');
@@ -99,7 +80,7 @@ const makeTrivyIgnoreFile = (trivyIgnore: string[]) => {
 const outputScanLogs = async (
   response: SpawnSyncReturns<Buffer>,
   imageUri: string,
-  output?: ScanLogsOutput,
+  output?: ScanLogsOutputOptions,
 ) => {
   switch (output?.type) {
     case 'cloudWatchLogs':

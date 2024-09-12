@@ -34,7 +34,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
   trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01', 'generic-unwanted-rule'],
   memorySize: 3008,
   platform: 'linux/arm64',
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs(logGroup),
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
 });
 
 const test = new IntegTest(app, 'Test', {

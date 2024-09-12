@@ -12,6 +12,7 @@ import {
 import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
+import { ScanLogsOutputOptions, ScannerCustomResourceProps } from './types';
 
 /**
  * Enum for Severity Selection
@@ -49,28 +50,62 @@ export enum ImageConfigScanners {
 }
 
 /**
+ * Enum for ScanLogsOutputType
+ */
+export enum ScanLogsOutputType {
+  CLOUDWATCH_LOGS = 'cloudWatchLogs',
+}
+
+/**
+ * Configuration for scan logs output to CloudWatch Logs log group.
+ */
+export interface CloudWatchLogsOutputOptions {
+  /**
+   * The log group to output scan logs.
+   */
+  readonly logGroup: ILogGroup;
+}
+
+interface CloudWatchLogsOutput {
+  type: 'cloudWatchLogs';
+  logGroupName: string;
+}
+
+/**
  * Represents the output of the scan logs.
  */
 export abstract class ScanLogsOutput {
   /**
    * Scan logs output to CloudWatch Logs log group.
    */
-  public static cloudWatchLogs(logGroup: ILogGroup): ScanLogsOutput {
-    return {
-      type: 'cloudWatchLogs',
-      logGroupName: logGroup.logGroupName,
-    };
+  public static cloudWatchLogs(options: CloudWatchLogsOutputOptions): ScanLogsOutput {
+    return new CloudWatchLogsOutput(options);
   }
 
-  /**
-   * The type of the scan logs output.
-   */
-  public abstract readonly type: 'cloudWatchLogs';
+  public abstract bind(): ScanLogsOutputOptions;
+}
 
+class CloudWatchLogsOutput extends ScanLogsOutput {
   /**
-   * The name of the logGroup.
+   * The log group to output scan logs.
    */
-  public abstract readonly logGroupName?: string;
+  private readonly logGroup: ILogGroup;
+
+  constructor(options: CloudWatchLogsOutputOptions) {
+    super();
+
+    this.logGroup = options.logGroup;
+  }
+
+  public bind(): {
+    type: 'cloudWatchLogs';
+    logGroupName: string;
+  } {
+    return {
+      type: ScanLogsOutputType.CLOUDWATCH_LOGS,
+      logGroupName: this.logGroup.logGroupName,
+    };
+  }
 }
 
 export interface ImageScannerWithTrivyProps {
@@ -283,23 +318,19 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    const imageScannerProperties: {
-      [key: string]: string | string[] | boolean | number | ScanLogsOutput;
-    } = {};
-    imageScannerProperties.addr = this.node.addr;
-    imageScannerProperties.imageUri = props.imageUri;
-    imageScannerProperties.ignoreUnfixed = props.ignoreUnfixed ?? false;
-    imageScannerProperties.severity = props.severity ?? [Severity.CRITICAL];
-    imageScannerProperties.scanners = props.scanners ?? [];
-    imageScannerProperties.imageConfigScanners = props.imageConfigScanners ?? [];
-    imageScannerProperties.exitCode = props.exitCode ?? 1;
-    imageScannerProperties.exitOnEol = props.exitOnEol ?? 1;
-    imageScannerProperties.trivyIgnore = props.trivyIgnore ?? [];
-    imageScannerProperties.platform = props.platform ?? '';
-
-    if (props.scanLogsOutput) {
-      imageScannerProperties.output = props.scanLogsOutput;
-    }
+    const imageScannerProperties: ScannerCustomResourceProps = {
+      addr: this.node.addr,
+      imageUri: props.imageUri,
+      ignoreUnfixed: String(props.ignoreUnfixed ?? false),
+      severity: props.severity ?? [Severity.CRITICAL],
+      scanners: props.scanners ?? [],
+      imageConfigScanners: props.imageConfigScanners ?? [],
+      exitCode: props.exitCode ?? 1,
+      exitOnEol: props.exitOnEol ?? 1,
+      trivyIgnore: props.trivyIgnore ?? [],
+      platform: props.platform ?? '',
+      output: props.scanLogsOutput?.bind(),
+    };
 
     new CustomResource(this, 'Resource', {
       resourceType: 'Custom::ImageScannerWithTrivy',

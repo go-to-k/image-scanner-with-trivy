@@ -8,35 +8,19 @@ import {
   ResourceAlreadyExistsException,
 } from '@aws-sdk/client-cloudwatch-logs';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
+import {
+  ScanLogsOutputOptions,
+  CloudWatchLogsOutput,
+  ScannerCustomResourceProps,
+} from '../../src/types';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
 const cwClient = new CloudWatchLogsClient();
 
-interface CloudWatchLogsOutput {
-  type: 'cloudWatchLogs';
-  logGroupName: string;
-}
-
-type ScanLogsOutput = CloudWatchLogsOutput;
-
-interface ScannerProps {
-  addr: string;
-  imageUri: string;
-  ignoreUnfixed: string;
-  severity: string[];
-  scanners: string[];
-  imageConfigScanners: string[];
-  exitCode: number;
-  exitOnEol: number;
-  trivyIgnore: string[];
-  platform: string;
-  output?: ScanLogsOutput;
-}
-
 export const handler: CdkCustomResourceHandler = async function (event) {
   const requestType = event.RequestType;
-  const props = event.ResourceProperties as unknown as ScannerProps;
+  const props = event.ResourceProperties as unknown as ScannerCustomResourceProps;
 
   if (!props.addr || !props.imageUri) throw new Error('addr and imageUri are required.');
 
@@ -72,7 +56,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   return funcResponse;
 };
 
-const makeOptions = (props: ScannerProps): string[] => {
+const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   const options: string[] = [];
 
   if (props.ignoreUnfixed === 'true') options.push('--ignore-unfixed');
@@ -96,7 +80,7 @@ const makeTrivyIgnoreFile = (trivyIgnore: string[]) => {
 const outputScanLogs = async (
   response: SpawnSyncReturns<Buffer>,
   imageUri: string,
-  output?: ScanLogsOutput,
+  output?: ScanLogsOutputOptions,
 ) => {
   switch (output?.type) {
     case 'cloudWatchLogs':
@@ -114,12 +98,12 @@ const outputScanLogsToCWLogs = async (
   output: CloudWatchLogsOutput,
   imageUri: string,
 ) => {
-  // LogStream name must satisfy regular expression pattern: `[^:*]*`
-  // we can't use `:` in logStreamName so replace it with `-`
+  // LogStream name must satisfy regular expression pattern: `[^:*]*`.
+  // So, we can't use `:` in logStreamName.
   const [uri, tag] = imageUri.split(':');
   const logStreamName = tag ? `uri=${uri},tag=${tag}` : `uri=${uri}`;
 
-  // Ensure log stream exists
+  // Ensure log stream exists before putting log events.
   try {
     await cwClient.send(
       new CreateLogStreamCommand({
@@ -128,13 +112,12 @@ const outputScanLogsToCWLogs = async (
       }),
     );
   } catch (e) {
-    // If the log stream already exists, ignore the error
+    // If the log stream already exists, ignore the error.
     if (e instanceof ResourceAlreadyExistsException) {
       console.log(
         `Log stream ${logStreamName} already exists in log group ${output.logGroupName}.`,
       );
     } else {
-      // Re-throw the error if it's not the expected exception
       throw e;
     }
   }
@@ -146,11 +129,11 @@ const outputScanLogsToCWLogs = async (
     logEvents: [
       {
         timestamp,
-        message: response.stderr.toString(),
+        message: 'stderr:\n' + response.stderr.toString(),
       },
       {
         timestamp,
-        message: response.stdout.toString(),
+        message: 'stdout:\n' + response.stdout.toString(),
       },
     ],
   };
