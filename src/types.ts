@@ -1,13 +1,22 @@
 /**
+ * Enum for ScanLogsOutputType
+ */
+export enum ScanLogsOutputType {
+  CLOUDWATCH_LOGS = 'cloudWatchLogs',
+}
+
+/**
  * Output configuration for scan logs to CloudWatch Logs.
  */
 export interface CloudWatchLogsOutputOptions {
-  readonly type: 'cloudWatchLogs';
+  readonly type: `${ScanLogsOutputType.CLOUDWATCH_LOGS}`;
   readonly logGroupName: string;
 }
 
 /**
  * Tagged union type of output configurations for scan logs.
+ *
+ * TODO: add new log output destination options as they are supported
  */
 export type ScanLogsOutputOptions = CloudWatchLogsOutputOptions;
 

@@ -16,6 +16,7 @@ import {
   ScanLogsOutputOptions,
   CloudWatchLogsOutputOptions,
   ScannerCustomResourceProps,
+  ScanLogsOutputType,
 } from './types';
 
 /**
@@ -54,13 +55,6 @@ export enum ImageConfigScanners {
 }
 
 /**
- * Enum for ScanLogsOutputType
- */
-export enum ScanLogsOutputType {
-  CLOUDWATCH_LOGS = 'cloudWatchLogs',
-}
-
-/**
  * Configuration for scan logs output to CloudWatch Logs log group.
  */
 export interface CloudWatchLogsOutputProps {
@@ -81,6 +75,9 @@ export abstract class ScanLogsOutput {
     return new CloudWatchLogsOutput(options);
   }
 
+  /**
+   * Returns the output configuration for scan logs.
+   */
   public abstract bind(): ScanLogsOutputOptions;
 }
 
