@@ -2,6 +2,7 @@ import { join } from 'path';
 import { CustomResource, Duration, Size, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
+import { IGrantable } from 'aws-cdk-lib/aws-iam';
 import {
   Architecture,
   AssetCode,
@@ -78,7 +79,7 @@ export abstract class ScanLogsOutput {
   /**
    * Returns the output configuration for scan logs.
    */
-  public abstract bind(): ScanLogsOutputOptions;
+  public abstract bind(grantee: IGrantable): ScanLogsOutputOptions;
 }
 
 class CloudWatchLogsOutput extends ScanLogsOutput {
@@ -93,7 +94,11 @@ class CloudWatchLogsOutput extends ScanLogsOutput {
     this.logGroup = options.logGroup;
   }
 
-  public bind(): CloudWatchLogsOutputOptions {
+  public bind(grantee: IGrantable): CloudWatchLogsOutputOptions {
+    // Most Lambdas are granted AWSLambdaBasicExecutionRole and can write to any CloudWatch Logs.
+    // However, just in case AWSLambdaBasicExecutionRole is not granted, allow writing to CloudWatch Logs.
+    this.logGroup.grantWrite(grantee);
+
     return {
       type: ScanLogsOutputType.CLOUDWATCH_LOGS,
       logGroupName: this.logGroup.logGroupName,
@@ -322,7 +327,7 @@ export class ImageScannerWithTrivy extends Construct {
       exitOnEol: props.exitOnEol ?? 1,
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
-      output: props.scanLogsOutput?.bind(),
+      output: props.scanLogsOutput?.bind(customResourceLambda),
     };
 
     new CustomResource(this, 'Resource', {

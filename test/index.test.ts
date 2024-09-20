@@ -1,5 +1,5 @@
 import { App, Stack } from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
@@ -37,14 +37,31 @@ describe('ImageScannerWithTrivy', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivy', 1);
   });
 
-  test('correctly sets scanLogsOutput settings', () => {
-    template.hasResourceProperties('Custom::ImageScannerWithTrivy', {
-      output: {
-        type: 'cloudWatchLogs',
-        logGroupName: {
-          Ref: 'LogGroupF5B46931',
+  describe('scanLogsOutput settings', () => {
+    test('correctly sets output configuration to cloudwatch logs', () => {
+      template.hasResourceProperties('Custom::ImageScannerWithTrivy', {
+        output: {
+          type: 'cloudWatchLogs',
+          logGroupName: {
+            Ref: 'LogGroupF5B46931',
+          },
         },
-      },
+      });
+
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Version: '2012-10-17',
+          Statement: Match.arrayWith([
+            {
+              Action: ['logs:CreateLogStream', 'logs:PutLogEvents'],
+              Effect: 'Allow',
+              Resource: {
+                'Fn::GetAtt': ['LogGroupF5B46931', 'Arn'],
+              },
+            },
+          ]),
+        },
+      });
     });
   });
 

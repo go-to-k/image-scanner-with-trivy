@@ -45,7 +45,7 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // If you output the scan logs to other than the default log group, you can specify this option.
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs(new LogGroup(stack, 'LogGroup')),
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(this, 'LogGroup') }),
 });
 
 // By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
