@@ -45,7 +45,7 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // If you output the scan logs to other than the default log group, you can specify this option.
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs(new LogGroup(stack, 'LogGroup')),
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(this, 'LogGroup') }),
 });
 
 // By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
@@ -686,10 +686,16 @@ new ScanLogsOutput()
 ##### `bind` <a name="bind" id="image-scanner-with-trivy.ScanLogsOutput.bind"></a>
 
 ```typescript
-public bind(): CloudWatchLogsOutputOptions
+public bind(grantee: IGrantable): CloudWatchLogsOutputOptions
 ```
 
 Returns the output configuration for scan logs.
+
+###### `grantee`<sup>Required</sup> <a name="grantee" id="image-scanner-with-trivy.ScanLogsOutput.bind.parameter.grantee"></a>
+
+- *Type:* aws-cdk-lib.aws_iam.IGrantable
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
