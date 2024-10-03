@@ -14,6 +14,7 @@ const logGroup = new LogGroup(stack, 'LogGroup', {
 
 const image = new DockerImageAsset(stack, 'DockerImage', {
   directory: resolve(__dirname, '../assets/lambda'),
+  exclude: ['node_modules'],
   platform: Platform.LINUX_ARM64,
 });
 

@@ -303,6 +303,10 @@ export class ImageScannerWithTrivy extends Construct {
       handler: Handler.FROM_IMAGE,
       code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
         platform: Platform.LINUX_ARM64,
+        // exclude node_modules
+        // because the native binary of the installed esbuild changes depending on the cpu architecture
+        // and the hash value of the assets changes depending on the execution environment.
+        exclude: ['node_modules'],
       }),
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
