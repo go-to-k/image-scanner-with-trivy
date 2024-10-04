@@ -91,4 +91,7 @@ project.projectBuild.compileTask.prependExec(
   },
 );
 project.projectBuild.testTask.exec('yarn integ');
+
+project.github?.actions.set('actions/upload-artifact', 'actions/upload-artifact@v3.1.3');
+
 project.synth();
