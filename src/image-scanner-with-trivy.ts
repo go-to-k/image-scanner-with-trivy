@@ -305,7 +305,7 @@ export class ImageScannerWithTrivy extends Construct {
         platform: Platform.LINUX_ARM64,
         // exclude node_modules
         // because the native binary of the installed esbuild changes depending on the cpu architecture
-        // and the hash value of the assets changes depending on the execution environment.
+        // and the hash value of the image asset changes depending on the execution environment.
         exclude: ['node_modules'],
       }),
       architecture: Architecture.ARM_64,
