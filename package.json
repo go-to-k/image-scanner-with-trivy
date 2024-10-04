@@ -90,8 +90,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.0",
-  "types": "lib/index.d.ts",
   "typesVersions": {
     "<=3.9": {
       "lib/*": [
@@ -100,6 +98,8 @@
       ]
     }
   },
+  "version": "0.0.0",
+  "types": "lib/index.d.ts",
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
