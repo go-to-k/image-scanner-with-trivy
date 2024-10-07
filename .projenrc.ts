@@ -58,7 +58,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'container',
     'security',
   ],
-  gitignore: ['*.js', '*.d.ts', 'cdk.out/'],
+  gitignore: ['*.js', '*.d.ts', 'cdk.out/', '!test/*.integ.snapshot/**/*'],
   bin: {
     0: './assets',
   },
@@ -69,20 +69,25 @@ const project = new awscdk.AwsCdkConstructLibrary({
       },
     },
   },
+  tsconfigDev: {
+    compilerOptions: {},
+    exclude: ['test/integ.*.snapshot'],
+  },
+  devDeps: ['@aws-cdk/integ-runner@2.95.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.95.1-alpha.0'],
   workflowNodeVersion: '18.18.0',
   // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
   // packageName: undefined,  /* The "name" in package.json. */
 });
 project.tsconfigDev.addInclude('assets/lambda/**/*.ts');
 project.setScript('cdk', 'cdk');
-project.setScript('integ:deploy', "cdk deploy --app='./test/integ.js'");
-project.setScript('integ:destroy', "cdk destroy --app='./test/integ.js'");
+project.setScript('integ', 'integ-runner');
 project.projectBuild.compileTask.prependExec(
   'yarn install --non-interactive --frozen-lockfile && yarn build',
   {
     cwd: 'assets/lambda',
   },
 );
+project.projectBuild.testTask.exec('yarn integ');
+
 project.synth();

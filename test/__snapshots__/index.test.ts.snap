@@ -103,6 +103,19 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
               "Effect": "Allow",
               "Resource": "*",
             },
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LogGroupF5B46931",
+                  "Arn",
+                ],
+              },
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -132,9 +145,15 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
         "addr": "c86a2a03c1252a9e84323d4e55c74690e11e4a44ce",
         "exitCode": 1,
         "exitOnEol": 1,
-        "ignoreUnfixed": true,
+        "ignoreUnfixed": "true",
         "imageConfigScanners": [],
         "imageUri": "imageUri",
+        "output": {
+          "logGroupName": {
+            "Ref": "LogGroupF5B46931",
+          },
+          "type": "cloudWatchLogs",
+        },
         "platform": "linux/arm64",
         "scanners": [
           "vuln",
@@ -259,6 +278,14 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "LogGroupF5B46931": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
     },
   },
   "Rules": {
