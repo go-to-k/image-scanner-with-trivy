@@ -74,6 +74,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     exclude: ['test/integ.*.snapshot'],
   },
   devDeps: ['@aws-cdk/integ-runner@2.95.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.95.1-alpha.0'],
+  workflowNodeVersion: '18.18.0',
   // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // packageName: undefined,  /* The "name" in package.json. */
