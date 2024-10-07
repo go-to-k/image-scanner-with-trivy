@@ -92,10 +92,6 @@
           "cwd": "assets/lambda"
         },
         {
-          "exec": "ls -lah node_modules | grep esbuild",
-          "cwd": "assets/lambda"
-        },
-        {
           "exec": "jsii --silence-warnings=reserved-word"
         }
       ]
