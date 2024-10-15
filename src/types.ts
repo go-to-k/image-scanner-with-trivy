@@ -17,6 +17,8 @@ export interface CloudWatchLogsOutputOptions {
  * Tagged union type of output configurations for scan logs.
  *
  * TODO: add new log output destination options as they are supported
+ *
+ * @internal
  */
 export type ScanLogsOutputOptions = CloudWatchLogsOutputOptions;
 

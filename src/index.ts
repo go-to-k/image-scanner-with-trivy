@@ -1,2 +1,2 @@
 export * from './image-scanner-with-trivy';
-export * from './types';
+export { ScanLogsOutputType, CloudWatchLogsOutputOptions } from './types';

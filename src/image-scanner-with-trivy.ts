@@ -78,8 +78,10 @@ export abstract class ScanLogsOutput {
 
   /**
    * Returns the output configuration for scan logs.
+   *
+   * @internal
    */
-  public abstract bind(grantee: IGrantable): ScanLogsOutputOptions;
+  public abstract _bind(grantee: IGrantable): ScanLogsOutputOptions;
 }
 
 class CloudWatchLogsOutput extends ScanLogsOutput {
@@ -94,7 +96,10 @@ class CloudWatchLogsOutput extends ScanLogsOutput {
     this.logGroup = options.logGroup;
   }
 
-  public bind(grantee: IGrantable): CloudWatchLogsOutputOptions {
+  /**
+   * @internal
+   */
+  public _bind(grantee: IGrantable): CloudWatchLogsOutputOptions {
     // Most Lambdas are granted AWSLambdaBasicExecutionRole and can write to any CloudWatch Logs.
     // However, just in case AWSLambdaBasicExecutionRole is not granted, allow writing to CloudWatch Logs.
     this.logGroup.grantWrite(grantee);
@@ -331,7 +336,7 @@ export class ImageScannerWithTrivy extends Construct {
       exitOnEol: props.exitOnEol ?? 1,
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
-      output: props.scanLogsOutput?.bind(customResourceLambda),
+      output: props.scanLogsOutput?._bind(customResourceLambda),
     };
 
     new CustomResource(this, 'Resource', {
