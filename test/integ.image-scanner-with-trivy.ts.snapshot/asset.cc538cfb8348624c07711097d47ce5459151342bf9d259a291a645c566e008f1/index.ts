@@ -13,7 +13,7 @@ import {
   CloudWatchLogsOutputOptions,
   ScannerCustomResourceProps,
   ScanLogsOutputType,
-} from '../../src';
+} from '../../src/types';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
