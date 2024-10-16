@@ -12,7 +12,8 @@ import {
   ScanLogsOutputOptions,
   CloudWatchLogsOutputOptions,
   ScannerCustomResourceProps,
-} from '../../src/types';
+  ScanLogsOutputType,
+} from '../../src';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
@@ -83,8 +84,8 @@ const outputScanLogs = async (
   output?: ScanLogsOutputOptions,
 ) => {
   switch (output?.type) {
-    case 'cloudWatchLogs':
-      await outputScanLogsToCWLogs(response, output, imageUri);
+    case ScanLogsOutputType.CLOUDWATCH_LOGS:
+      await outputScanLogsToCWLogs(response, output as CloudWatchLogsOutputOptions, imageUri);
       break;
     default:
       // Scan logs output to lambda default log group
