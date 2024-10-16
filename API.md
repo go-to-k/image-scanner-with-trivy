@@ -503,6 +503,27 @@ new ScanLogsOutput()
 
 ---
 
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.bind">bind</a></code> | Returns the output configuration for scan logs. |
+
+---
+
+##### `bind` <a name="bind" id="image-scanner-with-trivy.ScanLogsOutput.bind"></a>
+
+```typescript
+public bind(grantee: IGrantable): ScanLogsOutputOptions
+```
+
+Returns the output configuration for scan logs.
+
+###### `grantee`<sup>Required</sup> <a name="grantee" id="image-scanner-with-trivy.ScanLogsOutput.bind.parameter.grantee"></a>
+
+- *Type:* aws-cdk-lib.aws_iam.IGrantable
+
+---
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
