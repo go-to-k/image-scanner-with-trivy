@@ -32,8 +32,7 @@
     "watch": "npx projen watch",
     "projen": "npx projen",
     "cdk": "cdk",
-    "integ:deploy": "cdk deploy --app='./test/integ.js'",
-    "integ:destroy": "cdk destroy --app='./test/integ.js'"
+    "integ": "integ-runner"
   },
   "author": {
     "name": "go-to-k",
@@ -41,6 +40,8 @@
     "organization": false
   },
   "devDependencies": {
+    "@aws-cdk/integ-runner": "2.95.1-alpha.0",
+    "@aws-cdk/integ-tests-alpha": "2.95.1-alpha.0",
     "@types/jest": "^29.5.13",
     "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^7",

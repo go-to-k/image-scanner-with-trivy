@@ -21,9 +21,23 @@
   integrity sha512-3M2tELJOxQv0apCIiuKQ4pAbncz9GuLwnKFqxifWfe77wuMxyTRPmxssYHs42ePqzap1LT6GDcPygGs+hHstLg==
 
 "@aws-cdk/asset-node-proxy-agent-v6@^2.0.1":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v6/-/asset-node-proxy-agent-v6-2.1.0.tgz#6d3c7860354d4856a7e75375f2f0ecab313b4989"
-  integrity sha512-7bY3J8GCVxLupn/kNmpPc5VJz8grx+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/MfPtTpf748UhR425A==
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v6/-/asset-node-proxy-agent-v6-2.0.3.tgz#9b5d213b5ce5ad4461f6a4720195ff8de72e6523"
+  integrity sha512-twhuEG+JPOYCYPx/xy5uH2+VUsIEhPTzDY0F1KuB+ocjWWB/KEDiOVL19nHvbPCB6fhWnkykXEMJ4HHcKvjtvg==
+
+"@aws-cdk/integ-runner@2.95.1-alpha.0":
+  version "2.95.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-runner/-/integ-runner-2.95.1-alpha.0.tgz#df8067b73e6faa0edbac9f97b32d38442e770fd8"
+  integrity sha512-7aY1R5V1T8Uj2yLV2tnM8BE/5IyWeUGSyxf2GwyZAYB+B0MEDVesEvrbKHaeahn1DM9cqmUF7dCAVDGjulMu0g==
+  dependencies:
+    aws-cdk "2.95.1"
+  optionalDependencies:
+    fsevents "2.3.2"
+
+"@aws-cdk/integ-tests-alpha@2.95.1-alpha.0":
+  version "2.95.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-tests-alpha/-/integ-tests-alpha-2.95.1-alpha.0.tgz#39e92ca0dc09bed291f66f2f605044cc57ddfb3f"
+  integrity sha512-56tx7jfz93HO0SA53bZVQzkw5BNjmXTJW4/4xR986gsL5m12ljXYkVVYDy8drQA+0dNtcTZ/nhqZNOHa+hE4wQ==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.25.7":
   version "7.25.7"
@@ -1204,6 +1218,13 @@ aws-cdk-lib@2.95.1:
     semver "^7.5.4"
     table "^6.8.1"
     yaml "1.10.2"
+
+aws-cdk@2.95.1:
+  version "2.95.1"
+  resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.95.1.tgz#b1972bb6ee89a5af85468bea0b8a9f1499199712"
+  integrity sha512-KUJ63n2cB6qxpsHARmMWDhu8VITA7rKvYybbfS7BaBpXl4Tb9Bt/mEAY1EeVeyO/mpInvSRpMpdjyqE0kNAKtA==
+  optionalDependencies:
+    fsevents "2.3.2"
 
 babel-jest@^29.7.0:
   version "29.7.0"
@@ -2478,6 +2499,11 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
+
+fsevents@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
+  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
 fsevents@^2.3.2:
   version "2.3.3"

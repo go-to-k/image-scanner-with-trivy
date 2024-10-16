@@ -2,6 +2,7 @@ import { join } from 'path';
 import { CustomResource, Duration, Size, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
+import { IGrantable } from 'aws-cdk-lib/aws-iam';
 import {
   Architecture,
   AssetCode,
@@ -9,8 +10,15 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
+import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
+import {
+  CloudWatchLogsOutputOptions,
+  ScanLogsOutputOptions,
+  ScanLogsOutputType,
+  ScannerCustomResourceProps,
+} from './types';
 
 /**
  * Enum for Severity Selection
@@ -45,6 +53,57 @@ export enum Scanners {
 export enum ImageConfigScanners {
   CONFIG = 'config',
   SECRET = 'secret',
+}
+
+/**
+ * Configuration for scan logs output to CloudWatch Logs log group.
+ */
+export interface CloudWatchLogsOutputProps {
+  /**
+   * The log group to output scan logs.
+   */
+  readonly logGroup: ILogGroup;
+}
+
+/**
+ * Represents the output of the scan logs.
+ */
+export abstract class ScanLogsOutput {
+  /**
+   * Scan logs output to CloudWatch Logs log group.
+   */
+  public static cloudWatchLogs(options: CloudWatchLogsOutputProps): ScanLogsOutput {
+    return new CloudWatchLogsOutput(options);
+  }
+
+  /**
+   * Returns the output configuration for scan logs.
+   */
+  public abstract bind(grantee: IGrantable): ScanLogsOutputOptions;
+}
+
+class CloudWatchLogsOutput extends ScanLogsOutput {
+  /**
+   * The log group to output scan logs.
+   */
+  private readonly logGroup: ILogGroup;
+
+  constructor(options: CloudWatchLogsOutputProps) {
+    super();
+
+    this.logGroup = options.logGroup;
+  }
+
+  public bind(grantee: IGrantable): CloudWatchLogsOutputOptions {
+    // Most Lambdas are granted AWSLambdaBasicExecutionRole and can write to any CloudWatch Logs.
+    // However, just in case AWSLambdaBasicExecutionRole is not granted, allow writing to CloudWatch Logs.
+    this.logGroup.grantWrite(grantee);
+
+    return {
+      type: ScanLogsOutputType.CLOUDWATCH_LOGS,
+      logGroupName: this.logGroup.logGroupName,
+    };
+  }
 }
 
 export interface ImageScannerWithTrivyProps {
@@ -205,6 +264,19 @@ export interface ImageScannerWithTrivyProps {
    * @default -
    */
   readonly platform?: string;
+
+  /**
+   * Configuration for scan logs output
+   *
+   * By default, scan logs are output to default log group created by Scanner Lambda.
+   *
+   * Specify this if you want to send scan logs to other than the default log group.
+   *
+   * Currently, only `cloudWatchLogs` is supported.
+   *
+   * @default - scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
+   */
+  readonly scanLogsOutput?: ScanLogsOutput;
 }
 
 // Maximum Lambda memory size for default AWS account without quota limit increase
@@ -231,6 +303,10 @@ export class ImageScannerWithTrivy extends Construct {
       handler: Handler.FROM_IMAGE,
       code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
         platform: Platform.LINUX_ARM64,
+        // exclude node_modules
+        // because the native binary of the installed esbuild changes depending on the cpu architecture
+        // and the hash value of the image asset changes depending on the execution environment.
+        exclude: ['node_modules'],
       }),
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
@@ -244,17 +320,19 @@ export class ImageScannerWithTrivy extends Construct {
       onEventHandler: customResourceLambda,
     });
 
-    const imageScannerProperties: { [key: string]: string | string[] | boolean | number } = {};
-    imageScannerProperties.addr = this.node.addr;
-    imageScannerProperties.imageUri = props.imageUri;
-    imageScannerProperties.ignoreUnfixed = props.ignoreUnfixed ?? false;
-    imageScannerProperties.severity = props.severity ?? [Severity.CRITICAL];
-    imageScannerProperties.scanners = props.scanners ?? [];
-    imageScannerProperties.imageConfigScanners = props.imageConfigScanners ?? [];
-    imageScannerProperties.exitCode = props.exitCode ?? 1;
-    imageScannerProperties.exitOnEol = props.exitOnEol ?? 1;
-    imageScannerProperties.trivyIgnore = props.trivyIgnore ?? [];
-    imageScannerProperties.platform = props.platform ?? '';
+    const imageScannerProperties: ScannerCustomResourceProps = {
+      addr: this.node.addr,
+      imageUri: props.imageUri,
+      ignoreUnfixed: String(props.ignoreUnfixed ?? false),
+      severity: props.severity ?? [Severity.CRITICAL],
+      scanners: props.scanners ?? [],
+      imageConfigScanners: props.imageConfigScanners ?? [],
+      exitCode: props.exitCode ?? 1,
+      exitOnEol: props.exitOnEol ?? 1,
+      trivyIgnore: props.trivyIgnore ?? [],
+      platform: props.platform ?? '',
+      output: props.scanLogsOutput?.bind(customResourceLambda),
+    };
 
     new CustomResource(this, 'Resource', {
       resourceType: 'Custom::ImageScannerWithTrivy',
