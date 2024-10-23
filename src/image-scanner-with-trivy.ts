@@ -275,7 +275,7 @@ export interface ImageScannerWithTrivyProps {
   /**
    * The number of days log events are kept in Scanner Lambda's default log group
    *
-   * @default - - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
+   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
    */
   readonly defaultLogGroupRetentionDays?: RetentionDays;
 

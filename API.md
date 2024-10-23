@@ -253,7 +253,7 @@ public readonly defaultLogGroupRetentionDays: RetentionDays;
 ```
 
 - *Type:* aws-cdk-lib.aws_logs.RetentionDays
-- *Default:* - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
+- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
 
 The number of days log events are kept in Scanner Lambda's default log group.
 
