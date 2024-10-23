@@ -266,16 +266,14 @@ export interface ImageScannerWithTrivyProps {
   readonly platform?: string;
 
   /**
-   * The removal policy to apply to the Lambda's default log group
-   *
-   * If not specified, Lambda will create a new default log group and the log group will be retained.
+   * The removal policy to apply to Scanner Lambda's default log group
    *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
    */
   readonly defaultLogGroupRemovalPolicy?: RemovalPolicy;
 
   /**
-   * The number of days log events are kept in the Lambda's default log group
+   * The number of days log events are kept in Scanner Lambda's default log group
    *
    * @default - - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
    */
