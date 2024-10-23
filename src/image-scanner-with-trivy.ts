@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { CustomResource, Duration, Size, Token } from 'aws-cdk-lib';
+import { CustomResource, Duration, RemovalPolicy, Size, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { IGrantable } from 'aws-cdk-lib/aws-iam';
@@ -10,7 +10,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { ILogGroup } from 'aws-cdk-lib/aws-logs';
+import { ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import {
@@ -266,6 +266,22 @@ export interface ImageScannerWithTrivyProps {
   readonly platform?: string;
 
   /**
+   * The removal policy to apply to the Lambda's default log group
+   *
+   * If not specified, Lambda will create a new default log group and the log group will be retained.
+   *
+   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
+   */
+  readonly defaultLogGroupRemovalPolicy?: RemovalPolicy;
+
+  /**
+   * The number of days log events are kept in the Lambda's default log group
+   *
+   * @default - - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
+   */
+  readonly defaultLogGroupRetentionDays?: RetentionDays;
+
+  /**
    * Configuration for scan logs output
    *
    * By default, scan logs are output to default log group created by Scanner Lambda.
@@ -315,6 +331,16 @@ export class ImageScannerWithTrivy extends Construct {
       ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update trivy DB: /tmp/trivy/db/trivy.db
     });
     props.repository.grantPull(customResourceLambda);
+
+    // Since an error will occur if the default log group for Lambda already exists,
+    // the log group will only be created if settings related to the log group are specified in the Props.
+    if (props.defaultLogGroupRemovalPolicy || props.defaultLogGroupRetentionDays) {
+      new LogGroup(this, 'DefaultLogGroup', {
+        logGroupName: `/aws/lambda/${customResourceLambda.functionName}`,
+        retention: props.defaultLogGroupRetentionDays,
+        removalPolicy: props.defaultLogGroupRemovalPolicy,
+      });
+    }
 
     const imageScannerProvider = new Provider(this, 'Provider', {
       onEventHandler: customResourceLambda,

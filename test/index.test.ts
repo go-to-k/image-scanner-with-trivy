@@ -1,7 +1,7 @@
-import { App, Stack } from 'aws-cdk-lib';
+import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
-import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
 
 const getTemplate = (): Template => {
@@ -21,6 +21,8 @@ const getTemplate = (): Template => {
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
     platform: 'linux/arm64',
+    defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+    defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
   });
   return Template.fromStack(stack);
@@ -62,6 +64,26 @@ describe('ImageScannerWithTrivy', () => {
           ]),
         },
       });
+    });
+  });
+
+  test('create the default log group with removalPolicy and retentionInDays', () => {
+    template.hasResource('AWS::Logs::LogGroup', {
+      DeletionPolicy: 'Delete',
+      Properties: {
+        LogGroupName: {
+          'Fn::Join': [
+            '',
+            [
+              '/aws/lambda/',
+              {
+                Ref: 'CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3',
+              },
+            ],
+          ],
+        },
+        RetentionInDays: 30,
+      },
     });
   });
 
