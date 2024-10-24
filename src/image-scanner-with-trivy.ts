@@ -432,7 +432,7 @@ export class ImageScannerWithTrivy extends Construct {
   }
 
   /**
-   * Creates the default log group for Scanner Lambda if it does not exist
+   * Creates the default log group for Scanner Lambda if it does not exist.
    *
    * This method checks if the default log group for Scanner Lambda exists in children of the stack construct.
    * If it does not exist, it creates the default log group for Scanner Lambda as a child of the stack construct.
