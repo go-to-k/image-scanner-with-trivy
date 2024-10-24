@@ -1,5 +1,14 @@
 import { join } from 'path';
-import { CustomResource, Duration, RemovalPolicy, Size, Stack, Token } from 'aws-cdk-lib';
+import {
+  Annotations,
+  CfnDeletionPolicy,
+  CustomResource,
+  Duration,
+  RemovalPolicy,
+  Size,
+  Stack,
+  Token,
+} from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { IGrantable } from 'aws-cdk-lib/aws-iam';
@@ -10,7 +19,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { CfnLogGroup, ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import {
@@ -337,10 +346,16 @@ export class ImageScannerWithTrivy extends Construct {
     });
     props.repository.grantPull(customResourceLambda);
 
-    // Since an error will occur if the default log group for Lambda already exists,
-    // the log group will only be created if settings related to the log group are specified in the Props.
+    const customResourceLambdaLogGroupConstructName = `DefaultLogGroupFor${lambdaPurpose}`;
+
+    this.validateLambdaDefaultLogGroupOptions(customResourceLambdaLogGroupConstructName, props);
+
     if (props.defaultLogGroupRemovalPolicy || props.defaultLogGroupRetentionDays) {
-      this.ensureLambdaDefaultLogGroup(customResourceLambda, lambdaPurpose, props);
+      this.ensureLambdaDefaultLogGroup(
+        customResourceLambda,
+        customResourceLambdaLogGroupConstructName,
+        props,
+      );
     }
 
     const imageScannerProvider = new Provider(this, 'Provider', {
@@ -368,6 +383,54 @@ export class ImageScannerWithTrivy extends Construct {
     });
   }
 
+  private isSameResourceDeletionBehavior(
+    removalPolicy?: RemovalPolicy,
+    deletionPolicy?: CfnDeletionPolicy,
+  ): boolean {
+    switch (removalPolicy) {
+      case RemovalPolicy.DESTROY:
+        return deletionPolicy === CfnDeletionPolicy.DELETE;
+      case RemovalPolicy.RETAIN:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN;
+      case RemovalPolicy.SNAPSHOT:
+        return deletionPolicy === CfnDeletionPolicy.SNAPSHOT;
+      case RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN_EXCEPT_ON_CREATE;
+      case undefined:
+        return deletionPolicy === undefined;
+      default:
+        return removalPolicy satisfies never;
+    }
+  }
+
+  /**
+   * Validates that specified default log group options are the same for existing default log group
+   */
+  private validateLambdaDefaultLogGroupOptions(
+    logGroupConstructName: string,
+    props: ImageScannerWithTrivyProps,
+  ): void {
+    const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
+      | LogGroup
+      | undefined;
+    if (!existing) return;
+
+    const cfnLogGroup = existing.node.defaultChild as CfnLogGroup;
+
+    if (
+      !this.isSameResourceDeletionBehavior(
+        props.defaultLogGroupRemovalPolicy,
+        cfnLogGroup.cfnOptions.deletionPolicy,
+      ) ||
+      cfnLogGroup.retentionInDays !== props.defaultLogGroupRetentionDays
+    ) {
+      Annotations.of(this).addWarningV2(
+        '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroupOptions',
+        "You have to set the same values for 'defaultLogGroupRemovalPolicy' and 'defaultLogGroupRetentionDays' for each ImageScannerWithTrivy construct in the same stack.",
+      );
+    }
+  }
+
   /**
    * Creates the default log group for Scanner Lambda if it does not exist
    *
@@ -376,17 +439,17 @@ export class ImageScannerWithTrivy extends Construct {
    */
   private ensureLambdaDefaultLogGroup(
     singletonFunction: SingletonFunction,
-    lambdaPurpose: string,
+    logGroupConstructName: string,
     props: ImageScannerWithTrivyProps,
   ): LogGroup {
-    const constructName = `DefaultLogGroupFor${lambdaPurpose}`;
-
-    const existing = Stack.of(this).node.tryFindChild(constructName) as LogGroup | undefined;
+    const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
+      | LogGroup
+      | undefined;
     if (existing) {
       return existing;
     }
 
-    return new LogGroup(Stack.of(this), constructName, {
+    return new LogGroup(Stack.of(this), logGroupConstructName, {
       logGroupName: `/aws/lambda/${singletonFunction.functionName}`,
       retention: props.defaultLogGroupRetentionDays,
       removalPolicy: props.defaultLogGroupRemovalPolicy,

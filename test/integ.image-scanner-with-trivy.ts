@@ -18,13 +18,13 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
   platform: Platform.LINUX_ARM64,
 });
 
-new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithMinimalOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
   trivyIgnore: ['CVE-2023-37920'],
 });
 
-new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
   ignoreUnfixed: false,
@@ -36,9 +36,12 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
   memorySize: 3008,
   platform: 'linux/arm64',
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });
 
-new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy3', {
+// This test checks that the default log group is not created and that the existing log group is used.
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDefaultLogGroupOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
   trivyIgnore: ['CVE-2023-37920'],

@@ -1,5 +1,5 @@
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
-import { Match, Template } from 'aws-cdk-lib/assertions';
+import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
@@ -87,7 +87,7 @@ describe('ImageScannerWithTrivy', () => {
     });
   });
 
-  test('only create one log group per singletonFunction', () => {
+  test('only create one log group per singletonFunction and no warns', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
 
@@ -105,6 +105,43 @@ describe('ImageScannerWithTrivy', () => {
     });
 
     Template.fromStack(stack).resourceCountIs('AWS::Logs::LogGroup', 1);
+    Annotations.fromStack(stack).hasNoWarning(
+      '/TestStack/ImageScannerWithTrivy2',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
+  });
+
+  test('warns when the default log group options are different between ImageScannerWithTrivy constructs', () => {
+    const app = new App();
+    const stack = new Stack(app, 'TestStack');
+
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository1', {}),
+      defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+      defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+    });
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDifferentRemovalPolicy', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository2', {}),
+      defaultLogGroupRemovalPolicy: RemovalPolicy.RETAIN,
+      defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+    });
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDifferentRetentionDays', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository3', {}),
+      defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+      defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
+    });
+
+    Annotations.fromStack(stack).hasWarning(
+      '/TestStack/ImageScannerWithTrivyWithDifferentRemovalPolicy',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
+    Annotations.fromStack(stack).hasWarning(
+      '/TestStack/ImageScannerWithTrivyWithDifferentRetentionDays',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
   });
 
   test('throws if memorySize > 10240', () => {
