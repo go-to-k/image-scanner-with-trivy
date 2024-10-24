@@ -128,6 +128,25 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "DefaultLogGroupForCustomImageScannerWithTrivyCustomResourceLambda9AB0FBF0": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 30,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
     "ImageRepositoryBBCBC9DF": {
       "DeletionPolicy": "Retain",
       "Type": "AWS::ECR::Repository",
@@ -169,25 +188,6 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
         ],
       },
       "Type": "Custom::ImageScannerWithTrivy",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "ImageScannerWithTrivyDefaultLogGroup7DDB220B": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "LogGroupName": {
-          "Fn::Join": [
-            "",
-            [
-              "/aws/lambda/",
-              {
-                "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
-              },
-            ],
-          ],
-        },
-        "RetentionInDays": 30,
-      },
-      "Type": "AWS::Logs::LogGroup",
       "UpdateReplacePolicy": "Delete",
     },
     "ImageScannerWithTrivyProviderframeworkonEvent7AD0141E": {

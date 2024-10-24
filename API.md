@@ -244,6 +244,8 @@ public readonly defaultLogGroupRemovalPolicy: RemovalPolicy;
 
 The removal policy to apply to Scanner Lambda's default log group.
 
+If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+
 ---
 
 ##### `defaultLogGroupRetentionDays`<sup>Optional</sup> <a name="defaultLogGroupRetentionDays" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.defaultLogGroupRetentionDays"></a>
@@ -253,9 +255,11 @@ public readonly defaultLogGroupRetentionDays: RetentionDays;
 ```
 
 - *Type:* aws-cdk-lib.aws_logs.RetentionDays
-- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
+- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
 
 The number of days log events are kept in Scanner Lambda's default log group.
+
+If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different retention days for the default log group.
 
 ---
 

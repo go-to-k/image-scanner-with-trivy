@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { CustomResource, Duration, RemovalPolicy, Size, Token } from 'aws-cdk-lib';
+import { CustomResource, Duration, RemovalPolicy, Size, Stack, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { IGrantable } from 'aws-cdk-lib/aws-iam';
@@ -268,6 +268,9 @@ export interface ImageScannerWithTrivyProps {
   /**
    * The removal policy to apply to Scanner Lambda's default log group
    *
+   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+   * See `Notes` section in the README for more details.
+   *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
    */
   readonly defaultLogGroupRemovalPolicy?: RemovalPolicy;
@@ -275,7 +278,10 @@ export interface ImageScannerWithTrivyProps {
   /**
    * The number of days log events are kept in Scanner Lambda's default log group
    *
-   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log evens never expire.
+   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different retention days for the default log group.
+   * See `Notes` section in the README for more details.
+   *
+   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
    */
   readonly defaultLogGroupRetentionDays?: RetentionDays;
 
@@ -310,9 +316,10 @@ export class ImageScannerWithTrivy extends Construct {
       );
     }
 
+    const lambdaPurpose = 'Custom::ImageScannerWithTrivyCustomResourceLambda';
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: '470b6343-d267-f753-226c-1e99f09f319a',
-      lambdaPurpose: 'Custom::ImageScannerWithTrivyCustomResourceLambda',
+      lambdaPurpose,
       runtime: Runtime.FROM_IMAGE,
       handler: Handler.FROM_IMAGE,
       code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
@@ -333,11 +340,7 @@ export class ImageScannerWithTrivy extends Construct {
     // Since an error will occur if the default log group for Lambda already exists,
     // the log group will only be created if settings related to the log group are specified in the Props.
     if (props.defaultLogGroupRemovalPolicy || props.defaultLogGroupRetentionDays) {
-      new LogGroup(this, 'DefaultLogGroup', {
-        logGroupName: `/aws/lambda/${customResourceLambda.functionName}`,
-        retention: props.defaultLogGroupRetentionDays,
-        removalPolicy: props.defaultLogGroupRemovalPolicy,
-      });
+      this.ensureLambdaDefaultLogGroup(customResourceLambda, lambdaPurpose, props);
     }
 
     const imageScannerProvider = new Provider(this, 'Provider', {
@@ -362,6 +365,31 @@ export class ImageScannerWithTrivy extends Construct {
       resourceType: 'Custom::ImageScannerWithTrivy',
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
+    });
+  }
+
+  /**
+   * Creates the default log group for Scanner Lambda if it does not exist
+   *
+   * This method checks if the default log group for Scanner Lambda exists in children of the stack construct.
+   * If it does not exist, it creates the default log group for Scanner Lambda as a child of the stack construct.
+   */
+  private ensureLambdaDefaultLogGroup(
+    singletonFunction: SingletonFunction,
+    lambdaPurpose: string,
+    props: ImageScannerWithTrivyProps,
+  ): LogGroup {
+    const constructName = `DefaultLogGroupFor${lambdaPurpose}`;
+
+    const existing = Stack.of(this).node.tryFindChild(constructName) as LogGroup | undefined;
+    if (existing) {
+      return existing;
+    }
+
+    return new LogGroup(Stack.of(this), constructName, {
+      logGroupName: `/aws/lambda/${singletonFunction.functionName}`,
+      retention: props.defaultLogGroupRetentionDays,
+      removalPolicy: props.defaultLogGroupRemovalPolicy,
     });
   }
 }

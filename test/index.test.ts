@@ -87,6 +87,26 @@ describe('ImageScannerWithTrivy', () => {
     });
   });
 
+  test('only create one log group per singletonFunction', () => {
+    const app = new App();
+    const stack = new Stack(app, 'TestStack');
+
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository1', {}),
+      defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+      defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+    });
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository2', {}),
+      defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+      defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+    });
+
+    Template.fromStack(stack).resourceCountIs('AWS::Logs::LogGroup', 1);
+  });
+
   test('throws if memorySize > 10240', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');

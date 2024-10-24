@@ -46,6 +46,10 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   repository: image.repository,
   // If you output the scan logs to other than the default log group, you can specify this option.
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(this, 'LogGroup') }),
+  // If you customize the default log group for scanner lambda, you can specify these options.
+  // Now only changing the removal policy and retention days are supported.
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
 });
 
 // By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
@@ -54,6 +58,39 @@ const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
   dest: new DockerImageName(`${repository.repositoryUri}:latest`),
 });
 ecrDeployment.node.addDependency(imageScanner);
+```
+
+- Notes
+
+If you use ImageScannerWithTrivy construct for multiple times in the same stack, you cannot set the different values for `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` for each construct.
+If you set the different values for each construct, the first one will be applied to all ImageScannerWithTrivy constructs.
+```ts
+import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
+
+const repository = new Repository(this, 'ImageRepository', {
+  removalPolicy: RemovalPolicy.DESTROY,
+  autoDeleteImages: true,
+});
+
+const image = new DockerImageAsset(this, 'DockerImage', {
+  directory: resolve(__dirname, './'),
+});
+
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // The following options are applied to all ImageScannerWithTrivy constructs in the same stack.
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
+});
+
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy2', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // The following options are different from the above construct, and they will be ignored.
+  defaultLogGroupRemovalPolicy: RemovalPolicy.RETAIN,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+});
 ```
 
 ## API Reference

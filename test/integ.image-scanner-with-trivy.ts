@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { ExpectedResult, IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
 
 const app = new App();
@@ -36,6 +36,14 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy2', {
   memorySize: 3008,
   platform: 'linux/arm64',
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
+});
+
+new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy3', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  trivyIgnore: ['CVE-2023-37920'],
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });
 
 const test = new IntegTest(app, 'Test', {

@@ -17,7 +17,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1ff68825f9779025c91af5246b0f39def7757112240fbf305eea005ff1b129cd.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1dfc214809a6910b142793424c208afb564e6e8342f8042dfbd4205211f9613d.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -111,6 +111,36 @@
             "data": "ImageScannerWithTrivy253242F9E"
           }
         ],
+        "/ImageScannerWithTrivyStack/ImageScannerWithTrivy3/Provider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImageScannerWithTrivy3ProviderframeworkonEventServiceRole0965245D"
+          }
+        ],
+        "/ImageScannerWithTrivyStack/ImageScannerWithTrivy3/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImageScannerWithTrivy3ProviderframeworkonEventServiceRoleDefaultPolicy222C3304"
+          }
+        ],
+        "/ImageScannerWithTrivyStack/ImageScannerWithTrivy3/Provider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImageScannerWithTrivy3ProviderframeworkonEvent32CCF5C6"
+          }
+        ],
+        "/ImageScannerWithTrivyStack/ImageScannerWithTrivy3/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ImageScannerWithTrivy39D275834"
+          }
+        ],
+        "/ImageScannerWithTrivyStack/DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DefaultLogGroupForCustomImageScannerWithTrivyCustomResourceLambda9AB0FBF0"
+          }
+        ],
         "/ImageScannerWithTrivyStack/Exports/Output{\"Ref\":\"LogGroupF5B46931\"}": [
           {
             "type": "aws:cdk:logicalId",
@@ -148,7 +178,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c544a2d8ad47cd19a4f7a917344cdace12e8b0b7fc7a3a45057def64e0a083df.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/98636cb6c6a0dafaa5cd035357ef60af74e6f39f12c6cb41ec99b3334eb58964.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
