@@ -46,7 +46,7 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   repository: image.repository,
   // If you output the scan logs to other than the default log group, you can specify this option.
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(this, 'LogGroup') }),
-  // If you customize the default log group for scanner lambda, you can specify these options.
+  // If you customize the default log group for Scanner Lambda, you can specify the following options.
   // Now only changing the removal policy and retention days are supported.
   defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
   defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
@@ -62,8 +62,9 @@ ecrDeployment.node.addDependency(imageScanner);
 
 - Notes
 
-If you use ImageScannerWithTrivy construct for multiple times in the same stack, you cannot set the different values for `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` for each construct.
-If you set the different values for each construct, the first one will be applied to all ImageScannerWithTrivy constructs.
+If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set the different values for `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` for each construct.
+If you set the different values for each construct, the first one will be applied to all ImageScannerWithTrivy constructs in the same stack.
+
 ```ts
 import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
 
