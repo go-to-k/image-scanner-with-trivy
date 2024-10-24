@@ -245,6 +245,7 @@ public readonly defaultLogGroupRemovalPolicy: RemovalPolicy;
 The removal policy to apply to Scanner Lambda's default log group.
 
 If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+See `Notes` section in the README for more details.
 
 ---
 
@@ -260,6 +261,7 @@ public readonly defaultLogGroupRetentionDays: RetentionDays;
 The number of days log events are kept in Scanner Lambda's default log group.
 
 If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different retention days for the default log group.
+See `Notes` section in the README for more details.
 
 ---
 
