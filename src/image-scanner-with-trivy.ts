@@ -404,7 +404,7 @@ export class ImageScannerWithTrivy extends Construct {
   }
 
   /**
-   * Validates that specified default log group options are the same for existing default log group
+   * Validates that specified default log group options are the same for existing default log group.
    */
   private validateLambdaDefaultLogGroupOptions(
     logGroupConstructName: string,
