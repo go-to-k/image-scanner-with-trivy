@@ -106,6 +106,10 @@ describe('ImageScannerWithTrivy', () => {
 
     Template.fromStack(stack).resourceCountIs('AWS::Logs::LogGroup', 1);
     Annotations.fromStack(stack).hasNoWarning(
+      '/TestStack/ImageScannerWithTrivy1',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
+    Annotations.fromStack(stack).hasNoWarning(
       '/TestStack/ImageScannerWithTrivy2',
       Match.stringLikeRegexp('You have to set the same values for.+'),
     );
@@ -134,6 +138,10 @@ describe('ImageScannerWithTrivy', () => {
       defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
     });
 
+    Annotations.fromStack(stack).hasNoWarning(
+      '/TestStack/ImageScannerWithTrivy1',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
     Annotations.fromStack(stack).hasWarning(
       '/TestStack/ImageScannerWithTrivyWithDifferentRemovalPolicy',
       Match.stringLikeRegexp('You have to set the same values for.+'),
