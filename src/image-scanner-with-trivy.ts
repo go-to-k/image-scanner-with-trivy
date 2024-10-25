@@ -1,5 +1,14 @@
 import { join } from 'path';
-import { CustomResource, Duration, Size, Token } from 'aws-cdk-lib';
+import {
+  Annotations,
+  CfnDeletionPolicy,
+  CustomResource,
+  Duration,
+  RemovalPolicy,
+  Size,
+  Stack,
+  Token,
+} from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { IGrantable } from 'aws-cdk-lib/aws-iam';
@@ -10,7 +19,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { ILogGroup } from 'aws-cdk-lib/aws-logs';
+import { CfnLogGroup, ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import {
@@ -266,6 +275,26 @@ export interface ImageScannerWithTrivyProps {
   readonly platform?: string;
 
   /**
+   * The removal policy to apply to Scanner Lambda's default log group
+   *
+   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+   * See `Notes` section in the README for more details.
+   *
+   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
+   */
+  readonly defaultLogGroupRemovalPolicy?: RemovalPolicy;
+
+  /**
+   * The number of days log events are kept in Scanner Lambda's default log group
+   *
+   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different retention days for the default log group.
+   * See `Notes` section in the README for more details.
+   *
+   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
+   */
+  readonly defaultLogGroupRetentionDays?: RetentionDays;
+
+  /**
    * Configuration for scan logs output
    *
    * By default, scan logs are output to default log group created by Scanner Lambda.
@@ -296,9 +325,10 @@ export class ImageScannerWithTrivy extends Construct {
       );
     }
 
+    const lambdaPurpose = 'Custom::ImageScannerWithTrivyCustomResourceLambda';
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: '470b6343-d267-f753-226c-1e99f09f319a',
-      lambdaPurpose: 'Custom::ImageScannerWithTrivyCustomResourceLambda',
+      lambdaPurpose,
       runtime: Runtime.FROM_IMAGE,
       handler: Handler.FROM_IMAGE,
       code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
@@ -315,6 +345,18 @@ export class ImageScannerWithTrivy extends Construct {
       ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update trivy DB: /tmp/trivy/db/trivy.db
     });
     props.repository.grantPull(customResourceLambda);
+
+    const customResourceLambdaLogGroupConstructName = `DefaultLogGroupFor${lambdaPurpose}`;
+
+    this.validateLambdaDefaultLogGroupOptions(customResourceLambdaLogGroupConstructName, props);
+
+    if (props.defaultLogGroupRemovalPolicy || props.defaultLogGroupRetentionDays) {
+      this.ensureLambdaDefaultLogGroup(
+        customResourceLambda,
+        customResourceLambdaLogGroupConstructName,
+        props,
+      );
+    }
 
     const imageScannerProvider = new Provider(this, 'Provider', {
       onEventHandler: customResourceLambda,
@@ -339,5 +381,78 @@ export class ImageScannerWithTrivy extends Construct {
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
     });
+  }
+
+  /**
+   * Validates that specified default log group options are the same for existing default log group.
+   */
+  private validateLambdaDefaultLogGroupOptions(
+    logGroupConstructName: string,
+    props: ImageScannerWithTrivyProps,
+  ): void {
+    const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
+      | LogGroup
+      | undefined;
+    if (!existing) return;
+
+    const cfnLogGroup = existing.node.defaultChild as CfnLogGroup;
+
+    if (
+      !this.isSameResourceDeletionBehavior(
+        props.defaultLogGroupRemovalPolicy,
+        cfnLogGroup.cfnOptions.deletionPolicy,
+      ) ||
+      cfnLogGroup.retentionInDays !== props.defaultLogGroupRetentionDays
+    ) {
+      Annotations.of(this).addWarningV2(
+        '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroupOptions',
+        "You have to set the same values for 'defaultLogGroupRemovalPolicy' and 'defaultLogGroupRetentionDays' for each ImageScannerWithTrivy construct in the same stack.",
+      );
+    }
+  }
+
+  /**
+   * Creates the default log group for Scanner Lambda if it does not exist.
+   *
+   * This method checks if the default log group for Scanner Lambda exists in children of the stack construct.
+   * If it does not exist, it creates the default log group for Scanner Lambda as a child of the stack construct.
+   */
+  private ensureLambdaDefaultLogGroup(
+    singletonFunction: SingletonFunction,
+    logGroupConstructName: string,
+    props: ImageScannerWithTrivyProps,
+  ): LogGroup {
+    const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
+      | LogGroup
+      | undefined;
+    if (existing) {
+      return existing;
+    }
+
+    return new LogGroup(Stack.of(this), logGroupConstructName, {
+      logGroupName: `/aws/lambda/${singletonFunction.functionName}`,
+      retention: props.defaultLogGroupRetentionDays,
+      removalPolicy: props.defaultLogGroupRemovalPolicy,
+    });
+  }
+
+  private isSameResourceDeletionBehavior(
+    removalPolicy?: RemovalPolicy,
+    deletionPolicy?: CfnDeletionPolicy,
+  ): boolean {
+    switch (removalPolicy) {
+      case RemovalPolicy.DESTROY:
+        return deletionPolicy === CfnDeletionPolicy.DELETE;
+      case RemovalPolicy.RETAIN:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN;
+      case RemovalPolicy.SNAPSHOT:
+        return deletionPolicy === CfnDeletionPolicy.SNAPSHOT;
+      case RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN_EXCEPT_ON_CREATE;
+      case undefined:
+        return deletionPolicy === undefined;
+      default:
+        return removalPolicy satisfies never;
+    }
   }
 }

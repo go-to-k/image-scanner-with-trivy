@@ -8,7 +8,7 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "ImageScannerWithTrivy1ProviderframeworkonEventServiceRole0677B391": {
+  "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -39,7 +39,7 @@
     ]
    }
   },
-  "ImageScannerWithTrivy1ProviderframeworkonEventServiceRoleDefaultPolicy4C553B04": {
+  "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy68DCB519": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -73,15 +73,15 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "ImageScannerWithTrivy1ProviderframeworkonEventServiceRoleDefaultPolicy4C553B04",
+    "PolicyName": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy68DCB519",
     "Roles": [
      {
-      "Ref": "ImageScannerWithTrivy1ProviderframeworkonEventServiceRole0677B391"
+      "Ref": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA"
      }
     ]
    }
   },
-  "ImageScannerWithTrivy1ProviderframeworkonEventF296BFF8": {
+  "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEvent64D7E4F2": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
@@ -90,7 +90,7 @@
      },
      "S3Key": "717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivy1/Provider)",
+    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -104,7 +104,7 @@
     "Handler": "framework.onEvent",
     "Role": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivy1ProviderframeworkonEventServiceRole0677B391",
+      "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA",
       "Arn"
      ]
     },
@@ -112,20 +112,20 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "ImageScannerWithTrivy1ProviderframeworkonEventServiceRoleDefaultPolicy4C553B04",
-    "ImageScannerWithTrivy1ProviderframeworkonEventServiceRole0677B391"
+    "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy68DCB519",
+    "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA"
    ]
   },
-  "ImageScannerWithTrivy126BD6A8E": {
+  "ImageScannerWithTrivyWithMinimalOptionsEF57702A": {
    "Type": "Custom::ImageScannerWithTrivy",
    "Properties": {
     "ServiceToken": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivy1ProviderframeworkonEventF296BFF8",
+      "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEvent64D7E4F2",
       "Arn"
      ]
     },
-    "addr": "c80561e426b49b37fee8300e357d7c0e5be229cfaf",
+    "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:cc538cfb8348624c07711097d47ce5459151342bf9d259a291a645c566e008f1"
     },
@@ -280,7 +280,7 @@
     "Qualifier": "$LATEST"
    }
   },
-  "ImageScannerWithTrivy2ProviderframeworkonEventServiceRole1107BD38": {
+  "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -311,7 +311,7 @@
     ]
    }
   },
-  "ImageScannerWithTrivy2ProviderframeworkonEventServiceRoleDefaultPolicyF4EE9EA2": {
+  "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy471D37E6": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -345,15 +345,15 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "ImageScannerWithTrivy2ProviderframeworkonEventServiceRoleDefaultPolicyF4EE9EA2",
+    "PolicyName": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy471D37E6",
     "Roles": [
      {
-      "Ref": "ImageScannerWithTrivy2ProviderframeworkonEventServiceRole1107BD38"
+      "Ref": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E"
      }
     ]
    }
   },
-  "ImageScannerWithTrivy2ProviderframeworkonEventEA4B2365": {
+  "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEvent1625CE73": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
@@ -362,7 +362,7 @@
      },
      "S3Key": "717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivy2/Provider)",
+    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -376,7 +376,7 @@
     "Handler": "framework.onEvent",
     "Role": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivy2ProviderframeworkonEventServiceRole1107BD38",
+      "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E",
       "Arn"
      ]
     },
@@ -384,20 +384,20 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "ImageScannerWithTrivy2ProviderframeworkonEventServiceRoleDefaultPolicyF4EE9EA2",
-    "ImageScannerWithTrivy2ProviderframeworkonEventServiceRole1107BD38"
+    "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy471D37E6",
+    "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E"
    ]
   },
-  "ImageScannerWithTrivy253242F9E": {
+  "ImageScannerWithTrivyWithAllOptions35A21CF5": {
    "Type": "Custom::ImageScannerWithTrivy",
    "Properties": {
     "ServiceToken": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivy2ProviderframeworkonEventEA4B2365",
+      "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEvent1625CE73",
       "Arn"
      ]
     },
-    "addr": "c8edb59609fae66a32e8948d4457fe2d60aa45afe0",
+    "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:cc538cfb8348624c07711097d47ce5459151342bf9d259a291a645c566e008f1"
     },
@@ -424,6 +424,162 @@
       "Ref": "LogGroupF5B46931"
      }
     }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "DefaultLogGroupForCustomImageScannerWithTrivyCustomResourceLambda9AB0FBF0": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 1
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleDefaultPolicy04B421DF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleDefaultPolicy04B421DF",
+    "Roles": [
+     {
+      "Ref": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814"
+     }
+    ]
+   }
+  },
+  "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventC444DCB0": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleDefaultPolicy04B421DF",
+    "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814"
+   ]
+  },
+  "ImageScannerWithTrivyWithDefaultLogGroupOptionsF42B413F": {
+   "Type": "Custom::ImageScannerWithTrivy",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventC444DCB0",
+      "Arn"
+     ]
+    },
+    "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
+    "imageUri": {
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:cc538cfb8348624c07711097d47ce5459151342bf9d259a291a645c566e008f1"
+    },
+    "ignoreUnfixed": "false",
+    "severity": [
+     "CRITICAL"
+    ],
+    "scanners": [],
+    "imageConfigScanners": [],
+    "exitCode": 1,
+    "exitOnEol": 1,
+    "trivyIgnore": [
+     "CVE-2023-37920"
+    ],
+    "platform": ""
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
