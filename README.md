@@ -140,7 +140,7 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 
 // NG example
 // Once you set the defaultLogGroupRemovalPolicy and defaultLogGroupRetentionDays, you have to set the same values for each construct.
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithWarns', {
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithDifferentDefaultLogGroupOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
   // The following options are different from the above construct, and warning message will be displayed when synthesizing the stack.
