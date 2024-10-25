@@ -383,26 +383,6 @@ export class ImageScannerWithTrivy extends Construct {
     });
   }
 
-  private isSameResourceDeletionBehavior(
-    removalPolicy?: RemovalPolicy,
-    deletionPolicy?: CfnDeletionPolicy,
-  ): boolean {
-    switch (removalPolicy) {
-      case RemovalPolicy.DESTROY:
-        return deletionPolicy === CfnDeletionPolicy.DELETE;
-      case RemovalPolicy.RETAIN:
-        return deletionPolicy === CfnDeletionPolicy.RETAIN;
-      case RemovalPolicy.SNAPSHOT:
-        return deletionPolicy === CfnDeletionPolicy.SNAPSHOT;
-      case RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE:
-        return deletionPolicy === CfnDeletionPolicy.RETAIN_EXCEPT_ON_CREATE;
-      case undefined:
-        return deletionPolicy === undefined;
-      default:
-        return removalPolicy satisfies never;
-    }
-  }
-
   /**
    * Validates that specified default log group options are the same for existing default log group.
    */
@@ -454,5 +434,25 @@ export class ImageScannerWithTrivy extends Construct {
       retention: props.defaultLogGroupRetentionDays,
       removalPolicy: props.defaultLogGroupRemovalPolicy,
     });
+  }
+
+  private isSameResourceDeletionBehavior(
+    removalPolicy?: RemovalPolicy,
+    deletionPolicy?: CfnDeletionPolicy,
+  ): boolean {
+    switch (removalPolicy) {
+      case RemovalPolicy.DESTROY:
+        return deletionPolicy === CfnDeletionPolicy.DELETE;
+      case RemovalPolicy.RETAIN:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN;
+      case RemovalPolicy.SNAPSHOT:
+        return deletionPolicy === CfnDeletionPolicy.SNAPSHOT;
+      case RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE:
+        return deletionPolicy === CfnDeletionPolicy.RETAIN_EXCEPT_ON_CREATE;
+      case undefined:
+        return deletionPolicy === undefined;
+      default:
+        return removalPolicy satisfies never;
+    }
   }
 }
