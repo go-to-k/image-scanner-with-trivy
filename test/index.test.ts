@@ -137,6 +137,10 @@ describe('ImageScannerWithTrivy', () => {
       defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
       defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
     });
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithNoDefaultLogGroupOptions', {
+      imageUri: 'imageUri',
+      repository: new Repository(stack, 'ImageRepository4', {}),
+    });
 
     Annotations.fromStack(stack).hasNoWarning(
       '/TestStack/ImageScannerWithTrivy1',
@@ -148,6 +152,10 @@ describe('ImageScannerWithTrivy', () => {
     );
     Annotations.fromStack(stack).hasWarning(
       '/TestStack/ImageScannerWithTrivyWithDifferentRetentionDays',
+      Match.stringLikeRegexp('You have to set the same values for.+'),
+    );
+    Annotations.fromStack(stack).hasWarning(
+      '/TestStack/ImageScannerWithTrivyWithNoDefaultLogGroupOptions',
       Match.stringLikeRegexp('You have to set the same values for.+'),
     );
   });

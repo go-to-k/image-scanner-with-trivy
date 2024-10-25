@@ -87,12 +87,12 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 ### Default Log Group
 
 If you customize the default log group for Scanner Lambda, you can specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` option.
-Now only changing the removal policy and retention days are supported.
+Currently, only changing the removal policy and retention days are supported.
 
 If the default log group is already created and you specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options, the deployment will fail because of a conflict with the log group name.
 
 ```ts
-import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
 
 const repository = new Repository(this, 'ImageRepository', {
   removalPolicy: RemovalPolicy.DESTROY,
@@ -146,6 +146,11 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithWarns', {
   // The following options are different from the above construct, and warning message will be displayed when synthesizing the stack.
   defaultLogGroupRemovalPolicy: RemovalPolicy.RETAIN, // This should be `RemovalPolicy.DESTROY` as the above construct.
   defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH, // This should be `RetentionDays.ONE_YEAR` as the above construct.
+});
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithNoDefaultLogGroupOptions', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // You should specify the defaultLogGroupRemovalPolicy and defaultLogGroupRetentionDays if you have already set the values.
 });
 ```
 
