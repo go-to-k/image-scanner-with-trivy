@@ -89,7 +89,7 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 If you customize the default log group for Scanner Lambda, you can specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options.
 Currently, only changing the removal policy and retention days are supported.
 
-If the default log group is already created and you specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options, the deployment will fail because of a conflict with the log group name.
+If the default log group is already created in your AWS Account and you specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options, the deployment will fail because of a conflict with the log group name.
 
 ```ts
 import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
