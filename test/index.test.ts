@@ -119,7 +119,7 @@ describe('ImageScannerWithTrivy', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
 
-    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy1', {
+    new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy', {
       imageUri: 'imageUri',
       repository: new Repository(stack, 'ImageRepository1', {}),
       defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
@@ -143,7 +143,7 @@ describe('ImageScannerWithTrivy', () => {
     });
 
     Annotations.fromStack(stack).hasNoWarning(
-      '/TestStack/ImageScannerWithTrivy1',
+      '/TestStack/ImageScannerWithTrivy',
       Match.stringLikeRegexp('You have to set the same values for.+'),
     );
     Annotations.fromStack(stack).hasWarning(
