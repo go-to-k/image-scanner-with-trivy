@@ -59,9 +59,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'security',
   ],
   gitignore: ['*.js', '*.d.ts', 'cdk.out/', '!test/*.integ.snapshot/**/*'],
-  bin: {
-    0: './assets',
-  },
   githubOptions: {
     pullRequestLintOptions: {
       semanticTitleOptions: {

@@ -5,9 +5,6 @@
     "type": "git",
     "url": "https://github.com/go-to-k/image-scanner-with-trivy"
   },
-  "bin": {
-    "0": "./assets"
-  },
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
