@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/nodejs:18-arm64
+FROM public.ecr.aws/lambda/nodejs:22-arm64
 
 WORKDIR /
 
