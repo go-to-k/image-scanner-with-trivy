@@ -1,20 +1,20 @@
 {
-  "version": "34.0.0",
+  "version": "39.0.0",
   "files": {
-    "717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2": {
+    "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca": {
       "source": {
-        "path": "asset.717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2",
+        "path": "asset.bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca",
         "packaging": "zip"
       },
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "717110ffa4837721e2e2c69a407b428e4e0dac88ec7b5ae15329a543982cf7a2.zip",
+          "objectKey": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
     },
-    "bce5bd5691a5208615e28d686ca98d0cd6606cddfce8d22d175a4cd415697dd2": {
+    "52fdd29db46828708e58cf8bf9dc09c15370b1e93e3039be9b70b483c95426fa": {
       "source": {
         "path": "ImageScannerWithTrivyStack.template.json",
         "packaging": "file"
@@ -22,7 +22,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "bce5bd5691a5208615e28d686ca98d0cd6606cddfce8d22d175a4cd415697dd2.json",
+          "objectKey": "52fdd29db46828708e58cf8bf9dc09c15370b1e93e3039be9b70b483c95426fa.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

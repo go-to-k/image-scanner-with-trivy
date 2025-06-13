@@ -33,7 +33,7 @@ jspm_packages/
 *.js
 *.d.ts
 cdk.out/
-!test/*.integ.snapshot/**/*
+!test/integ.*.snapshot/**/*
 /test-reports/
 junit.xml
 !/jest.config.json
