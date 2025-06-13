@@ -2,12 +2,12 @@
   "dependencies": [
     {
       "name": "@aws-cdk/integ-runner",
-      "version": "2.95.1-alpha.0",
+      "version": "2.178.1-alpha.0",
       "type": "build"
     },
     {
       "name": "@aws-cdk/integ-tests-alpha",
-      "version": "2.95.1-alpha.0",
+      "version": "2.178.1-alpha.0",
       "type": "build"
     },
     {
@@ -16,7 +16,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^18",
+      "version": "^20",
       "type": "build"
     },
     {
@@ -109,7 +109,7 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.95.1",
+      "version": "^2.178.1",
       "type": "peer"
     },
     {
