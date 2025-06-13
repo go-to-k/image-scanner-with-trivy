@@ -28,7 +28,6 @@
   "include": [
     "src/**/*.ts",
     "test/**/*.ts",
-    "assets/lambda/**/*.ts",
     ".projenrc.ts",
     "projenrc/**/*.ts"
   ],

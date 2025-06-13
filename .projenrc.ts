@@ -76,7 +76,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // packageName: undefined,  /* The "name" in package.json. */
 });
-project.tsconfigDev.addInclude('assets/lambda/**/*.ts');
 project.setScript('cdk', 'cdk');
 project.setScript('integ', 'integ-runner');
 project.projectBuild.compileTask.prependExec(
