@@ -85,6 +85,6 @@ project.projectBuild.compileTask.prependExec(
     cwd: 'assets/lambda',
   },
 );
-project.projectBuild.testTask.exec('yarn integ');
+project.projectBuild.testTask.exec('yarn tsc -p tsconfig.dev.json && yarn integ');
 
 project.synth();

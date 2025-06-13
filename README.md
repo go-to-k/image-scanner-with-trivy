@@ -157,3 +157,13 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithNoDefaultLogGroupOptio
 ## API Reference
 
 API Reference is [here](./API.md#api-reference-).
+
+## Contribution
+
+### Update Snapshots in Integration Tests
+
+```sh
+yarn tsc -p tsconfig.dev.json
+
+yarn integ --update-on-failed
+```
