@@ -4,7 +4,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   author: 'go-to-k',
   authorAddress: '24818752+go-to-k@users.noreply.github.com',
   majorVersion: 2,
-  minNodeVersion: '20.0.0',
+  minNodeVersion: '20.9.0',
   cdkVersion: '2.178.1',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.0.0',
@@ -71,7 +71,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     exclude: ['test/integ.*.snapshot'],
   },
   devDeps: ['@aws-cdk/integ-runner@2.178.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0'],
-  workflowNodeVersion: '20.0.0',
+  workflowNodeVersion: '20.9.0',
   // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // packageName: undefined,  /* The "name" in package.json. */
