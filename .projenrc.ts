@@ -3,11 +3,11 @@ import { TrailingComma, Transform } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'go-to-k',
   authorAddress: '24818752+go-to-k@users.noreply.github.com',
-  majorVersion: 1,
+  majorVersion: 2,
   minNodeVersion: '18.0.0',
-  cdkVersion: '2.95.1',
+  cdkVersion: '2.178.1',
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.0.0',
+  jsiiVersion: '~5.8.0',
   name: 'image-scanner-with-trivy',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/go-to-k/image-scanner-with-trivy',
@@ -58,7 +58,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'container',
     'security',
   ],
-  gitignore: ['*.js', '*.d.ts', 'cdk.out/', '!test/*.integ.snapshot/**/*'],
+  gitignore: ['*.js', '*.d.ts', 'cdk.out/', '!test/integ.*.snapshot/**/*'],
   githubOptions: {
     pullRequestLintOptions: {
       semanticTitleOptions: {
@@ -70,13 +70,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
     compilerOptions: {},
     exclude: ['test/integ.*.snapshot'],
   },
-  devDeps: ['@aws-cdk/integ-runner@2.95.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.95.1-alpha.0'],
+  devDeps: ['@aws-cdk/integ-runner@2.178.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0'],
   workflowNodeVersion: '18.18.0',
   // deps: [],                /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // packageName: undefined,  /* The "name" in package.json. */
 });
-project.tsconfigDev.addInclude('assets/lambda/**/*.ts');
 project.setScript('cdk', 'cdk');
 project.setScript('integ', 'integ-runner');
 project.projectBuild.compileTask.prependExec(
@@ -85,6 +84,6 @@ project.projectBuild.compileTask.prependExec(
     cwd: 'assets/lambda',
   },
 );
-project.projectBuild.testTask.exec('yarn integ');
+project.projectBuild.testTask.exec('yarn tsc -p tsconfig.dev.json && yarn integ');
 
 project.synth();
