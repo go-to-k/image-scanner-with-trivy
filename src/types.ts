@@ -34,4 +34,5 @@ export interface ScannerCustomResourceProps {
   readonly trivyIgnore: string[];
   readonly platform: string;
   readonly output?: ScanLogsOutputOptions;
+  readonly suppressErrorOnRollback: string;
 }

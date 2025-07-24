@@ -7,6 +7,11 @@ import {
   PutLogEventsCommandInput,
   ResourceAlreadyExistsException,
 } from '@aws-sdk/client-cloudwatch-logs';
+import {
+  CloudFormationClient,
+  DescribeStacksCommand,
+  ResourceStatus,
+} from '@aws-sdk/client-cloudformation';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
 import {
   ScanLogsOutputOptions,
@@ -18,6 +23,7 @@ import {
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
 const cwClient = new CloudWatchLogsClient();
+const cfnClient = new CloudFormationClient();
 
 export const handler: CdkCustomResourceHandler = async function (event) {
   const requestType = event.RequestType;
@@ -48,10 +54,18 @@ export const handler: CdkCustomResourceHandler = async function (event) {
 
     await outputScanLogs(response, props.imageUri, props.output);
 
-    if (response.status !== 0)
-      throw new Error(
-        `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${response.status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`,
+    if (response.status === 0) return funcResponse;
+
+    const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${response.status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
+
+    if (props.suppressErrorOnRollback === 'true' && (await isRollbackInProgress(event.StackId))) {
+      console.log(
+        `Vulnerabilities may be detected, but suppressing errors during rollback (suppressErrorOnRollback=true).\n${errorMessage}`,
       );
+      return funcResponse;
+    }
+
+    throw new Error(errorMessage);
   }
 
   return funcResponse;
@@ -143,5 +157,21 @@ const outputScanLogsToCWLogs = async (
 
   console.log(
     `Scan logs output to the log group: ${output.logGroupName}, log stream: ${logStreamName}`,
+  );
+};
+
+const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
+  const command = new DescribeStacksCommand({
+    StackName: stackId,
+  });
+  const response = await cfnClient.send(command);
+
+  if (response.Stacks && response.Stacks.length > 0) {
+    const stackStatus = response.Stacks[0].StackStatus;
+    return stackStatus === ResourceStatus.ROLLBACK_IN_PROGRESS;
+  }
+
+  throw new Error(
+    `Stack not found or no stacks returned from DescribeStacks command, stackId: ${stackId}`,
   );
 };

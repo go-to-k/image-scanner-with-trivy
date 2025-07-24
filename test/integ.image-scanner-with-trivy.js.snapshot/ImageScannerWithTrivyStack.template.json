@@ -145,7 +145,7 @@
     },
     "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:ef9704749057c8a1991115ce806c8933a4e9544612bdc770a5a5bd57903a7451"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fce1929d8e3259b248615fcc96dde950854304bffbdd185aad5bcf65a89da84c"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -156,9 +156,11 @@
     "exitCode": 1,
     "exitOnEol": 1,
     "trivyIgnore": [
-     "CVE-2023-37920"
+     "CVE-2023-37920",
+     "CVE-2025-7783"
     ],
-    "platform": ""
+    "platform": "",
+    "suppressErrorOnRollback": "true"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -267,7 +269,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:ef9704749057c8a1991115ce806c8933a4e9544612bdc770a5a5bd57903a7451"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fce1929d8e3259b248615fcc96dde950854304bffbdd185aad5bcf65a89da84c"
      }
     },
     "EphemeralStorage": {
@@ -435,7 +437,7 @@
     },
     "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:ef9704749057c8a1991115ce806c8933a4e9544612bdc770a5a5bd57903a7451"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fce1929d8e3259b248615fcc96dde950854304bffbdd185aad5bcf65a89da84c"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -450,6 +452,7 @@
     "exitOnEol": 1,
     "trivyIgnore": [
      "CVE-2023-37920",
+     "CVE-2025-7783",
      "CVE-2019-14697 exp:2023-01-01",
      "generic-unwanted-rule"
     ],
@@ -459,7 +462,8 @@
      "logGroupName": {
       "Ref": "LogGroupF5B46931"
      }
-    }
+    },
+    "suppressErrorOnRollback": "true"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -620,7 +624,7 @@
     },
     "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:ef9704749057c8a1991115ce806c8933a4e9544612bdc770a5a5bd57903a7451"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fce1929d8e3259b248615fcc96dde950854304bffbdd185aad5bcf65a89da84c"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -631,9 +635,11 @@
     "exitCode": 1,
     "exitOnEol": 1,
     "trivyIgnore": [
-     "CVE-2023-37920"
+     "CVE-2023-37920",
+     "CVE-2025-7783"
     ],
-    "platform": ""
+    "platform": "",
+    "suppressErrorOnRollback": "true"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"

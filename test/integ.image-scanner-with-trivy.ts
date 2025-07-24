@@ -21,7 +21,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithMinimalOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920'],
+  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783'],
 });
 
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
@@ -32,7 +32,12 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
   scanners: [Scanners.VULN, Scanners.SECRET],
   exitCode: 1,
   exitOnEol: 1,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01', 'generic-unwanted-rule'],
+  trivyIgnore: [
+    'CVE-2023-37920',
+    'CVE-2025-7783',
+    'CVE-2019-14697 exp:2023-01-01',
+    'generic-unwanted-rule',
+  ],
   memorySize: 3008,
   platform: 'linux/arm64',
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
@@ -44,7 +49,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDefaultLogGroupOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920'],
+  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783'],
   defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
   defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });

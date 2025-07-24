@@ -306,6 +306,7 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
           "CRITICAL",
           "HIGH",
         ],
+        "suppressErrorOnRollback": "true",
         "trivyIgnore": [
           "CVE-2023-37920",
           "CVE-2019-14697 exp:2023-01-01",

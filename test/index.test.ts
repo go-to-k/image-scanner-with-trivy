@@ -24,6 +24,7 @@ const getTemplate = (): Template => {
     defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
     defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
+    suppressErrorOnRollback: true,
   });
   return Template.fromStack(stack);
 };
@@ -37,6 +38,32 @@ describe('ImageScannerWithTrivy', () => {
 
   test('ImageScannerWithTrivy created', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivy', 1);
+  });
+
+  describe('suppressErrorOnRollback', () => {
+    test.each([
+      { value: true, expected: 'true' },
+      { value: false, expected: 'false' },
+      { value: undefined, expected: 'true' },
+    ])(
+      'suppressErrorOnRollback is set to $expected when value is $value',
+      ({ value, expected }) => {
+        const app = new App();
+        const stack = new Stack(app, 'TestStack');
+
+        const repository = new Repository(stack, 'ImageRepository', {});
+
+        new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy', {
+          imageUri: 'imageUri',
+          repository: repository,
+          suppressErrorOnRollback: value,
+        });
+
+        Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivy', {
+          suppressErrorOnRollback: expected,
+        });
+      },
+    );
   });
 
   describe('scanLogsOutput settings', () => {
