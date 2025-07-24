@@ -306,6 +306,21 @@ export interface ImageScannerWithTrivyProps {
    * @default - scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
    */
   readonly scanLogsOutput?: ScanLogsOutput;
+
+  /**
+   * Suppress errors during rollback scanner Lambda execution
+   *
+   * When image scanning fails, CloudFormation triggers a rollback and executes the previous
+   * version of the scanner Lambda. If this property is set to `true`, the previous version of
+   * the scanner Lambda will not throw an error, even if the image scanning for the previous version
+   * fails.
+   *
+   * This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
+   * when image scanning failures occur.
+   *
+   * @default true
+   */
+  readonly suppressErrorOnRollback?: boolean;
 }
 
 // Maximum Lambda memory size for default AWS account without quota limit increase
@@ -374,6 +389,7 @@ export class ImageScannerWithTrivy extends Construct {
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
+      suppressErrorOnRollback: String(props.suppressErrorOnRollback ?? true),
     };
 
     new CustomResource(this, 'Resource', {
