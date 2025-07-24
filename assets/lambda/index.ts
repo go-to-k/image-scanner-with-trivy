@@ -7,7 +7,11 @@ import {
   PutLogEventsCommandInput,
   ResourceAlreadyExistsException,
 } from '@aws-sdk/client-cloudwatch-logs';
-import { CloudFormationClient, DescribeStacksCommand } from '@aws-sdk/client-cloudformation';
+import {
+  CloudFormationClient,
+  DescribeStacksCommand,
+  ResourceStatus,
+} from '@aws-sdk/client-cloudformation';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
 import {
   ScanLogsOutputOptions,
@@ -164,7 +168,7 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
 
   if (response.Stacks && response.Stacks.length > 0) {
     const stackStatus = response.Stacks[0].StackStatus;
-    return stackStatus === 'ROLLBACK_IN_PROGRESS';
+    return stackStatus === ResourceStatus.ROLLBACK_IN_PROGRESS;
   }
 
   throw new Error(
