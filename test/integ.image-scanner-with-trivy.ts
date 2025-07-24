@@ -43,6 +43,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
   defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
   defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
+  suppressErrorOnRollback: true,
 });
 
 // This test checks that the default log group is not created and that the existing log group is used.
