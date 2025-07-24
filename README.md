@@ -154,6 +154,39 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithNoDefaultLogGroupOptio
 });
 ```
 
+### Rollback Error Suppression
+
+By default, the `suppressErrorOnRollback` property is set to `true`.
+
+When image scanning fails, CloudFormation triggers a rollback and executes the previous version
+of the scanner Lambda. If this property is set to `true`, the previous version of the scanner
+Lambda will not throw an error, even if the image scanning for the previous version fails.
+
+This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
+when image scanning failures occur.
+
+```ts
+import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+
+const repository = new Repository(this, 'ImageRepository', {
+  removalPolicy: RemovalPolicy.DESTROY,
+  autoDeleteImages: true,
+});
+
+const image = new DockerImageAsset(this, 'DockerImage', {
+  directory: resolve(__dirname, './'),
+});
+
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // Default is true - suppress errors during rollback to prevent ROLLBACK_FAILED
+  suppressErrorOnRollback: true,
+  // Set to false if you want rollback errors to be thrown
+  suppressErrorOnRollback: false,
+});
+```
+
 ## API Reference
 
 API Reference is [here](./API.md#api-reference-).
