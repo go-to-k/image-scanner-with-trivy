@@ -710,7 +710,7 @@
                     ],
                     "code": {
                       "imageUri": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:2d7e1568207817d51bb6a31147ee4dfd731b35a227d89f3ff93761c39a791392"
+                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:cc34424cbb279454256673104223f6622fa151f290618220327129482b244756"
                       }
                     },
                     "ephemeralStorage": {

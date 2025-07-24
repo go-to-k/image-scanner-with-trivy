@@ -1,5 +1,11 @@
 ## Contribution
 
+### Build for Code Bundle and API.md
+
+```sh
+yarn build
+```
+
 ### Update Snapshots in Integration Tests
 
 ```sh

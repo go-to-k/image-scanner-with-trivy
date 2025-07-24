@@ -203,6 +203,7 @@ const imageScannerWithTrivyProps: ImageScannerWithTrivyProps = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanLogsOutput">scanLogsOutput</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a></code> | Configuration for scan logs output. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.suppressErrorOnRollback">suppressErrorOnRollback</a></code> | <code>boolean</code> | Suppress errors during rollback scanner Lambda execution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyProps.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
 
 ---
@@ -445,6 +446,27 @@ Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor 
 It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
 
 > [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection)
+
+---
+
+##### `suppressErrorOnRollback`<sup>Optional</sup> <a name="suppressErrorOnRollback" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.suppressErrorOnRollback"></a>
+
+```typescript
+public readonly suppressErrorOnRollback: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Suppress errors during rollback scanner Lambda execution.
+
+When image scanning fails, CloudFormation triggers a rollback and executes the previous
+version of the scanner Lambda. If this property is set to `true`, the previous version of
+the scanner Lambda will not throw an error, even if the image scanning for the previous version
+fails.
+
+This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
+when image scanning failures occur.
 
 ---
 
