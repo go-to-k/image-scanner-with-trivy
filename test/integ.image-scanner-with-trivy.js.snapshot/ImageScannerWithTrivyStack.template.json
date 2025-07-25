@@ -238,6 +238,13 @@
        "Resource": "*"
       },
       {
+       "Action": "cloudformation:DescribeStacks",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "AWS::StackId"
+       }
+      },
+      {
        "Action": [
         "logs:CreateLogStream",
         "logs:PutLogEvents"

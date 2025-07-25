@@ -64,6 +64,44 @@ describe('ImageScannerWithTrivy', () => {
         });
       },
     );
+
+    test.each([
+      { suppressErrorOnRollback: true, shouldHavePolicy: true },
+      { suppressErrorOnRollback: false, shouldHavePolicy: false },
+      { suppressErrorOnRollback: undefined, shouldHavePolicy: true },
+    ])(
+      'CloudFormation DescribeStacks IAM policy is $shouldHavePolicy when suppressErrorOnRollback is $suppressErrorOnRollback',
+      ({ suppressErrorOnRollback, shouldHavePolicy }) => {
+        const app = new App();
+        const stack = new Stack(app, 'TestStack');
+
+        const repository = new Repository(stack, 'ImageRepository', {});
+
+        new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivy', {
+          imageUri: 'imageUri',
+          repository: repository,
+          suppressErrorOnRollback,
+        });
+
+        const statementArray = [
+          {
+            Effect: 'Allow',
+            Action: 'cloudformation:DescribeStacks',
+            Resource: {
+              Ref: 'AWS::StackId',
+            },
+          },
+        ];
+        Template.fromStack(stack).hasResourceProperties('AWS::IAM::Policy', {
+          PolicyDocument: {
+            Version: '2012-10-17',
+            Statement: shouldHavePolicy
+              ? Match.arrayWith(statementArray)
+              : Match.not(Match.arrayWith(statementArray)),
+          },
+        });
+      },
+    );
   });
 
   describe('scanLogsOutput settings', () => {
