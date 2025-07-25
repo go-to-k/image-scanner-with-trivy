@@ -11,7 +11,7 @@ import {
 } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { IGrantable } from 'aws-cdk-lib/aws-iam';
+import { IGrantable, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
   Architecture,
   AssetCode,
@@ -361,6 +361,17 @@ export class ImageScannerWithTrivy extends Construct {
     });
     props.repository.grantPull(customResourceLambda);
 
+    // Grant CloudFormation DescribeStacks permission for rollback detection when suppressErrorOnRollback is enabled
+    const suppressErrorOnRollback = props.suppressErrorOnRollback ?? true;
+    if (suppressErrorOnRollback) {
+      customResourceLambda.addToRolePolicy(
+        new PolicyStatement({
+          actions: ['cloudformation:DescribeStacks'],
+          resources: [Stack.of(this).stackId],
+        }),
+      );
+    }
+
     const customResourceLambdaLogGroupConstructName = `DefaultLogGroupFor${lambdaPurpose}`;
 
     this.validateLambdaDefaultLogGroupOptions(customResourceLambdaLogGroupConstructName, props);
@@ -389,7 +400,7 @@ export class ImageScannerWithTrivy extends Construct {
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
-      suppressErrorOnRollback: String(props.suppressErrorOnRollback ?? true),
+      suppressErrorOnRollback: String(suppressErrorOnRollback),
     };
 
     new CustomResource(this, 'Resource', {

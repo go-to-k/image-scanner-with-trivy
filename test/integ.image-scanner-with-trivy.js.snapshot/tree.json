@@ -526,6 +526,13 @@
                                   "Resource": "*"
                                 },
                                 {
+                                  "Action": "cloudformation:DescribeStacks",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Ref": "AWS::StackId"
+                                  }
+                                },
+                                {
                                   "Action": [
                                     "logs:CreateLogStream",
                                     "logs:PutLogEvents"
@@ -604,6 +611,21 @@
                           "addStatements": [
                             {}
                           ]
+                        },
+                        {
+                          "addStatements": [
+                            {}
+                          ]
+                        },
+                        {
+                          "addStatements": [
+                            {}
+                          ]
+                        },
+                        {
+                          "addStatements": [
+                            {}
+                          ]
                         }
                       ]
                     }
@@ -637,6 +659,21 @@
                     {
                       "attachInlinePolicy": [
                         "*"
+                      ]
+                    },
+                    {
+                      "addToPrincipalPolicy": [
+                        {}
+                      ]
+                    },
+                    {
+                      "addToPrincipalPolicy": [
+                        {}
+                      ]
+                    },
+                    {
+                      "addToPrincipalPolicy": [
+                        {}
                       ]
                     },
                     {
