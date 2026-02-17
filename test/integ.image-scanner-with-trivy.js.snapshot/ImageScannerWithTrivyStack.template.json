@@ -145,7 +145,7 @@
     },
     "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:d269ce66fe53d29455c9e837818c6b69c03b4327cc3958378922e01542218b2d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -157,7 +157,8 @@
     "exitOnEol": 1,
     "trivyIgnore": [
      "CVE-2023-37920",
-     "CVE-2025-7783"
+     "CVE-2025-7783",
+     "CVE-2025-68121"
     ],
     "platform": "",
     "suppressErrorOnRollback": "true"
@@ -276,7 +277,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:d269ce66fe53d29455c9e837818c6b69c03b4327cc3958378922e01542218b2d"
      }
     },
     "EphemeralStorage": {
@@ -444,7 +445,7 @@
     },
     "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:d269ce66fe53d29455c9e837818c6b69c03b4327cc3958378922e01542218b2d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -460,6 +461,7 @@
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
+     "CVE-2025-68121",
      "CVE-2019-14697 exp:2023-01-01",
      "generic-unwanted-rule"
     ],
@@ -631,7 +633,7 @@
     },
     "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:d269ce66fe53d29455c9e837818c6b69c03b4327cc3958378922e01542218b2d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -643,7 +645,8 @@
     "exitOnEol": 1,
     "trivyIgnore": [
      "CVE-2023-37920",
-     "CVE-2025-7783"
+     "CVE-2025-7783",
+     "CVE-2025-68121"
     ],
     "platform": "",
     "suppressErrorOnRollback": "true"
