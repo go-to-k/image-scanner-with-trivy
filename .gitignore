@@ -33,6 +33,7 @@ jspm_packages/
 *.js
 *.d.ts
 cdk.out/
+.DS_Store
 test/cdk-integ.*.snapshot/**/*
 !test/integ.*.snapshot/**/*
 /test-reports/

@@ -14,7 +14,7 @@
         }
       }
     },
-    "79ee138ca7a1119c352d9b858a33a1283996941301f3b76e1e0999fc5f50924d": {
+    "f8b6306d52ee5fe086fcb15a7c5b1c0976c64b77ea53d427a8805cde32fb3025": {
       "source": {
         "path": "ImageScannerWithTrivyStack.template.json",
         "packaging": "file"
@@ -22,22 +22,22 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "79ee138ca7a1119c352d9b858a33a1283996941301f3b76e1e0999fc5f50924d.json",
+          "objectKey": "f8b6306d52ee5fe086fcb15a7c5b1c0976c64b77ea53d427a8805cde32fb3025.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
     }
   },
   "dockerImages": {
-    "55a2e00dc5e60fee1e85e99bd032ed7c98fc6fa11f432e53ce5c8c0a522adb94": {
+    "15238e3ec3602dcf1f870b59febfd716954ae85c7dd38b460be6897de0767df8": {
       "source": {
-        "directory": "asset.55a2e00dc5e60fee1e85e99bd032ed7c98fc6fa11f432e53ce5c8c0a522adb94",
+        "directory": "asset.15238e3ec3602dcf1f870b59febfd716954ae85c7dd38b460be6897de0767df8",
         "platform": "linux/arm64"
       },
       "destinations": {
         "current_account-current_region": {
           "repositoryName": "cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}",
-          "imageTag": "55a2e00dc5e60fee1e85e99bd032ed7c98fc6fa11f432e53ce5c8c0a522adb94",
+          "imageTag": "15238e3ec3602dcf1f870b59febfd716954ae85c7dd38b460be6897de0767df8",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

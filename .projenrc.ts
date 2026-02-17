@@ -61,6 +61,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     '*.js',
     '*.d.ts',
     'cdk.out/',
+    '.DS_Store',
     'test/cdk-integ.*.snapshot/**/*',
     '!test/integ.*.snapshot/**/*',
   ],
