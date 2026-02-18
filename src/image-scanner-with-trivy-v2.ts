@@ -1,14 +1,5 @@
 import { join } from 'path';
-import {
-  Annotations,
-  CfnDeletionPolicy,
-  CustomResource,
-  Duration,
-  RemovalPolicy,
-  Size,
-  Stack,
-  Token,
-} from 'aws-cdk-lib';
+import { Annotations, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -19,7 +10,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { CfnLogGroup, ILogGroup, LogGroup } from 'aws-cdk-lib/aws-logs';
+import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
