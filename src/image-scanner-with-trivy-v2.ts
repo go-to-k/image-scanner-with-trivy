@@ -19,7 +19,7 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { CfnLogGroup, ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
@@ -189,24 +189,16 @@ export interface ImageScannerWithTrivyV2Props {
   readonly platform?: string;
 
   /**
-   * The removal policy to apply to Scanner Lambda's default log group
+   * The Scanner Lambda's default log group
    *
-   * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+   * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack,
+   * you must specify the same log group for each construct.
+   *
    * See `Notes` section in the README for more details.
    *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
    */
-  readonly defaultLogGroupRemovalPolicy?: RemovalPolicy;
-
-  /**
-   * The number of days log events are kept in Scanner Lambda's default log group
-   *
-   * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different retention days for the default log group.
-   * See `Notes` section in the README for more details.
-   *
-   * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
-   */
-  readonly defaultLogGroupRetentionDays?: RetentionDays;
+  readonly defaultLogGroup?: ILogGroup;
 
   /**
    * Configuration for scan logs output
