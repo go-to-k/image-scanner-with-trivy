@@ -22,8 +22,8 @@ import {
 import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
-import { ScanLogsOutput } from './scan-logs-output';
 import { ScannerCustomResourceProps } from './custom-resource-props';
+import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
 
 /**
