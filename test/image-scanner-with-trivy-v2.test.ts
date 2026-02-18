@@ -115,7 +115,7 @@ describe('ImageScannerWithTrivyV2', () => {
               [
                 '/aws/lambda/',
                 {
-                  Ref: 'CustomImageScannerWithTrivyV2CustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3',
+                  Ref: 'CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1',
                 },
               ],
             ],
