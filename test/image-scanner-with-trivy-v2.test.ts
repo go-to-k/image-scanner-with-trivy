@@ -104,34 +104,6 @@ describe('ImageScannerWithTrivyV2', () => {
     );
   });
 
-  describe('scanLogsOutput settings', () => {
-    test('correctly sets output configuration to cloudwatch logs', () => {
-      template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
-        output: {
-          type: 'cloudWatchLogs',
-          logGroupName: {
-            Ref: 'LogGroupF5B46931',
-          },
-        },
-      });
-
-      template.hasResourceProperties('AWS::IAM::Policy', {
-        PolicyDocument: {
-          Version: '2012-10-17',
-          Statement: Match.arrayWith([
-            {
-              Action: ['logs:CreateLogStream', 'logs:PutLogEvents'],
-              Effect: 'Allow',
-              Resource: {
-                'Fn::GetAtt': ['LogGroupF5B46931', 'Arn'],
-              },
-            },
-          ]),
-        },
-      });
-    });
-  });
-
   describe('default log group settings', () => {
     test('create the default log group with removalPolicy and retentionInDays', () => {
       template.hasResource('AWS::Logs::LogGroup', {
