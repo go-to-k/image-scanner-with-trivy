@@ -13,12 +13,12 @@ import {
   ResourceStatus,
 } from '@aws-sdk/client-cloudformation';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
+import { ScannerCustomResourceProps } from '../../src/custom-resource-props';
 import {
   ScanLogsOutputOptions,
-  CloudWatchLogsOutputOptions,
-  ScannerCustomResourceProps,
   ScanLogsOutputType,
-} from '../../src/types';
+  CloudWatchLogsOutputOptions,
+} from '../../src/scan-logs-output';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
 
