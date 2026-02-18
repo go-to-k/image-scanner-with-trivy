@@ -11,7 +11,7 @@ import {
 } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { IGrantable, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
   Architecture,
   AssetCode,
@@ -22,10 +22,13 @@ import {
 import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
+import { ScannerCustomResourceProps } from './types';
 import {
-  ScannerCustomResourceProps,
-} from './types';
-import { Severity, Scanners, ImageConfigScanners, ScanLogsOutput } from './image-scanner-with-trivy';
+  Severity,
+  Scanners,
+  ImageConfigScanners,
+  ScanLogsOutput,
+} from './image-scanner-with-trivy';
 
 /**
  * Properties for ImageScannerWithTrivyV2 Construct.
