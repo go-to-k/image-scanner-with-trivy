@@ -27,11 +27,9 @@ import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
 
 /**
- * Properties for ImageScannerWithTrivy Construct.
- *
- * @deprecated Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
+ * Properties for ImageScannerWithTrivyV2 Construct.
  */
-export interface ImageScannerWithTrivyProps {
+export interface ImageScannerWithTrivyV2Props {
   /**
    * Image URI for scan target.
    */
@@ -193,7 +191,7 @@ export interface ImageScannerWithTrivyProps {
   /**
    * The removal policy to apply to Scanner Lambda's default log group
    *
-   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+   * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different removal policies for the default log group.
    * See `Notes` section in the README for more details.
    *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
@@ -203,7 +201,7 @@ export interface ImageScannerWithTrivyProps {
   /**
    * The number of days log events are kept in Scanner Lambda's default log group
    *
-   * If you use ImageScannerWithTrivy construct multiple times in the same stack, you cannot set different retention days for the default log group.
+   * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different retention days for the default log group.
    * See `Notes` section in the README for more details.
    *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
@@ -245,11 +243,9 @@ const DEFAULT_MEMORY_SIZE = 3008;
 /**
  * A Construct that scans container images with Trivy.
  * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
- *
- * @deprecated Use ImageScannerWithTrivyV2 instead. This will be removed in the next major version.
  */
-export class ImageScannerWithTrivy extends Construct {
-  constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
+export class ImageScannerWithTrivyV2 extends Construct {
+  constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
 
     if (
@@ -262,9 +258,9 @@ export class ImageScannerWithTrivy extends Construct {
       );
     }
 
-    const lambdaPurpose = 'Custom::ImageScannerWithTrivyCustomResourceLambda';
+    const lambdaPurpose = 'Custom::ImageScannerWithTrivyV2CustomResourceLambda';
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
-      uuid: '470b6343-d267-f753-226c-1e99f09f319a',
+      uuid: 'cc3b41b5-4701-d86f-fe24-3a04f4a573f1',
       lambdaPurpose,
       runtime: Runtime.FROM_IMAGE,
       handler: Handler.FROM_IMAGE,
@@ -326,7 +322,7 @@ export class ImageScannerWithTrivy extends Construct {
     };
 
     new CustomResource(this, 'Resource', {
-      resourceType: 'Custom::ImageScannerWithTrivy',
+      resourceType: 'Custom::ImageScannerWithTrivyV2',
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
     });
@@ -337,7 +333,7 @@ export class ImageScannerWithTrivy extends Construct {
    */
   private validateLambdaDefaultLogGroupOptions(
     logGroupConstructName: string,
-    props: ImageScannerWithTrivyProps,
+    props: ImageScannerWithTrivyV2Props,
   ): void {
     const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
       | LogGroup
@@ -355,7 +351,7 @@ export class ImageScannerWithTrivy extends Construct {
     ) {
       Annotations.of(this).addWarningV2(
         '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroupOptions',
-        "You have to set the same values for 'defaultLogGroupRemovalPolicy' and 'defaultLogGroupRetentionDays' for each ImageScannerWithTrivy construct in the same stack.",
+        "You have to set the same values for 'defaultLogGroupRemovalPolicy' and 'defaultLogGroupRetentionDays' for each ImageScannerWithTrivyV2 construct in the same stack.",
       );
     }
   }
@@ -369,7 +365,7 @@ export class ImageScannerWithTrivy extends Construct {
   private ensureLambdaDefaultLogGroup(
     singletonFunction: SingletonFunction,
     logGroupConstructName: string,
-    props: ImageScannerWithTrivyProps,
+    props: ImageScannerWithTrivyV2Props,
   ): LogGroup {
     const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
       | LogGroup

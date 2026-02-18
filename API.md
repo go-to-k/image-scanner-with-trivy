@@ -4,6 +4,10 @@
 
 ### ImageScannerWithTrivy <a name="ImageScannerWithTrivy" id="image-scanner-with-trivy.ImageScannerWithTrivy"></a>
 
+A Construct that scans container images with Trivy.
+
+It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
+
 #### Initializers <a name="Initializers" id="image-scanner-with-trivy.ImageScannerWithTrivy.Initializer"></a>
 
 ```typescript
@@ -46,7 +50,7 @@ new ImageScannerWithTrivy(scope: Construct, id: string, props: ImageScannerWithT
 
 ---
 
-##### `toString` <a name="toString" id="image-scanner-with-trivy.ImageScannerWithTrivy.toString"></a>
+##### ~~`toString`~~ <a name="toString" id="image-scanner-with-trivy.ImageScannerWithTrivy.toString"></a>
 
 ```typescript
 public toString(): string
@@ -88,7 +92,112 @@ Any object.
 
 ---
 
-##### `node`<sup>Required</sup> <a name="node" id="image-scanner-with-trivy.ImageScannerWithTrivy.property.node"></a>
+##### ~~`node`~~<sup>Required</sup> <a name="node" id="image-scanner-with-trivy.ImageScannerWithTrivy.property.node"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2 instead. This will be removed in the next major version.
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+
+### ImageScannerWithTrivyV2 <a name="ImageScannerWithTrivyV2" id="image-scanner-with-trivy.ImageScannerWithTrivyV2"></a>
+
+A Construct that scans container images with Trivy.
+
+It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
+
+#### Initializers <a name="Initializers" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer"></a>
+
+```typescript
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy'
+
+new ImageScannerWithTrivyV2(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.props">props</a></code> | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props">ImageScannerWithTrivyV2Props</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props">ImageScannerWithTrivyV2Props</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### ~~`isConstruct`~~ <a name="isConstruct" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.isConstruct"></a>
+
+```typescript
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy'
+
+ImageScannerWithTrivyV2.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+###### `x`<sup>Required</sup> <a name="x" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.property.node"></a>
 
 ```typescript
 public readonly node: Node;
@@ -178,6 +287,8 @@ The log group to output scan logs.
 
 ### ImageScannerWithTrivyProps <a name="ImageScannerWithTrivyProps" id="image-scanner-with-trivy.ImageScannerWithTrivyProps"></a>
 
+Properties for ImageScannerWithTrivy Construct.
+
 #### Initializer <a name="Initializer" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.Initializer"></a>
 
 ```typescript
@@ -208,7 +319,9 @@ const imageScannerWithTrivyProps: ImageScannerWithTrivyProps = { ... }
 
 ---
 
-##### `imageUri`<sup>Required</sup> <a name="imageUri" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageUri"></a>
+##### ~~`imageUri`~~<sup>Required</sup> <a name="imageUri" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageUri"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly imageUri: string;
@@ -220,7 +333,9 @@ Image URI for scan target.
 
 ---
 
-##### `repository`<sup>Required</sup> <a name="repository" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.repository"></a>
+##### ~~`repository`~~<sup>Required</sup> <a name="repository" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.repository"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly repository: IRepository;
@@ -234,7 +349,9 @@ Because of grantPull to CustomResourceLambda.
 
 ---
 
-##### `defaultLogGroupRemovalPolicy`<sup>Optional</sup> <a name="defaultLogGroupRemovalPolicy" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.defaultLogGroupRemovalPolicy"></a>
+##### ~~`defaultLogGroupRemovalPolicy`~~<sup>Optional</sup> <a name="defaultLogGroupRemovalPolicy" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.defaultLogGroupRemovalPolicy"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly defaultLogGroupRemovalPolicy: RemovalPolicy;
@@ -250,7 +367,9 @@ See `Notes` section in the README for more details.
 
 ---
 
-##### `defaultLogGroupRetentionDays`<sup>Optional</sup> <a name="defaultLogGroupRetentionDays" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.defaultLogGroupRetentionDays"></a>
+##### ~~`defaultLogGroupRetentionDays`~~<sup>Optional</sup> <a name="defaultLogGroupRetentionDays" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.defaultLogGroupRetentionDays"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly defaultLogGroupRetentionDays: RetentionDays;
@@ -266,7 +385,9 @@ See `Notes` section in the README for more details.
 
 ---
 
-##### `exitCode`<sup>Optional</sup> <a name="exitCode" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitCode"></a>
+##### ~~`exitCode`~~<sup>Optional</sup> <a name="exitCode" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitCode"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly exitCode: number;
@@ -287,7 +408,9 @@ It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, i
 
 ---
 
-##### `exitOnEol`<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitOnEol"></a>
+##### ~~`exitOnEol`~~<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.exitOnEol"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly exitOnEol: number;
@@ -311,7 +434,9 @@ It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, i
 
 ---
 
-##### `ignoreUnfixed`<sup>Optional</sup> <a name="ignoreUnfixed" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.ignoreUnfixed"></a>
+##### ~~`ignoreUnfixed`~~<sup>Optional</sup> <a name="ignoreUnfixed" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.ignoreUnfixed"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly ignoreUnfixed: boolean;
@@ -328,7 +453,9 @@ To hide unfixed/unfixable vulnerabilities, you can use the `--ignore-unfixed` fl
 
 ---
 
-##### `imageConfigScanners`<sup>Optional</sup> <a name="imageConfigScanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageConfigScanners"></a>
+##### ~~`imageConfigScanners`~~<sup>Optional</sup> <a name="imageConfigScanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.imageConfigScanners"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly imageConfigScanners: ImageConfigScanners[];
@@ -351,7 +478,9 @@ They are disabled by default. You can enable them with `imageConfigScanners`.
 
 ---
 
-##### `memorySize`<sup>Optional</sup> <a name="memorySize" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.memorySize"></a>
+##### ~~`memorySize`~~<sup>Optional</sup> <a name="memorySize" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.memorySize"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly memorySize: number;
@@ -370,7 +499,9 @@ Default value (`3008` MB) is Maximum Lambda memory size for default AWS account 
 
 ---
 
-##### `platform`<sup>Optional</sup> <a name="platform" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.platform"></a>
+##### ~~`platform`~~<sup>Optional</sup> <a name="platform" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.platform"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly platform: string;
@@ -387,7 +518,9 @@ To customize this, pass a `platform` argument in the format OS/Architecture for 
 
 ---
 
-##### `scanLogsOutput`<sup>Optional</sup> <a name="scanLogsOutput" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanLogsOutput"></a>
+##### ~~`scanLogsOutput`~~<sup>Optional</sup> <a name="scanLogsOutput" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanLogsOutput"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly scanLogsOutput: ScanLogsOutput;
@@ -406,7 +539,9 @@ Currently, only `cloudWatchLogs` is supported.
 
 ---
 
-##### `scanners`<sup>Optional</sup> <a name="scanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners"></a>
+##### ~~`scanners`~~<sup>Optional</sup> <a name="scanners" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.scanners"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly scanners: Scanners[];
@@ -426,7 +561,9 @@ If you don't need secret scanning, it can be disabled by specifying Scanners.VUL
 
 ---
 
-##### `severity`<sup>Optional</sup> <a name="severity" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity"></a>
+##### ~~`severity`~~<sup>Optional</sup> <a name="severity" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.severity"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly severity: Severity[];
@@ -449,7 +586,9 @@ It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default
 
 ---
 
-##### `suppressErrorOnRollback`<sup>Optional</sup> <a name="suppressErrorOnRollback" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.suppressErrorOnRollback"></a>
+##### ~~`suppressErrorOnRollback`~~<sup>Optional</sup> <a name="suppressErrorOnRollback" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.suppressErrorOnRollback"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
 
 ```typescript
 public readonly suppressErrorOnRollback: boolean;
@@ -470,7 +609,345 @@ when image scanning failures occur.
 
 ---
 
-##### `trivyIgnore`<sup>Optional</sup> <a name="trivyIgnore" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.trivyIgnore"></a>
+##### ~~`trivyIgnore`~~<sup>Optional</sup> <a name="trivyIgnore" id="image-scanner-with-trivy.ImageScannerWithTrivyProps.property.trivyIgnore"></a>
+
+- *Deprecated:* Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
+
+```typescript
+public readonly trivyIgnore: string[];
+```
+
+- *Type:* string[]
+- *Default:* []
+
+By Finding IDs.
+
+The ignore rules written to the .trivyignore in trivy.
+Put each line you write in the file into one element of the array.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore](https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore)
+
+---
+
+*Example*
+
+```typescript
+    $ cat .trivyignore
+    # Accept the risk
+    CVE-2018-14618
+
+    # Accept the risk until 2023-01-01
+    CVE-2019-14697 exp:2023-01-01
+
+    # No impact in our settings
+    CVE-2019-1543
+
+    # Ignore misconfigurations
+    AVD-DS-0002
+
+    # Ignore secrets
+    generic-unwanted-rule
+    aws-account-id
+```
+
+
+### ImageScannerWithTrivyV2Props <a name="ImageScannerWithTrivyV2Props" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props"></a>
+
+Properties for ImageScannerWithTrivyV2 Construct.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.Initializer"></a>
+
+```typescript
+import { ImageScannerWithTrivyV2Props } from 'image-scanner-with-trivy'
+
+const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRemovalPolicy">defaultLogGroupRemovalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | The removal policy to apply to Scanner Lambda's default log group. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRetentionDays">defaultLogGroupRetentionDays</a></code> | <code>aws-cdk-lib.aws_logs.RetentionDays</code> | The number of days log events are kept in Scanner Lambda's default log group. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode">exitCode</a></code> | <code>number</code> | Exit Code. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.platform">platform</a></code> | <code>string</code> | Scan Image on a specific Architecture and OS. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanLogsOutput">scanLogsOutput</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a></code> | Configuration for scan logs output. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.suppressErrorOnRollback">suppressErrorOnRollback</a></code> | <code>boolean</code> | Suppress errors during rollback scanner Lambda execution. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
+
+---
+
+##### `imageUri`<sup>Required</sup> <a name="imageUri" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri"></a>
+
+```typescript
+public readonly imageUri: string;
+```
+
+- *Type:* string
+
+Image URI for scan target.
+
+---
+
+##### `repository`<sup>Required</sup> <a name="repository" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository"></a>
+
+```typescript
+public readonly repository: IRepository;
+```
+
+- *Type:* aws-cdk-lib.aws_ecr.IRepository
+
+Repository including the image URI for scan target.
+
+Because of grantPull to CustomResourceLambda.
+
+---
+
+##### `defaultLogGroupRemovalPolicy`<sup>Optional</sup> <a name="defaultLogGroupRemovalPolicy" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRemovalPolicy"></a>
+
+```typescript
+public readonly defaultLogGroupRemovalPolicy: RemovalPolicy;
+```
+
+- *Type:* aws-cdk-lib.RemovalPolicy
+- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
+
+The removal policy to apply to Scanner Lambda's default log group.
+
+If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different removal policies for the default log group.
+See `Notes` section in the README for more details.
+
+---
+
+##### `defaultLogGroupRetentionDays`<sup>Optional</sup> <a name="defaultLogGroupRetentionDays" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRetentionDays"></a>
+
+```typescript
+public readonly defaultLogGroupRetentionDays: RetentionDays;
+```
+
+- *Type:* aws-cdk-lib.aws_logs.RetentionDays
+- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
+
+The number of days log events are kept in Scanner Lambda's default log group.
+
+If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different retention days for the default log group.
+See `Notes` section in the README for more details.
+
+---
+
+##### `exitCode`<sup>Optional</sup> <a name="exitCode" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode"></a>
+
+```typescript
+public readonly exitCode: number;
+```
+
+- *Type:* number
+- *Default:* 1
+
+Exit Code.
+
+Use the `exitCode` option if you want to exit with a non-zero exit code.
+
+You can specify 0 if you do not want to exit even when vulnerabilities are detected.
+
+It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code)
+
+---
+
+##### `exitOnEol`<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol"></a>
+
+```typescript
+public readonly exitOnEol: number;
+```
+
+- *Type:* number
+- *Default:* 1
+
+Exit on EOL.
+
+Sometimes you may surprisingly get 0 vulnerabilities in an old image:
+ - Enabling --ignore-unfixed option while all packages have no fixed versions.
+ - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
+
+An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
+`exitOnEol` can fail scanning on EOL OS with a non-zero code.
+
+It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol)
+
+---
+
+##### `ignoreUnfixed`<sup>Optional</sup> <a name="ignoreUnfixed" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed"></a>
+
+```typescript
+public readonly ignoreUnfixed: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution.
+
+To hide unfixed/unfixable vulnerabilities, you can use the `--ignore-unfixed` flag.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities)
+
+---
+
+##### `imageConfigScanners`<sup>Optional</sup> <a name="imageConfigScanners" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners"></a>
+
+```typescript
+public readonly imageConfigScanners: ImageConfigScanners[];
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]
+- *Default:* []
+
+Enum for ImageConfigScanners.
+
+Container images have configuration. docker inspect and `docker history` show the information according to the configuration.
+Trivy scans the configuration of container images for
+
+- Misconfigurations
+- Secrets
+
+They are disabled by default. You can enable them with `imageConfigScanners`.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata](https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata)
+
+---
+
+##### `memorySize`<sup>Optional</sup> <a name="memorySize" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize"></a>
+
+```typescript
+public readonly memorySize: number;
+```
+
+- *Type:* number
+- *Default:* 3008
+
+Memory Size (MB) for Scanner Lambda.
+
+You can specify between `3008` and `10240`.
+
+If this Construct execution terminates abnormally due to SIGKILL, try a larger size.
+
+Default value (`3008` MB) is Maximum Lambda memory size for default AWS account without quota limit increase.
+
+---
+
+##### `platform`<sup>Optional</sup> <a name="platform" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.platform"></a>
+
+```typescript
+public readonly platform: string;
+```
+
+- *Type:* string
+- *Default:* 
+
+Scan Image on a specific Architecture and OS.
+
+By default, Trivy loads an image on a `linux/amd64` machine.
+
+To customize this, pass a `platform` argument in the format OS/Architecture for the image, such as `linux/arm64`
+
+---
+
+##### `scanLogsOutput`<sup>Optional</sup> <a name="scanLogsOutput" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanLogsOutput"></a>
+
+```typescript
+public readonly scanLogsOutput: ScanLogsOutput;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a>
+- *Default:* scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
+
+Configuration for scan logs output.
+
+By default, scan logs are output to default log group created by Scanner Lambda.
+
+Specify this if you want to send scan logs to other than the default log group.
+
+Currently, only `cloudWatchLogs` is supported.
+
+---
+
+##### `scanners`<sup>Optional</sup> <a name="scanners" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanners"></a>
+
+```typescript
+public readonly scanners: Scanners[];
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]
+- *Default:* [Security.VULN,Scanners.SECRET]
+
+Enable/Disable Scanners.
+
+You can enable/disable scanners with the `scanners`.
+
+For example, container image scanning enables vulnerability (VULN) and secret scanners (SECRET) by default.
+If you don't need secret scanning, it can be disabled by specifying Scanners.VULN only.
+
+> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners)
+
+---
+
+##### `severity`<sup>Optional</sup> <a name="severity" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.severity"></a>
+
+```typescript
+public readonly severity: Severity[];
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.Severity">Severity</a>[]
+- *Default:* [Severity.CRITICAL]
+
+Severity Selection.
+
+The severity is taken from the selected data source since the severity from vendors is more accurate.
+Using CVE-2023-0464 as an example, while it is rated as "HIGH" in NVD, Red Hat has marked its 'Impact' as "Low". As a result, Trivy will display it as "Low".
+
+The severity depends on the compile option, the default configuration, etc. NVD doesn't know how the vendor distributes the software.
+Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor scores over NVD.
+
+It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
+
+> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection)
+
+---
+
+##### `suppressErrorOnRollback`<sup>Optional</sup> <a name="suppressErrorOnRollback" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.suppressErrorOnRollback"></a>
+
+```typescript
+public readonly suppressErrorOnRollback: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Suppress errors during rollback scanner Lambda execution.
+
+When image scanning fails, CloudFormation triggers a rollback and executes the previous
+version of the scanner Lambda. If this property is set to `true`, the previous version of
+the scanner Lambda will not throw an error, even if the image scanning for the previous version
+fails.
+
+This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
+when image scanning failures occur.
+
+---
+
+##### `trivyIgnore`<sup>Optional</sup> <a name="trivyIgnore" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore"></a>
 
 ```typescript
 public readonly trivyIgnore: string[];

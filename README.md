@@ -1,10 +1,6 @@
 # image-scanner-with-trivy
 
-## Detail Pages
-
-The detail blog is [here](https://dev.to/aws-builders/container-image-scanning-with-trivy-in-aws-cdk-151h).
-
-To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!
+TODO: V2 migration and changes between V1 and V2.
 
 ## What is
 
@@ -186,6 +182,10 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   suppressErrorOnRollback: false,
 });
 ```
+
+## Trivy's official documentation
+
+To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!
 
 ## API Reference
 

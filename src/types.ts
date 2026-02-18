@@ -1,38 +1,34 @@
 /**
- * Enum for ScanLogsOutputType
+ * Enum for Severity Selection
+ *
+ * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection
  */
-export enum ScanLogsOutputType {
-  CLOUDWATCH_LOGS = 'cloudWatchLogs',
+export enum Severity {
+  UNKNOWN = 'UNKNOWN',
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
 }
 
 /**
- * Output configurations for scan logs.
+ * Enum for Scanners
+ *
+ * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
  */
-export interface ScanLogsOutputOptions {
-  readonly type: ScanLogsOutputType;
+export enum Scanners {
+  VULN = 'vuln',
+  CONFIG = 'config',
+  SECRET = 'secret',
+  LICENSE = 'license',
 }
 
 /**
- * Output configuration for scan logs to CloudWatch Logs.
+ * Enum for ImageConfigScanners
+ *
+ * @see https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata
  */
-export interface CloudWatchLogsOutputOptions extends ScanLogsOutputOptions {
-  readonly logGroupName: string;
-}
-
-/**
- * Lambda function event object for Scanner Custom Resource.
- */
-export interface ScannerCustomResourceProps {
-  readonly addr: string;
-  readonly imageUri: string;
-  readonly ignoreUnfixed: string;
-  readonly severity: string[];
-  readonly scanners: string[];
-  readonly imageConfigScanners: string[];
-  readonly exitCode: number;
-  readonly exitOnEol: number;
-  readonly trivyIgnore: string[];
-  readonly platform: string;
-  readonly output?: ScanLogsOutputOptions;
-  readonly suppressErrorOnRollback: string;
+export enum ImageConfigScanners {
+  CONFIG = 'config',
+  SECRET = 'secret',
 }
