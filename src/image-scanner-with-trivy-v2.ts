@@ -22,13 +22,9 @@ import {
 import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
-import { ScannerCustomResourceProps } from './types';
-import {
-  Severity,
-  Scanners,
-  ImageConfigScanners,
-  ScanLogsOutput,
-} from './image-scanner-with-trivy';
+import { ScanLogsOutput } from './scan-logs-output';
+import { ScannerCustomResourceProps } from './custom-resource-props';
+import { Severity, Scanners, ImageConfigScanners } from './types';
 
 /**
  * Properties for ImageScannerWithTrivyV2 Construct.
