@@ -237,6 +237,11 @@ const DEFAULT_MEMORY_SIZE = 3008;
  * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
  */
 export class ImageScannerWithTrivyV2 extends Construct {
+  /**
+   * The default log group for the singleton Lambda function
+   */
+  public defaultLogGroup?: ILogGroup;
+
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
 
@@ -250,7 +255,9 @@ export class ImageScannerWithTrivyV2 extends Construct {
       );
     }
 
+    this.defaultLogGroup = props.defaultLogGroup;
     const lambdaPurpose = 'Custom::ImageScannerWithTrivyV2CustomResourceLambda';
+
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
       uuid: 'cc3b41b5-4701-d86f-fe24-3a04f4a573f1',
       lambdaPurpose,
@@ -268,7 +275,9 @@ export class ImageScannerWithTrivyV2 extends Construct {
       retryAttempts: 0,
       memorySize: props.memorySize ?? DEFAULT_MEMORY_SIZE,
       ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update trivy DB: /tmp/trivy/db/trivy.db
+      logGroup: this.defaultLogGroup,
     });
+
     props.repository.grantPull(customResourceLambda);
 
     // Grant CloudFormation DescribeStacks permission for rollback detection when suppressErrorOnRollback is enabled
@@ -282,7 +291,18 @@ export class ImageScannerWithTrivyV2 extends Construct {
       );
     }
 
-    this.validateLambdaDefaultLogGroupOptions(lambdaPurpose, props.defaultLogGroup);
+    // If multiple ImageScannerWithTrivyV2 constructs in the same stack have different default log groups, add a warning annotation.
+    Stack.of(this).node.children.forEach((child) => {
+      if (
+        child instanceof ImageScannerWithTrivyV2 &&
+        child.defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
+      ) {
+        Annotations.of(this).addWarningV2(
+          '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
+          "You have to set the same values for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        );
+      }
+    });
 
     const imageScannerProvider = new Provider(this, 'Provider', {
       onEventHandler: customResourceLambda,
@@ -308,37 +328,5 @@ export class ImageScannerWithTrivyV2 extends Construct {
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
     });
-  }
-
-  /**
-   * Validates that specified default log group options are the same for existing default log group.
-   */
-  private validateLambdaDefaultLogGroupOptions(
-    lambdaPurpose: string,
-    defaultLogGroup?: ILogGroup,
-  ): void {
-    if (!defaultLogGroup) return;
-
-    // props.defaultLogGroup なし
-    //   -> ツリー
-    // props.defaultLogGroup あり
-    //   ->
-    const logGroupConstructName = `DefaultLogGroupFor${lambdaPurpose}`;
-
-    const existing = Stack.of(this).node.tryFindChild(logGroupConstructName) as
-      | LogGroup
-      | undefined;
-    if (!existing) return;
-
-    // WIP
-    const cfnLogGroup = existing.node.defaultChild as CfnLogGroup;
-    const path = defaultLogGroup?.node.path;
-
-    if (cfnLogGroup.node.path !== path) {
-      Annotations.of(this).addWarningV2(
-        '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroupOptions',
-        "You have to set the same values for 'defaultLogGroupRemovalPolicy' and 'defaultLogGroupRetentionDays' for each ImageScannerWithTrivyV2 construct in the same stack.",
-      );
-    }
   }
 }
