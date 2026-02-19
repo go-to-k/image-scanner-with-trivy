@@ -180,7 +180,7 @@ export interface ImageScannerWithTrivyV2Props {
   readonly platform?: string;
 
   /**
-   * The Scanner Lambda's default log group
+   * The Scanner Lambda function's default log group
    *
    * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack,
    * you must specify the same log group for each construct.
