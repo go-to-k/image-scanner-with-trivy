@@ -232,7 +232,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
   /**
    * The default log group for the singleton Lambda function
    */
-  public defaultLogGroup?: ILogGroup;
+  public readonly defaultLogGroup?: ILogGroup;
 
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
