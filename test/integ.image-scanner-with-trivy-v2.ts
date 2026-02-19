@@ -30,7 +30,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   ignoreUnfixed: false,
   severity: [Severity.CRITICAL],
   scanners: [Scanners.VULN, Scanners.SECRET],
-  exitCode: 1,
+  failOnVulnerability: true,
   exitOnEol: 1,
   trivyIgnore: [
     'CVE-2023-37920',

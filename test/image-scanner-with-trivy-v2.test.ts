@@ -16,7 +16,7 @@ const getTemplate = (): Template => {
     ignoreUnfixed: true,
     severity: [Severity.CRITICAL, Severity.HIGH],
     scanners: [Scanners.VULN, Scanners.SECRET],
-    exitCode: 1,
+    failOnVulnerability: true,
     exitOnEol: 1,
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
