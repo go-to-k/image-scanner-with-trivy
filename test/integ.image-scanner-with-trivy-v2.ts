@@ -9,6 +9,7 @@ import {
   Scanners,
   Severity,
   TargetImagePlatform,
+  TrivyIgnore,
 } from '../src';
 
 const app = new App();
@@ -27,7 +28,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithMinimalOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121'],
+  trivyIgnore: TrivyIgnore.fromRules(['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121']),
 });
 
 new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
@@ -38,13 +39,13 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   scanners: [Scanners.VULN, Scanners.SECRET],
   failOnVulnerability: true,
   failOnEol: true,
-  trivyIgnore: [
+  trivyIgnore: TrivyIgnore.fromRules([
     'CVE-2023-37920',
     'CVE-2025-7783',
     'CVE-2025-68121',
     'CVE-2019-14697 exp:2023-01-01',
     'generic-unwanted-rule',
-  ],
+  ]),
   memorySize: 3008,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: scanLogsOutputLogGroup }),

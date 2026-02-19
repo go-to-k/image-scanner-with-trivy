@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { readFileSync } from 'fs';
 import { Annotations, Aspects, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
@@ -16,6 +17,71 @@ import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
 import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
+
+/**
+ * File type for TrivyIgnore file path
+ */
+export enum TrivyIgnoreFileType {
+  /**
+   * .trivyignore file
+   *
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
+   */
+  TRIVYIGNORE = 'TRIVYIGNORE',
+
+  /**
+   * .trivyignore.yaml file
+   *
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml
+   */
+  TRIVYIGNORE_YAML = 'TRIVYIGNORE_YAML',
+}
+
+/**
+ * Union-like class for specifying Trivy ignore configuration.
+ *
+ * You can either specify ignore rules inline, or point to an existing ignore file.
+ */
+export class TrivyIgnore {
+  /**
+   * Specify ignore rules inline (equivalent to writing lines in a .trivyignore file).
+   *
+   * @param rules Each element corresponds to one line in the .trivyignore file.
+   *
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
+   */
+  public static fromRules(rules: string[]): TrivyIgnore {
+    return new TrivyIgnore(rules);
+  }
+
+  /**
+   * Specify the path to an existing trivyignore file.
+   *
+   * @param path Absolute path to the ignore file inside the Lambda container.
+   * @param fileType File format. Defaults to `TrivyIgnoreFileType.TRIVYIGNORE`.
+   *
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml
+   */
+  public static fromFilePath(
+    path: string,
+    fileType: TrivyIgnoreFileType = TrivyIgnoreFileType.TRIVYIGNORE,
+  ): TrivyIgnore {
+    const content = readFileSync(path, 'utf-8');
+    if (fileType === TrivyIgnoreFileType.TRIVYIGNORE_YAML) {
+      // Extract IDs from .trivyignore.yaml and return as plain lines
+      return new TrivyIgnore(
+        content
+          .split('\n')
+          .map((line) => line.match(/^\s*-\s+id:\s*(\S+)/)?.[1])
+          .filter((id): id is string => id !== undefined),
+      );
+    }
+    return new TrivyIgnore(content.split('\n'));
+  }
+
+  private constructor(public readonly rules: string[]) {}
+}
 
 /**
  * Enum for Target Image Platform
@@ -152,34 +218,38 @@ export interface ImageScannerWithTrivyV2Props {
   readonly failOnEol?: boolean;
 
   /**
-   * By Finding IDs
+   * Ignore rules or ignore file for Trivy.
    *
-   * The ignore rules written to the .trivyignore in trivy.
-   * Put each line you write in the file into one element of the array.
+   * Use `TrivyIgnore.fromRules()` to specify inline ignore rules (equivalent to writing lines
+   * in a `.trivyignore` file), or `TrivyIgnore.fromFilePath()` to point to an existing ignore file.
    *
-   * @example
-   *     $ cat .trivyignore
-   *     # Accept the risk
-   *     CVE-2018-14618
+   * @example Inline rules
+   * ```ts
+   * trivyIgnore: TrivyIgnore.fromRules([
+   *   'CVE-2018-14618',
+   *   'CVE-2019-14697 exp:2023-01-01',
+   *   'AVD-DS-0002',
+   *   'generic-unwanted-rule',
+   *   'aws-account-id',
+   * ])
+   * ```
    *
-   *     # Accept the risk until 2023-01-01
-   *     CVE-2019-14697 exp:2023-01-01
+   * @example File path (.trivyignore)
+   * ```ts
+   * trivyIgnore: TrivyIgnore.fromFilePath('/path/to/.trivyignore')
+   * ```
    *
-   *     # No impact in our settings
-   *     CVE-2019-1543
+   * @example File path (.trivyignore.yaml)
+   * ```ts
+   * trivyIgnore: TrivyIgnore.fromFilePath('/path/to/.trivyignore.yaml', TrivyIgnoreFileType.TRIVYIGNORE_YAML)
+   * ```
    *
-   *     # Ignore misconfigurations
-   *     AVD-DS-0002
-   *
-   *     # Ignore secrets
-   *     generic-unwanted-rule
-   *     aws-account-id
-   *
-   * @default []
+   * @default - no ignore rules
    *
    * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml
    */
-  readonly trivyIgnore?: string[];
+  readonly trivyIgnore?: TrivyIgnore;
 
   /**
    * Memory Size (MB) for Scanner Lambda
@@ -333,7 +403,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       imageConfigScanners: props.imageConfigScanners ?? [],
       exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
       exitOnEol: (props.failOnEol ?? true) ? 1 : 0,
-      trivyIgnore: props.trivyIgnore ?? [],
+      trivyIgnore: props.trivyIgnore?.rules ?? [],
       platform: props.targetImagePlatform?.value ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),

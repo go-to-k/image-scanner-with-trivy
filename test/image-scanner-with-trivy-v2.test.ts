@@ -8,6 +8,7 @@ import {
   Scanners,
   Severity,
   TargetImagePlatform,
+  TrivyIgnore,
 } from '../src';
 
 const getTemplate = (): Template => {
@@ -24,7 +25,7 @@ const getTemplate = (): Template => {
     scanners: [Scanners.VULN, Scanners.SECRET],
     failOnVulnerability: true,
     failOnEol: true,
-    trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
+    trivyIgnore: TrivyIgnore.fromRules(['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01']),
     memorySize: 3008,
     targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
     defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
