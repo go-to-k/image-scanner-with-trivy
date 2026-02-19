@@ -93,7 +93,7 @@ export interface ImageScannerWithTrivyV2Props {
   readonly imageConfigScanners?: ImageConfigScanners[];
 
   /**
-   * Exit Code
+   * Whether to fail on vulnerabilities
    *
    * If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
    *
@@ -108,22 +108,22 @@ export interface ImageScannerWithTrivyV2Props {
   readonly failOnVulnerability?: boolean;
 
   /**
-   * Exit on EOL
+   * Whether to fail on EOL (End of Life) OS
    *
    * Sometimes you may surprisingly get 0 vulnerabilities in an old image:
    *  - Enabling --ignore-unfixed option while all packages have no fixed versions.
    *  - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
    *
    * An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
-   * `exitOnEol` can fail scanning on EOL OS with a non-zero code.
+   * If set to `true`, scanning fails on EOL OS with a non-zero exit code.
    *
-   * It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
    *
-   * @default 1
+   * @default true
    *
    * @see https://trivy.dev/docs/latest/configuration/others/#exit-on-eol
    */
-  readonly exitOnEol?: number;
+  readonly failOnEol?: boolean;
 
   /**
    * By Finding IDs
@@ -310,7 +310,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
       exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
-      exitOnEol: props.exitOnEol ?? 1,
+      exitOnEol: (props.failOnEol ?? true) ? 1 : 0,
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),

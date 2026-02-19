@@ -17,7 +17,7 @@ const getTemplate = (): Template => {
     severity: [Severity.CRITICAL, Severity.HIGH],
     scanners: [Scanners.VULN, Scanners.SECRET],
     failOnVulnerability: true,
-    exitOnEol: 1,
+    failOnEol: 1,
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
     platform: 'linux/arm64',
@@ -222,6 +222,30 @@ describe('ImageScannerWithTrivyV2', () => {
 
       Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
         exitCode: expectedExitCode,
+      });
+    },
+  );
+
+  test.each([
+    [1, true],
+    [0, false],
+    [1, undefined],
+  ])(
+    'exitOnEol is set to %p when failOnEol is %p',
+    (expectedExitOnEol, failOnEol) => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const repository = new Repository(stack, 'ImageRepository', {});
+
+      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
+        imageUri: 'imageUri',
+        repository: repository,
+        failOnEol,
+      });
+
+      Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        exitOnEol: expectedExitOnEol,
       });
     },
   );
