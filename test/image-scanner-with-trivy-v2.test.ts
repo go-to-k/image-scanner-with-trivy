@@ -103,7 +103,7 @@ describe('ImageScannerWithTrivyV2', () => {
     );
   });
 
-  test('warns when the default log groups are different between ImageScannerWithTrivyV2 constructs', () => {
+  test('warns per construct when the default log groups are different between ImageScannerWithTrivyV2 constructs', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
 
@@ -119,6 +119,7 @@ describe('ImageScannerWithTrivyV2', () => {
     new ImageScannerWithTrivyV2(stack, 'WithAnotherDefaultLogGroup', {
       imageUri: 'imageUri',
       repository: new Repository(stack, 'ImageRepository3', {}),
+      defaultLogGroup: new LogGroup(stack, 'AnotherDefaultLogGroup'),
     });
 
     Annotations.fromStack(stack).hasWarning(
