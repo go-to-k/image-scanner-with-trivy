@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { Annotations, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
+import { Annotations, Aspects, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -284,16 +284,18 @@ export class ImageScannerWithTrivyV2 extends Construct {
     }
 
     // If multiple ImageScannerWithTrivyV2 constructs in the same stack have different default log groups, add a warning annotation.
-    Stack.of(this).node.children.forEach((child) => {
-      if (
-        child instanceof ImageScannerWithTrivyV2 &&
-        child.defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
-      ) {
-        Annotations.of(this).addWarningV2(
-          '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
-          "You have to set the same values for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
-        );
-      }
+    Aspects.of(this).add({
+      visit: (node) => {
+        if (
+          node instanceof ImageScannerWithTrivyV2 &&
+          node.defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
+        ) {
+          Annotations.of(this).addWarningV2(
+            '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
+            "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+          );
+        }
+      },
     });
 
     const imageScannerProvider = new Provider(this, 'Provider', {

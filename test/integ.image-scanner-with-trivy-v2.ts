@@ -8,7 +8,7 @@ import { ImageScannerWithTrivyV2, ScanLogsOutput, Scanners, Severity } from '../
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyV2Stack');
 
-const logGroup = new LogGroup(stack, 'LogGroup', {
+const scanLogsOutputLogGroup = new LogGroup(stack, 'ScanLogsOutputLogGroup', {
   removalPolicy: RemovalPolicy.DESTROY,
 });
 
@@ -41,19 +41,12 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   ],
   memorySize: 3008,
   platform: 'linux/arm64',
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup }),
-  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-  defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: scanLogsOutputLogGroup }),
+  defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup', {
+    removalPolicy: RemovalPolicy.DESTROY,
+    retention: RetentionDays.ONE_DAY,
+  }),
   suppressErrorOnRollback: true,
-});
-
-// This test checks that the default log group is not created and that the existing log group is used.
-new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithDefaultLogGroupOptions', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121'],
-  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-  defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });
 
 const test = new IntegTest(app, 'Test', {
@@ -63,7 +56,7 @@ const test = new IntegTest(app, 'Test', {
 
 test.assertions
   .awsApiCall('CloudWatchLogs', 'filterLogEvents', {
-    logGroupName: logGroup.logGroupName,
+    logGroupName: scanLogsOutputLogGroup.logGroupName,
     limit: 1,
   })
   .assertAtPath('events.0.message', ExpectedResult.stringLikeRegexp('.+'))
