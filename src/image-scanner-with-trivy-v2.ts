@@ -40,7 +40,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default false
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities
+   * @see https://trivy.dev/docs/latest/scanner/vulnerability/#unfixed-vulnerabilities
    */
   readonly ignoreUnfixed?: boolean;
 
@@ -57,7 +57,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default [Severity.CRITICAL]
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection
+   * @see https://trivy.dev/docs/latest/scanner/vulnerability/#severity-selection
    */
   readonly severity?: Severity[];
 
@@ -71,7 +71,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default [Security.VULN,Scanners.SECRET]
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
+   * @see https://trivy.dev/docs/latest/configuration/others/#enabledisable-scanners
    */
   readonly scanners?: Scanners[];
 
@@ -88,24 +88,24 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default []
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata
+   * @see https://trivy.dev/docs/latest/target/container_image/#container-image-metadata
    */
   readonly imageConfigScanners?: ImageConfigScanners[];
 
   /**
    * Exit Code
    *
-   * Use the `exitCode` option if you want to exit with a non-zero exit code.
+   * If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
    *
-   * You can specify 0 if you do not want to exit even when vulnerabilities are detected.
+   * If set to `false`, Trivy exits with a zero exit code even when vulnerabilities are detected.
    *
-   * It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+   * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
    *
-   * @default 1
+   * @default true
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code
+   * @see https://trivy.dev/docs/latest/configuration/others/#exit-code
    */
-  readonly exitCode?: number;
+  readonly failOnVulnerability?: boolean;
 
   /**
    * Exit on EOL
@@ -121,7 +121,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default 1
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol
+   * @see https://trivy.dev/docs/latest/configuration/others/#exit-on-eol
    */
   readonly exitOnEol?: number;
 
@@ -151,7 +151,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * @default []
    *
-   * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore
+   * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
    */
   readonly trivyIgnore?: string[];
 
@@ -309,7 +309,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       severity: props.severity ?? [Severity.CRITICAL],
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
-      exitCode: props.exitCode ?? 1,
+      exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
       exitOnEol: props.exitOnEol ?? 1,
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
