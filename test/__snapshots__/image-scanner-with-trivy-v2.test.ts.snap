@@ -151,6 +151,11 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
         "EphemeralStorage": {
           "Size": 10240,
         },
+        "LoggingConfig": {
+          "LogGroup": {
+            "Ref": "DefaultLogGroup696834B2",
+          },
+        },
         "MemorySize": 3008,
         "PackageType": "Image",
         "Role": {
@@ -259,24 +264,13 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "DefaultLogGroupForCustomImageScannerWithTrivyV2CustomResourceLambdaFBCF4496": {
-      "DeletionPolicy": "Delete",
+    "DefaultLogGroup696834B2": {
+      "DeletionPolicy": "Retain",
       "Properties": {
-        "LogGroupName": {
-          "Fn::Join": [
-            "",
-            [
-              "/aws/lambda/",
-              {
-                "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-              },
-            ],
-          ],
-        },
-        "RetentionInDays": 30,
+        "RetentionInDays": 731,
       },
       "Type": "AWS::Logs::LogGroup",
-      "UpdateReplacePolicy": "Delete",
+      "UpdateReplacePolicy": "Retain",
     },
     "ImageRepositoryBBCBC9DF": {
       "DeletionPolicy": "Retain",

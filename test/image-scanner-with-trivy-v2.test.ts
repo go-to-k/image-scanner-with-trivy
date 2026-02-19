@@ -1,7 +1,7 @@
-import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
+import { App, Stack } from 'aws-cdk-lib';
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
-import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivyV2, ScanLogsOutput, Scanners, Severity } from '../src';
 
 const getTemplate = (): Template => {
@@ -21,8 +21,7 @@ const getTemplate = (): Template => {
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
     platform: 'linux/arm64',
-    defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-    defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+    defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
     suppressErrorOnRollback: true,
   });
@@ -104,109 +103,101 @@ describe('ImageScannerWithTrivyV2', () => {
     );
   });
 
-  describe('default log group settings', () => {
-    test('create the default log group with removalPolicy and retentionInDays', () => {
-      template.hasResource('AWS::Logs::LogGroup', {
-        DeletionPolicy: 'Delete',
-        Properties: {
-          LogGroupName: {
-            'Fn::Join': [
-              '',
-              [
-                '/aws/lambda/',
-                {
-                  Ref: 'CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1',
-                },
-              ],
-            ],
-          },
-          RetentionInDays: 30,
-        },
-      });
-    });
-
-    test("don't create the default log group if none of the properties for the default log group are specified", () => {
+  describe('defaultLogGroup', () => {
+    test('warns per construct when the default log groups are different between ImageScannerWithTrivyV2 constructs', () => {
       const app = new App();
       const stack = new Stack(app, 'TestStack');
 
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV21', {
+      new ImageScannerWithTrivyV2(stack, 'WithNone', {
         imageUri: 'imageUri',
         repository: new Repository(stack, 'ImageRepository1', {}),
       });
-
-      Template.fromStack(stack).resourceCountIs('AWS::Logs::LogGroup', 0);
-    });
-
-    test('only create one log group per singletonFunction and no warns', () => {
-      const app = new App();
-      const stack = new Stack(app, 'TestStack');
-
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV21', {
-        imageUri: 'imageUri',
-        repository: new Repository(stack, 'ImageRepository1', {}),
-        defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-        defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
-      });
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV22', {
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup', {
         imageUri: 'imageUri',
         repository: new Repository(stack, 'ImageRepository2', {}),
-        defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-        defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
+        defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
       });
-
-      Template.fromStack(stack).resourceCountIs('AWS::Logs::LogGroup', 1);
-      Annotations.fromStack(stack).hasNoWarning(
-        '/TestStack/ImageScannerWithTrivyV21',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
-      );
-      Annotations.fromStack(stack).hasNoWarning(
-        '/TestStack/ImageScannerWithTrivyV22',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
-      );
-    });
-
-    test('warns when the default log group options are different between ImageScannerWithTrivyV2 constructs', () => {
-      const app = new App();
-      const stack = new Stack(app, 'TestStack');
-
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
-        imageUri: 'imageUri',
-        repository: new Repository(stack, 'ImageRepository1', {}),
-        defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-        defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
-      });
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithDifferentRemovalPolicy', {
-        imageUri: 'imageUri',
-        repository: new Repository(stack, 'ImageRepository2', {}),
-        defaultLogGroupRemovalPolicy: RemovalPolicy.RETAIN,
-        defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH,
-      });
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithDifferentRetentionDays', {
+      new ImageScannerWithTrivyV2(stack, 'WithAnotherDefaultLogGroup', {
         imageUri: 'imageUri',
         repository: new Repository(stack, 'ImageRepository3', {}),
-        defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-        defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
+        defaultLogGroup: new LogGroup(stack, 'AnotherDefaultLogGroup'),
       });
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithNoDefaultLogGroupOptions', {
+
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithNone',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithDefaultLogGroup',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithAnotherDefaultLogGroup',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+    });
+
+    test("don't warn when the default log groups are the same between ImageScannerWithTrivyV2 constructs", () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const defaultLogGroup = new LogGroup(stack, 'DefaultLogGroup');
+
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup1', {
         imageUri: 'imageUri',
-        repository: new Repository(stack, 'ImageRepository4', {}),
+        repository: new Repository(stack, 'ImageRepository1', {}),
+        defaultLogGroup,
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup2', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository2', {}),
+        defaultLogGroup,
       });
 
       Annotations.fromStack(stack).hasNoWarning(
-        '/TestStack/ImageScannerWithTrivyV2',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
+        '/TestStack/WithDefaultLogGroup1',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
       );
-      Annotations.fromStack(stack).hasWarning(
-        '/TestStack/ImageScannerWithTrivyV2WithDifferentRemovalPolicy',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithDefaultLogGroup2',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
       );
-      Annotations.fromStack(stack).hasWarning(
-        '/TestStack/ImageScannerWithTrivyV2WithDifferentRetentionDays',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
+    });
+
+    test("don't warn when the default log groups are not set", () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      new ImageScannerWithTrivyV2(stack, 'WithoutDefaultLogGroup1', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository1', {}),
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithoutDefaultLogGroup2', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository2', {}),
+      });
+
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithoutDefaultLogGroup1',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
       );
-      Annotations.fromStack(stack).hasWarning(
-        '/TestStack/ImageScannerWithTrivyV2WithNoDefaultLogGroupOptions',
-        Match.stringLikeRegexp('You have to set the same values for.+'),
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithoutDefaultLogGroup2',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
       );
     });
   });
