@@ -1,0 +1,4 @@
+*
+!dist/*
+!Dockerfile
+!index.ts

@@ -1209,6 +1209,7 @@ Each element corresponds to one line in the .trivyignore file.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.TrivyIgnore.property.rules">rules</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnore.property.fileType">fileType</a></code> | <code><a href="#image-scanner-with-trivy.TrivyIgnoreFileType">TrivyIgnoreFileType</a></code> | *No description.* |
 
 ---
 
@@ -1219,6 +1220,16 @@ public readonly rules: string[];
 ```
 
 - *Type:* string[]
+
+---
+
+##### `fileType`<sup>Optional</sup> <a name="fileType" id="image-scanner-with-trivy.TrivyIgnore.property.fileType"></a>
+
+```typescript
+public readonly fileType: TrivyIgnoreFileType;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.TrivyIgnoreFileType">TrivyIgnoreFileType</a>
 
 ---
 

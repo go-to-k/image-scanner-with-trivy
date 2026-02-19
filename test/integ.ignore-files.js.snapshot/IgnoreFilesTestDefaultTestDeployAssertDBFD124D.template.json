@@ -23,7 +23,7 @@
        [
         "\"",
         {
-         "Fn::ImportValue": "ImageScannerWithTrivyV2Stack:ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
+         "Fn::ImportValue": "IgnoreFilesStack:ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
         },
         "\""
        ]
@@ -35,7 +35,7 @@
     "outputPaths": [
      "events.0.message"
     ],
-    "salt": "1771491617138"
+    "salt": "1771502031558"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"

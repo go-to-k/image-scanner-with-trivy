@@ -21,6 +21,7 @@ import {
 } from '../../src/scan-logs-output';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
+const TRIVY_IGNORE_YAML_FILE_PATH = '/tmp/.trivyignore.yaml';
 
 const cwClient = new CloudWatchLogsClient();
 const cfnClient = new CloudFormationClient();
@@ -41,7 +42,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
 
     if (props.trivyIgnore.length) {
       console.log('trivyignore: ' + JSON.stringify(props.trivyIgnore));
-      makeTrivyIgnoreFile(props.trivyIgnore);
+      makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
     }
 
     const cmd = `/opt/trivy image --no-progress ${options.join(' ')} ${props.imageUri}`;
@@ -81,15 +82,19 @@ const makeOptions = (props: ScannerCustomResourceProps): string[] => {
     options.push(`--image-config-scanners ${props.imageConfigScanners.join(',')}`);
   if (props.exitCode) options.push(`--exit-code ${props.exitCode}`);
   if (props.exitOnEol) options.push(`--exit-on-eol ${props.exitOnEol}`);
-  if (props.trivyIgnore.length) options.push(`--ignorefile ${TRIVY_IGNORE_FILE_PATH}`);
+  if (props.trivyIgnore.length) {
+    const ignoreFilePath =
+      props.trivyIgnoreFileType === 'TRIVYIGNORE_YAML' ? TRIVY_IGNORE_YAML_FILE_PATH : TRIVY_IGNORE_FILE_PATH;
+    options.push(`--ignorefile ${ignoreFilePath}`);
+  }
   if (props.platform) options.push(`--platform ${props.platform}`);
 
   return options;
 };
 
-const makeTrivyIgnoreFile = (trivyIgnore: string[]) => {
-  const ignoreLines = trivyIgnore.join('\n');
-  writeFileSync(TRIVY_IGNORE_FILE_PATH, ignoreLines, 'utf-8');
+const makeTrivyIgnoreFile = (trivyIgnore: string[], fileType?: string) => {
+  const filePath = fileType === 'TRIVYIGNORE_YAML' ? TRIVY_IGNORE_YAML_FILE_PATH : TRIVY_IGNORE_FILE_PATH;
+  writeFileSync(filePath, trivyIgnore.join('\n'), 'utf-8');
 };
 
 const outputScanLogs = async (
