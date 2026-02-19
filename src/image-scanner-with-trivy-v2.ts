@@ -1,5 +1,5 @@
-import { join } from 'path';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 import { Annotations, Aspects, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
