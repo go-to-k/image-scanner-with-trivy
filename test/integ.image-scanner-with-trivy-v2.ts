@@ -3,7 +3,13 @@ import { ExpectedResult, IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { ImageScannerWithTrivyV2, ScanLogsOutput, Scanners, Severity } from '../src';
+import {
+  ImageScannerWithTrivyV2,
+  ScanLogsOutput,
+  Scanners,
+  Severity,
+  TargetImagePlatform,
+} from '../src';
 
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyV2Stack');
@@ -40,7 +46,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
     'generic-unwanted-rule',
   ],
   memorySize: 3008,
-  platform: 'linux/arm64',
+  targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: scanLogsOutputLogGroup }),
   defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup', {
     removalPolicy: RemovalPolicy.DESTROY,

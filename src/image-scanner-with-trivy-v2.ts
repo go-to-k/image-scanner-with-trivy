@@ -18,6 +18,32 @@ import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
 
 /**
+ * Enum for Target Image Platform
+ */
+export class TargetImagePlatform {
+  /**
+   * Linux AMD64 platform
+   */
+  public static readonly LINUX_AMD64 = new TargetImagePlatform('linux/amd64');
+
+  /**
+   * Linux ARM64 platform
+   */
+  public static readonly LINUX_ARM64 = new TargetImagePlatform('linux/arm64');
+
+  /**
+   * Custom value for target image platform
+   *
+   * The value should be in the format OS/Architecture for the image, such as `linux/arm64`.
+   */
+  public static custom(value: string): TargetImagePlatform {
+    return new TargetImagePlatform(value);
+  }
+
+  private constructor(public readonly value: string) {}
+}
+
+/**
  * Properties for ImageScannerWithTrivyV2 Construct.
  */
 export interface ImageScannerWithTrivyV2Props {
@@ -171,13 +197,9 @@ export interface ImageScannerWithTrivyV2Props {
   /**
    * Scan Image on a specific Architecture and OS
    *
-   * By default, Trivy loads an image on a `linux/amd64` machine.
-   *
-   * To customize this, pass a `platform` argument in the format OS/Architecture for the image, such as `linux/arm64`
-   *
-   * @default -
+   * @default - Trivy loads an image on a `linux/amd64` machine.
    */
-  readonly platform?: string;
+  readonly targetImagePlatform?: TargetImagePlatform;
 
   /**
    * The Scanner Lambda function's default log group
@@ -312,7 +334,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
       exitOnEol: (props.failOnEol ?? true) ? 1 : 0,
       trivyIgnore: props.trivyIgnore ?? [],
-      platform: props.platform ?? '',
+      platform: props.targetImagePlatform?.value ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),
     };
