@@ -194,6 +194,7 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The default log group for the singleton Lambda function. |
 
 ---
 
@@ -206,6 +207,18 @@ public readonly node: Node;
 - *Type:* constructs.Node
 
 The tree node.
+
+---
+
+##### `defaultLogGroup`<sup>Optional</sup> <a name="defaultLogGroup" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.property.defaultLogGroup"></a>
+
+```typescript
+public readonly defaultLogGroup: ILogGroup;
+```
+
+- *Type:* aws-cdk-lib.aws_logs.ILogGroup
+
+The default log group for the singleton Lambda function.
 
 ---
 
@@ -669,8 +682,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRemovalPolicy">defaultLogGroupRemovalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | The removal policy to apply to Scanner Lambda's default log group. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRetentionDays">defaultLogGroupRetentionDays</a></code> | <code>aws-cdk-lib.aws_logs.RetentionDays</code> | The number of days log events are kept in Scanner Lambda's default log group. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda's default log group. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode">exitCode</a></code> | <code>number</code> | Exit Code. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
@@ -711,34 +723,20 @@ Because of grantPull to CustomResourceLambda.
 
 ---
 
-##### `defaultLogGroupRemovalPolicy`<sup>Optional</sup> <a name="defaultLogGroupRemovalPolicy" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRemovalPolicy"></a>
+##### `defaultLogGroup`<sup>Optional</sup> <a name="defaultLogGroup" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup"></a>
 
 ```typescript
-public readonly defaultLogGroupRemovalPolicy: RemovalPolicy;
+public readonly defaultLogGroup: ILogGroup;
 ```
 
-- *Type:* aws-cdk-lib.RemovalPolicy
+- *Type:* aws-cdk-lib.aws_logs.ILogGroup
 - *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
 
-The removal policy to apply to Scanner Lambda's default log group.
+The Scanner Lambda's default log group.
 
-If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different removal policies for the default log group.
-See `Notes` section in the README for more details.
+If you use ImageScannerWithTrivyV2 construct multiple times in the same stack,
+you must specify the same log group for each construct.
 
----
-
-##### `defaultLogGroupRetentionDays`<sup>Optional</sup> <a name="defaultLogGroupRetentionDays" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroupRetentionDays"></a>
-
-```typescript
-public readonly defaultLogGroupRetentionDays: RetentionDays;
-```
-
-- *Type:* aws-cdk-lib.aws_logs.RetentionDays
-- *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`) and log events never expire.
-
-The number of days log events are kept in Scanner Lambda's default log group.
-
-If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you cannot set different retention days for the default log group.
 See `Notes` section in the README for more details.
 
 ---
@@ -871,7 +869,7 @@ public readonly scanLogsOutput: ScanLogsOutput;
 ```
 
 - *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a>
-- *Default:* scan logs output to default log group created by Scanner Lambda(`/aws/lambda/${functionName}`)
+- *Default:* scan logs output to `defaultLogGroup` if specified, otherwise to the default log group created by Scanner Lambda.
 
 Configuration for scan logs output.
 
