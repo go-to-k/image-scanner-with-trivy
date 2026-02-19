@@ -200,7 +200,8 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * Currently, only `cloudWatchLogs` is supported.
    *
-   * @default - scan logs output to `defaultLogGroup` if specified, otherwise to the default log group created by Scanner Lambda.
+   * @default - scan logs output to `defaultLogGroup` if specified, otherwise to the default
+   * log group created by Scanner Lambda.
    */
   readonly scanLogsOutput?: ScanLogsOutput;
 
