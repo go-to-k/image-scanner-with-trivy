@@ -284,7 +284,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
     }
 
     // If multiple ImageScannerWithTrivyV2 constructs in the same stack have different default log groups, add a warning annotation.
-    Aspects.of(this).add({
+    Aspects.of(Stack.of(this)).add({
       visit: (node) => {
         if (
           node instanceof ImageScannerWithTrivyV2 &&

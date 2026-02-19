@@ -48,6 +48,12 @@
             "data": "ScanLogsOutputLogGroup242F0DED"
           }
         ],
+        "/ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack. [ack: @image-scanner-with-trivy:duplicateLambdaDefaultLogGroup]"
+          }
+        ],
         "/ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
@@ -461,6 +467,12 @@
             "data": "DefaultLogGroup696834B2"
           }
         ],
+        "/ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack. [ack: @image-scanner-with-trivy:duplicateLambdaDefaultLogGroup]"
+          }
+        ],
         "/ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
@@ -667,7 +679,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/4e756a67c7bd1ae5dac793a24225e3dd88c307c2c99f2c63c6fe84e08beb529e.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/82b92d7e311c4e945ca83467613cab40cba2f6ee716674c63f5d68ec2b3cf9cf.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
