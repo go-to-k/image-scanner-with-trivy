@@ -185,7 +185,7 @@ export interface ImageScannerWithTrivyV2Props {
    * If you use ImageScannerWithTrivyV2 construct multiple times in the same stack,
    * you must specify the same log group for each construct.
    *
-   * See `Notes` section in the README for more details.
+   * See `Default Log Group` section in the README for more details.
    *
    * @default - Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
    */
