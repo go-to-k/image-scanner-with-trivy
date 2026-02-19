@@ -57,7 +57,7 @@ export class TrivyIgnore {
   /**
    * Specify the path to an existing trivyignore file.
    *
-   * @param path Absolute path to the ignore file inside the Lambda container.
+   * @param path Path to the ignore file.
    * @param fileType File format. Defaults to `TrivyIgnoreFileType.TRIVYIGNORE`.
    *
    * @see https://trivy.dev/docs/latest/configuration/filtering/#trivyignore
@@ -77,7 +77,10 @@ export class TrivyIgnore {
           .filter((id): id is string => id !== undefined),
       );
     }
-    return new TrivyIgnore(content.split('\n'));
+    // Exclude empty lines and comment lines from .trivyignore
+    return new TrivyIgnore(
+      content.split('\n').filter((line) => line.trim() !== '' && !line.trim().startsWith('#')),
+    );
   }
 
   private constructor(public readonly rules: string[]) {}
@@ -222,27 +225,6 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * Use `TrivyIgnore.fromRules()` to specify inline ignore rules (equivalent to writing lines
    * in a `.trivyignore` file), or `TrivyIgnore.fromFilePath()` to point to an existing ignore file.
-   *
-   * @example Inline rules
-   * ```ts
-   * trivyIgnore: TrivyIgnore.fromRules([
-   *   'CVE-2018-14618',
-   *   'CVE-2019-14697 exp:2023-01-01',
-   *   'AVD-DS-0002',
-   *   'generic-unwanted-rule',
-   *   'aws-account-id',
-   * ])
-   * ```
-   *
-   * @example File path (.trivyignore)
-   * ```ts
-   * trivyIgnore: TrivyIgnore.fromFilePath('/path/to/.trivyignore')
-   * ```
-   *
-   * @example File path (.trivyignore.yaml)
-   * ```ts
-   * trivyIgnore: TrivyIgnore.fromFilePath('/path/to/.trivyignore.yaml', TrivyIgnoreFileType.TRIVYIGNORE_YAML)
-   * ```
    *
    * @default - no ignore rules
    *
