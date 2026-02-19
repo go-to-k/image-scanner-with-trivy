@@ -82,10 +82,10 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 
 ### Default Log Group
 
-If you customize the default log group for Scanner Lambda, you can specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options.
-Currently, only changing the removal policy and retention days are supported.
+If you want to use a custom log group for the Scanner Lambda function's default log group, you can specify the `defaultLogGroup` option.
 
-If the default log group is already created in your AWS Account and you specify the `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` options, the deployment will fail because of a conflict with the log group name.
+If you use ImageScannerWithTrivy construct multiple times in the same stack, you have to set the same log group for `defaultLogGroup` for each construct.
+When you set different log groups for each construct, a warning message will be displayed.
 
 ```ts
 import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
@@ -99,54 +99,22 @@ const image = new DockerImageAsset(this, 'DockerImage', {
   directory: resolve(__dirname, './'),
 });
 
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  // Change the default log group removal policy to `Destroy`.
-  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-  // Change the default log group retention days to `One Year`.
-  defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
-});
-```
-
-If you use ImageScannerWithTrivy construct multiple times in the same stack, you have to set the same values for `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` for each construct.
-When you set the different values for each construct, the first one will be applied to all ImageScannerWithTrivy constructs in the same stack and warning message will be displayed.
-
-The following code will produce warning message because of the different values of `defaultLogGroupRemovalPolicy` and `defaultLogGroupRetentionDays` for each construct.
-
-```ts
-import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
-
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
+const logGroup = new LogGroup(this, 'LogGroup');
 
 new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
-  // The following options are applied to all ImageScannerWithTrivy constructs in the same stack.
-  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
-  defaultLogGroupRetentionDays: RetentionDays.ONE_YEAR,
+  // Specify the log group to use as the default log group for Scanner Lambda.
+  defaultLogGroup: logGroup,
 });
 
 // NG example
-// Once you specify the defaultLogGroupRemovalPolicy and defaultLogGroupRetentionDays, you have to set the same values for each construct.
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithDifferentDefaultLogGroupOptions', {
+// When multiple ImageScannerWithTrivy constructs have different default log groups, a warning will be displayed.
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithAnotherDefaultLogGroup', {
   imageUri: image.imageUri,
   repository: image.repository,
-  // The following options are different from the above construct, and warning message will be displayed when synthesizing the stack.
-  defaultLogGroupRemovalPolicy: RemovalPolicy.RETAIN, // This should be `RemovalPolicy.DESTROY` as the above construct.
-  defaultLogGroupRetentionDays: RetentionDays.ONE_MONTH, // This should be `RetentionDays.ONE_YEAR` as the above construct.
-});
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithNoDefaultLogGroupOptions', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  // You should specify the defaultLogGroupRemovalPolicy and defaultLogGroupRetentionDays if you have already set the values.
+  defaultLogGroup: new LogGroup(this, 'AnotherDefaultLogGroup'), // NG example - different log group from the previous construct
+  // defaultLogGroup: logGroup, // OK example - use the same log group for all constructs
 });
 ```
 
