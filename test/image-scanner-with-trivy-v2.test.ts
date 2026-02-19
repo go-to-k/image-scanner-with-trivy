@@ -202,6 +202,30 @@ describe('ImageScannerWithTrivyV2', () => {
     });
   });
 
+  test.each([
+    [1, true],
+    [0, false],
+    [1, undefined],
+  ])(
+    'exitCode is set to %p when failOnVulnerability is %p',
+    (expectedExitCode, failOnVulnerability) => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const repository = new Repository(stack, 'ImageRepository', {});
+
+      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
+        imageUri: 'imageUri',
+        repository: repository,
+        failOnVulnerability,
+      });
+
+      Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        exitCode: expectedExitCode,
+      });
+    },
+  );
+
   test('throws if memorySize > 10240', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
