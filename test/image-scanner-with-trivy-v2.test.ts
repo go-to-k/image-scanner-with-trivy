@@ -103,43 +103,103 @@ describe('ImageScannerWithTrivyV2', () => {
     );
   });
 
-  test('warns per construct when the default log groups are different between ImageScannerWithTrivyV2 constructs', () => {
-    const app = new App();
-    const stack = new Stack(app, 'TestStack');
+  describe('defaultLogGroup', () => {
+    test('warns per construct when the default log groups are different between ImageScannerWithTrivyV2 constructs', () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
 
-    new ImageScannerWithTrivyV2(stack, 'WithNone', {
-      imageUri: 'imageUri',
-      repository: new Repository(stack, 'ImageRepository1', {}),
-    });
-    new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup', {
-      imageUri: 'imageUri',
-      repository: new Repository(stack, 'ImageRepository2', {}),
-      defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
-    });
-    new ImageScannerWithTrivyV2(stack, 'WithAnotherDefaultLogGroup', {
-      imageUri: 'imageUri',
-      repository: new Repository(stack, 'ImageRepository3', {}),
-      defaultLogGroup: new LogGroup(stack, 'AnotherDefaultLogGroup'),
+      new ImageScannerWithTrivyV2(stack, 'WithNone', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository1', {}),
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository2', {}),
+        defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithAnotherDefaultLogGroup', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository3', {}),
+        defaultLogGroup: new LogGroup(stack, 'AnotherDefaultLogGroup'),
+      });
+
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithNone',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithDefaultLogGroup',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasWarning(
+        '/TestStack/WithAnotherDefaultLogGroup',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
     });
 
-    Annotations.fromStack(stack).hasWarning(
-      '/TestStack/WithNone',
-      Match.stringLikeRegexp(
-        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
-      ),
-    );
-    Annotations.fromStack(stack).hasWarning(
-      '/TestStack/WithDefaultLogGroup',
-      Match.stringLikeRegexp(
-        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
-      ),
-    );
-    Annotations.fromStack(stack).hasWarning(
-      '/TestStack/WithAnotherDefaultLogGroup',
-      Match.stringLikeRegexp(
-        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
-      ),
-    );
+    test("don't warn when the default log groups are the same between ImageScannerWithTrivyV2 constructs", () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const defaultLogGroup = new LogGroup(stack, 'DefaultLogGroup');
+
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup1', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository1', {}),
+        defaultLogGroup,
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithDefaultLogGroup2', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository2', {}),
+        defaultLogGroup,
+      });
+
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithDefaultLogGroup1',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithDefaultLogGroup2',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+    });
+
+    test("don't warn when the default log groups are not set", () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      new ImageScannerWithTrivyV2(stack, 'WithoutDefaultLogGroup1', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository1', {}),
+      });
+      new ImageScannerWithTrivyV2(stack, 'WithoutDefaultLogGroup2', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository2', {}),
+      });
+
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithoutDefaultLogGroup1',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+      Annotations.fromStack(stack).hasNoWarning(
+        '/TestStack/WithoutDefaultLogGroup2',
+        Match.stringLikeRegexp(
+          "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+        ),
+      );
+    });
   });
 
   test('throws if memorySize > 10240', () => {
