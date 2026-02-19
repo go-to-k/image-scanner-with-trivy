@@ -683,8 +683,8 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda function's default log group. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Exit Code. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnEol">failOnEol</a></code> | <code>boolean</code> | Whether to fail on EOL (End of Life) OS. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Whether to fail on vulnerabilities. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
@@ -741,25 +741,25 @@ See `Default Log Group` section in the README for more details.
 
 ---
 
-##### `exitOnEol`<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol"></a>
+##### `failOnEol`<sup>Optional</sup> <a name="failOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnEol"></a>
 
 ```typescript
-public readonly exitOnEol: number;
+public readonly failOnEol: boolean;
 ```
 
-- *Type:* number
-- *Default:* 1
+- *Type:* boolean
+- *Default:* true
 
-Exit on EOL.
+Whether to fail on EOL (End of Life) OS.
 
 Sometimes you may surprisingly get 0 vulnerabilities in an old image:
  - Enabling --ignore-unfixed option while all packages have no fixed versions.
  - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
 
 An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
-`exitOnEol` can fail scanning on EOL OS with a non-zero code.
+If set to `true`, scanning fails on EOL OS with a non-zero exit code.
 
-It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
+It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
 
 > [https://trivy.dev/docs/latest/configuration/others/#exit-on-eol](https://trivy.dev/docs/latest/configuration/others/#exit-on-eol)
 
@@ -774,7 +774,7 @@ public readonly failOnVulnerability: boolean;
 - *Type:* boolean
 - *Default:* true
 
-Exit Code.
+Whether to fail on vulnerabilities.
 
 If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
 
