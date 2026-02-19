@@ -2,7 +2,13 @@ import { App, Stack } from 'aws-cdk-lib';
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
-import { ImageScannerWithTrivyV2, ScanLogsOutput, Scanners, Severity } from '../src';
+import {
+  ImageScannerWithTrivyV2,
+  ScanLogsOutput,
+  Scanners,
+  Severity,
+  TargetImagePlatform,
+} from '../src';
 
 const getTemplate = (): Template => {
   const app = new App();
@@ -20,7 +26,7 @@ const getTemplate = (): Template => {
     failOnEol: true,
     trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
     memorySize: 3008,
-    platform: 'linux/arm64',
+    targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
     defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
     suppressErrorOnRollback: true,

@@ -688,11 +688,11 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.platform">platform</a></code> | <code>string</code> | Scan Image on a specific Architecture and OS. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanLogsOutput">scanLogsOutput</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutput">ScanLogsOutput</a></code> | Configuration for scan logs output. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanners">scanners</a></code> | <code><a href="#image-scanner-with-trivy.Scanners">Scanners</a>[]</code> | Enable/Disable Scanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.suppressErrorOnRollback">suppressErrorOnRollback</a></code> | <code>boolean</code> | Suppress errors during rollback scanner Lambda execution. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.targetImagePlatform">targetImagePlatform</a></code> | <code><a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a></code> | Scan Image on a specific Architecture and OS. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
 
 ---
@@ -845,23 +845,6 @@ Default value (`3008` MB) is Maximum Lambda memory size for default AWS account 
 
 ---
 
-##### `platform`<sup>Optional</sup> <a name="platform" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.platform"></a>
-
-```typescript
-public readonly platform: string;
-```
-
-- *Type:* string
-- *Default:* 
-
-Scan Image on a specific Architecture and OS.
-
-By default, Trivy loads an image on a `linux/amd64` machine.
-
-To customize this, pass a `platform` argument in the format OS/Architecture for the image, such as `linux/arm64`
-
----
-
 ##### `scanLogsOutput`<sup>Optional</sup> <a name="scanLogsOutput" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.scanLogsOutput"></a>
 
 ```typescript
@@ -942,6 +925,19 @@ fails.
 
 This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
 when image scanning failures occur.
+
+---
+
+##### `targetImagePlatform`<sup>Optional</sup> <a name="targetImagePlatform" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.targetImagePlatform"></a>
+
+```typescript
+public readonly targetImagePlatform: TargetImagePlatform;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a>
+- *Default:* Trivy loads an image on a `linux/amd64` machine.
+
+Scan Image on a specific Architecture and OS.
 
 ---
 
@@ -1081,6 +1077,88 @@ Scan logs output to CloudWatch Logs log group.
 ---
 
 
+
+### TargetImagePlatform <a name="TargetImagePlatform" id="image-scanner-with-trivy.TargetImagePlatform"></a>
+
+Enum for Target Image Platform.
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.TargetImagePlatform.custom">custom</a></code> | Custom value for target image platform. |
+
+---
+
+##### `custom` <a name="custom" id="image-scanner-with-trivy.TargetImagePlatform.custom"></a>
+
+```typescript
+import { TargetImagePlatform } from 'image-scanner-with-trivy'
+
+TargetImagePlatform.custom(value: string)
+```
+
+Custom value for target image platform.
+
+The value should be in the format OS/Architecture for the image, such as `linux/arm64`.
+
+###### `value`<sup>Required</sup> <a name="value" id="image-scanner-with-trivy.TargetImagePlatform.custom.parameter.value"></a>
+
+- *Type:* string
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.TargetImagePlatform.property.value">value</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `value`<sup>Required</sup> <a name="value" id="image-scanner-with-trivy.TargetImagePlatform.property.value"></a>
+
+```typescript
+public readonly value: string;
+```
+
+- *Type:* string
+
+---
+
+#### Constants <a name="Constants" id="Constants"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.TargetImagePlatform.property.LINUX_AMD64">LINUX_AMD64</a></code> | <code><a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a></code> | Linux AMD64 platform. |
+| <code><a href="#image-scanner-with-trivy.TargetImagePlatform.property.LINUX_ARM64">LINUX_ARM64</a></code> | <code><a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a></code> | Linux ARM64 platform. |
+
+---
+
+##### `LINUX_AMD64`<sup>Required</sup> <a name="LINUX_AMD64" id="image-scanner-with-trivy.TargetImagePlatform.property.LINUX_AMD64"></a>
+
+```typescript
+public readonly LINUX_AMD64: TargetImagePlatform;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a>
+
+Linux AMD64 platform.
+
+---
+
+##### `LINUX_ARM64`<sup>Required</sup> <a name="LINUX_ARM64" id="image-scanner-with-trivy.TargetImagePlatform.property.LINUX_ARM64"></a>
+
+```typescript
+public readonly LINUX_ARM64: TargetImagePlatform;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a>
+
+Linux ARM64 platform.
+
+---
 
 
 ## Enums <a name="Enums" id="Enums"></a>
