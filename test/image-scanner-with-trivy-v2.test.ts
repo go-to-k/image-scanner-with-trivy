@@ -124,15 +124,21 @@ describe('ImageScannerWithTrivyV2', () => {
 
     Annotations.fromStack(stack).hasWarning(
       '/TestStack/WithNone',
-      Match.stringLikeRegexp('You have to set the same log group.+'),
+      Match.stringLikeRegexp(
+        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+      ),
     );
     Annotations.fromStack(stack).hasWarning(
       '/TestStack/WithDefaultLogGroup',
-      Match.stringLikeRegexp('You have to set the same log group.+'),
+      Match.stringLikeRegexp(
+        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+      ),
     );
     Annotations.fromStack(stack).hasWarning(
       '/TestStack/WithAnotherDefaultLogGroup',
-      Match.stringLikeRegexp('You have to set the same log group.+'),
+      Match.stringLikeRegexp(
+        "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
+      ),
     );
   });
 

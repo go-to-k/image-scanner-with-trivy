@@ -49,17 +49,6 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   suppressErrorOnRollback: true,
 });
 
-// Test for one warning per construct when multiple ImageScannerWithTrivyV2 constructs have different default log groups
-new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAnotherDefaultLogGroup', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121'],
-  defaultLogGroup: new LogGroup(stack, 'AnotherDefaultLogGroup', {
-    removalPolicy: RemovalPolicy.DESTROY,
-    retention: RetentionDays.ONE_DAY,
-  }),
-});
-
 const test = new IntegTest(app, 'Test', {
   testCases: [stack],
   diffAssets: true,
