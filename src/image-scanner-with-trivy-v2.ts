@@ -68,22 +68,16 @@ export class TrivyIgnore {
     fileType: TrivyIgnoreFileType = TrivyIgnoreFileType.TRIVYIGNORE,
   ): TrivyIgnore {
     const content = readFileSync(path, 'utf-8');
-    if (fileType === TrivyIgnoreFileType.TRIVYIGNORE_YAML) {
-      // Extract IDs from .trivyignore.yaml and return as plain lines
-      return new TrivyIgnore(
-        content
-          .split('\n')
-          .map((line) => line.match(/^\s*-\s+id:\s*(\S+)/)?.[1])
-          .filter((id): id is string => id !== undefined),
-      );
-    }
-    // Exclude empty lines and comment lines from .trivyignore
-    return new TrivyIgnore(
-      content.split('\n').filter((line) => line.trim() !== '' && !line.trim().startsWith('#')),
-    );
+    // Pass lines as-is without stripping comments or empty lines.
+    // Trivy itself handles comment lines (starting with `#`) and empty lines when reading the ignore file,
+    // so pre-filtering here would be redundant and could cause unexpected behavior.
+    return new TrivyIgnore(content.split('\n'), fileType);
   }
 
-  private constructor(public readonly rules: string[]) {}
+  private constructor(
+    public readonly rules: string[],
+    public readonly fileType?: TrivyIgnoreFileType,
+  ) {}
 }
 
 /**
@@ -386,6 +380,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
       exitOnEol: (props.failOnEol ?? true) ? 1 : 0,
       trivyIgnore: props.trivyIgnore?.rules ?? [],
+      trivyIgnoreFileType: props.trivyIgnore?.fileType,
       platform: props.targetImagePlatform?.value ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),

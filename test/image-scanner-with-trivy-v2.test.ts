@@ -285,77 +285,88 @@ describe('ImageScannerWithTrivyV2', () => {
   });
 });
 
-describe('TrivyIgnore.fromRules', () => {
-  test('stores given rules as-is', () => {
-    const rules = ['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01', '# comment', ''];
-    const result = TrivyIgnore.fromRules(rules);
-    expect(result.rules).toEqual(rules);
-  });
-});
+describe('TrivyIgnore', () => {
+  describe('TrivyIgnore.fromRules', () => {
+    test('stores given rules as-is', () => {
+      const rules = ['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01', '# comment', ''];
+      const result = TrivyIgnore.fromRules(rules);
+      expect(result.rules).toEqual(rules);
+    });
 
-describe('TrivyIgnore.fromFilePath', () => {
-  let tmpDir: string;
+    test('fileType is set to undefined', () => {
+      const rules = ['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01', '# comment', ''];
+      const result = TrivyIgnore.fromRules(rules);
 
-  beforeEach(() => {
-    tmpDir = mkdtempSync(join(tmpdir(), 'trivy-ignore-test-'));
-  });
-
-  test('reads .trivyignore file and returns lines as rules, excluding empty lines and comments', () => {
-    const filePath = join(tmpDir, '.trivyignore');
-    writeFileSync(
-      filePath,
-      [
-        '# Accept the risk',
-        'CVE-2018-14618',
-        '',
-        '  # indented comment',
-        'CVE-2019-14697 exp:2023-01-01',
-        '# another comment',
-        '',
-      ].join('\n'),
-      'utf-8',
-    );
-
-    const result = TrivyIgnore.fromFilePath(filePath);
-
-    expect(result.rules).toEqual(['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01']);
+      expect(result.fileType).toBe(undefined);
+    });
   });
 
-  test('reads .trivyignore.yaml file and extracts IDs only', () => {
-    const filePath = join(tmpDir, '.trivyignore.yaml');
-    writeFileSync(
-      filePath,
-      [
-        'vulnerabilities:',
-        '  - id: CVE-2022-40897',
-        '    paths:',
-        '      - "usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA"',
-        '    statement: Accept the risk',
-        '  - id: CVE-2023-2650',
-        '  - id: CVE-2023-3446',
-        'misconfigurations:',
-        '  - id: AVD-DS-0001',
-        '  - id: AVD-DS-0002',
-        '    paths:',
-        '      - "docs/Dockerfile"',
-        'secrets:',
-        '  - id: aws-access-key-id',
-        'licenses:',
-        '  - id: GPL-3.0 # License name is used as ID',
-      ].join('\n'),
-      'utf-8',
-    );
+  describe('TrivyIgnore.fromFilePath', () => {
+    let tmpDir: string;
 
-    const result = TrivyIgnore.fromFilePath(filePath, TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+    beforeEach(() => {
+      tmpDir = mkdtempSync(join(tmpdir(), 'trivy-ignore-test-'));
+    });
 
-    expect(result.rules).toEqual([
-      'CVE-2022-40897',
-      'CVE-2023-2650',
-      'CVE-2023-3446',
-      'AVD-DS-0001',
-      'AVD-DS-0002',
-      'aws-access-key-id',
-      'GPL-3.0',
-    ]);
+    describe('.trivyignore', () => {
+      test('reads file content as-is, line by line', () => {
+        const filePath = join(tmpDir, '.trivyignore');
+        const lines = [
+          '# Accept the risk',
+          'CVE-2018-14618',
+          '',
+          'CVE-2019-14697 exp:2023-01-01',
+          'AVD-DS-0002',
+        ];
+        writeFileSync(filePath, lines.join('\n'), 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath);
+
+        expect(result.rules).toEqual(lines);
+      });
+
+      test('fileType is set to TRIVYIGNORE as default', () => {
+        const filePath = join(tmpDir, '.trivyignore');
+        writeFileSync(filePath, 'CVE-2022-40897\n', 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath);
+
+        expect(result.fileType).toBe(TrivyIgnoreFileType.TRIVYIGNORE);
+      });
+    });
+
+    describe('.trivyignore.yaml', () => {
+      test('reads file content as-is, line by line', () => {
+        const filePath = join(tmpDir, '.trivyignore.yaml');
+        const lines = [
+          'vulnerabilities:',
+          '  - id: CVE-2022-40897',
+          '    paths:',
+          '      - "usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA"',
+          '    statement: Accept the risk',
+          '  - id: CVE-2023-2650',
+          'misconfigurations:',
+          '  - id: AVD-DS-0001',
+          'secrets:',
+          '  - id: aws-access-key-id',
+          'licenses:',
+          '  - id: GPL-3.0 # License name is used as ID',
+        ];
+        writeFileSync(filePath, lines.join('\n'), 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath, TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+
+        expect(result.rules).toEqual(lines);
+      });
+
+      test('fileType is set to TRIVYIGNORE_YAML', () => {
+        const filePath = join(tmpDir, '.trivyignore.yaml');
+        writeFileSync(filePath, 'vulnerabilities:\n  - id: CVE-2022-40897\n', 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath, TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+
+        expect(result.fileType).toBe(TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+      });
+    });
   });
 });
