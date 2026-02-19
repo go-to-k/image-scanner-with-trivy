@@ -683,8 +683,8 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda function's default log group. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode">exitCode</a></code> | <code>number</code> | Exit Code. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Exit Code. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
@@ -741,27 +741,6 @@ See `Default Log Group` section in the README for more details.
 
 ---
 
-##### `exitCode`<sup>Optional</sup> <a name="exitCode" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode"></a>
-
-```typescript
-public readonly exitCode: number;
-```
-
-- *Type:* number
-- *Default:* 1
-
-Exit Code.
-
-Use the `exitCode` option if you want to exit with a non-zero exit code.
-
-You can specify 0 if you do not want to exit even when vulnerabilities are detected.
-
-It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
-
-> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-code)
-
----
-
 ##### `exitOnEol`<sup>Optional</sup> <a name="exitOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol"></a>
 
 ```typescript
@@ -782,7 +761,28 @@ An OS at the end of service/life (EOL) usually gets into this situation, which i
 
 It defaults to 1 IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is 0.
 
-> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#exit-on-eol)
+> [https://trivy.dev/docs/latest/configuration/others/#exit-on-eol](https://trivy.dev/docs/latest/configuration/others/#exit-on-eol)
+
+---
+
+##### `failOnVulnerability`<sup>Optional</sup> <a name="failOnVulnerability" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability"></a>
+
+```typescript
+public readonly failOnVulnerability: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Exit Code.
+
+If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
+
+If set to `false`, Trivy exits with a zero exit code even when vulnerabilities are detected.
+
+It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
+
+> [https://trivy.dev/docs/latest/configuration/others/#exit-code](https://trivy.dev/docs/latest/configuration/others/#exit-code)
 
 ---
 
@@ -799,7 +799,7 @@ The unfixed/unfixable vulnerabilities mean that the patch has not yet been provi
 
 To hide unfixed/unfixable vulnerabilities, you can use the `--ignore-unfixed` flag.
 
-> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#unfixed-vulnerabilities)
+> [https://trivy.dev/docs/latest/scanner/vulnerability/#unfixed-vulnerabilities](https://trivy.dev/docs/latest/scanner/vulnerability/#unfixed-vulnerabilities)
 
 ---
 
@@ -822,7 +822,7 @@ Trivy scans the configuration of container images for
 
 They are disabled by default. You can enable them with `imageConfigScanners`.
 
-> [https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata](https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata)
+> [https://trivy.dev/docs/latest/target/container_image/#container-image-metadata](https://trivy.dev/docs/latest/target/container_image/#container-image-metadata)
 
 ---
 
@@ -897,7 +897,7 @@ You can enable/disable scanners with the `scanners`.
 For example, container image scanning enables vulnerability (VULN) and secret scanners (SECRET) by default.
 If you don't need secret scanning, it can be disabled by specifying Scanners.VULN only.
 
-> [https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners](https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners)
+> [https://trivy.dev/docs/latest/configuration/others/#enabledisable-scanners](https://trivy.dev/docs/latest/configuration/others/#enabledisable-scanners)
 
 ---
 
@@ -920,7 +920,7 @@ Red Hat evaluates the severity more accurately. That's why Trivy prefers vendor 
 
 It defaults to `CRITICAL` IN THIS CONSTRUCT for safety in CI/CD, but the default configuration of Trivy is "CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN".
 
-> [https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection](https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection)
+> [https://trivy.dev/docs/latest/scanner/vulnerability/#severity-selection](https://trivy.dev/docs/latest/scanner/vulnerability/#severity-selection)
 
 ---
 
@@ -959,7 +959,7 @@ By Finding IDs.
 The ignore rules written to the .trivyignore in trivy.
 Put each line you write in the file into one element of the array.
 
-> [https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore](https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/#trivyignore)
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignore](https://trivy.dev/docs/latest/configuration/filtering/#trivyignore)
 
 ---
 
