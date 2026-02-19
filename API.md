@@ -682,7 +682,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda's default log group. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda function's default log group. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitCode">exitCode</a></code> | <code>number</code> | Exit Code. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.exitOnEol">exitOnEol</a></code> | <code>number</code> | Exit on EOL. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
@@ -732,7 +732,7 @@ public readonly defaultLogGroup: ILogGroup;
 - *Type:* aws-cdk-lib.aws_logs.ILogGroup
 - *Default:* Scanner Lambda creates the default log group(`/aws/lambda/${functionName}`).
 
-The Scanner Lambda's default log group.
+The Scanner Lambda function's default log group.
 
 If you use ImageScannerWithTrivyV2 construct multiple times in the same stack,
 you must specify the same log group for each construct.
