@@ -194,7 +194,6 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The default log group for the singleton Lambda function. |
 
 ---
 
@@ -207,18 +206,6 @@ public readonly node: Node;
 - *Type:* constructs.Node
 
 The tree node.
-
----
-
-##### `defaultLogGroup`<sup>Optional</sup> <a name="defaultLogGroup" id="image-scanner-with-trivy.ImageScannerWithTrivyV2.property.defaultLogGroup"></a>
-
-```typescript
-public readonly defaultLogGroup: ILogGroup;
-```
-
-- *Type:* aws-cdk-lib.aws_logs.ILogGroup
-
-The default log group for the singleton Lambda function.
 
 ---
 

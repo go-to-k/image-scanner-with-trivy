@@ -296,10 +296,7 @@ const DEFAULT_MEMORY_SIZE = 3008;
  * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
  */
 export class ImageScannerWithTrivyV2 extends Construct {
-  /**
-   * The default log group for the singleton Lambda function
-   */
-  public readonly defaultLogGroup?: ILogGroup;
+  private readonly defaultLogGroup?: ILogGroup;
 
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
@@ -355,7 +352,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       visit: (node) => {
         if (
           node instanceof ImageScannerWithTrivyV2 &&
-          node.defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
+          node._defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
         ) {
           Annotations.of(this).addWarningV2(
             '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
@@ -390,5 +387,10 @@ export class ImageScannerWithTrivyV2 extends Construct {
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
     });
+  }
+
+  /** @internal */
+  get _defaultLogGroup(): ILogGroup | undefined {
+    return this.defaultLogGroup;
   }
 }
