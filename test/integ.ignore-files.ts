@@ -28,7 +28,6 @@ new ImageScannerWithTrivyV2(stack, 'IgnoreYaml', {
   imageUri: image.imageUri,
   repository: image.repository,
   failOnVulnerability: true,
-  failOnEol: true,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   trivyIgnore: TrivyIgnore.fromFilePath(
     resolve(__dirname, 'ignore-files/.trivyignore.yaml'),
@@ -41,7 +40,6 @@ new ImageScannerWithTrivyV2(stack, 'Ignore', {
   imageUri: image.imageUri,
   repository: image.repository,
   failOnVulnerability: true,
-  failOnEol: true,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   trivyIgnore: TrivyIgnore.fromFilePath(
     resolve(__dirname, 'ignore-files/.trivyignore'),

@@ -182,11 +182,11 @@ export interface ImageScannerWithTrivyV2Props {
   readonly imageConfigScanners?: ImageConfigScanners[];
 
   /**
-   * Whether to fail on vulnerabilities
+   * Whether to fail on vulnerabilities or EOL (End of Life) images
    *
-   * If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
+   * If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities or EOL images are detected.
    *
-   * If set to `false`, Trivy exits with a zero exit code even when vulnerabilities are detected.
+   * If set to `false`, Trivy exits with a zero exit code even when vulnerabilities or EOL images are detected.
    *
    * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
    *
@@ -195,29 +195,6 @@ export interface ImageScannerWithTrivyV2Props {
    * @see https://trivy.dev/docs/latest/configuration/others/#exit-code
    */
   readonly failOnVulnerability?: boolean;
-
-  /**
-   * Whether to fail on EOL (End of Life) OS
-   *
-   * Sometimes you may surprisingly get 0 vulnerabilities in an old image:
-   *  - Enabling --ignore-unfixed option while all packages have no fixed versions.
-   *  - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
-   *
-   * An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
-   * If set to `true`, scanning fails on EOL OS with a non-zero exit code.
-   *
-   * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
-   *
-   * **Important:** Trivy checks EOL first, then vulnerabilities. If EOL is detected, Trivy immediately
-   * returns EOL status without checking vulnerabilities. Therefore, when EOL is detected, we cannot
-   * determine if vulnerabilities also exist. Thus, even if you set `failOnEol: false`, the scan
-   * will still fail when EOL is detected unless you also set `failOnVulnerability: false`.
-   *
-   * @default true
-   *
-   * @see https://trivy.dev/docs/latest/configuration/others/#exit-on-eol
-   */
-  readonly failOnEol?: boolean;
 
   /**
    * Ignore rules or ignore file for Trivy.
@@ -298,7 +275,7 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * If specified, an SNS topic notification will be sent when vulnerabilities or EOL (End of Life) OS are detected.
    *
-   * The notification is sent regardless of the `failOnVulnerability` and `failOnEol` settings.
+   * The notification is sent regardless of the `failOnVulnerability` setting.
    * This means you can choose to receive notifications even when you don't want the deployment to fail.
    *
    * You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
@@ -394,7 +371,6 @@ export class ImageScannerWithTrivyV2 extends Construct {
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
       failOnVulnerability: props.failOnVulnerability ?? true,
-      failOnEol: props.failOnEol ?? true,
       trivyIgnore: props.trivyIgnore?.rules ?? [],
       trivyIgnoreFileType: props.trivyIgnore?.fileType,
       platform: props.targetImagePlatform?.value ?? '',

@@ -155,7 +155,7 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 
 You can configure an SNS topic to receive notifications when vulnerabilities or EOL (End of Life) OS are detected.
 
-The notification is sent **regardless of the `failOnVulnerability` and `failOnEol` settings**. This means you can receive notifications even when you don't want the deployment to fail.
+The notification is sent **regardless of the `failOnVulnerability` setting**. This means you can receive notifications even when you don't want the deployment to fail.
 
 ```ts
 import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
@@ -179,75 +179,10 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   vulnsNotificationTopic: notificationTopic,
   // You can choose not to fail the deployment while still receiving notifications
   failOnVulnerability: false,
-  failOnEol: false,
 });
 ```
 
 You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
-
-### Exit Code Priority: EOL vs Vulnerabilities
-
-When both EOL (End of Life) OS and vulnerabilities are detected in an image, Trivy prioritizes the EOL check over vulnerability checks.
-
-Therefore, when EOL is detected, Trivy immediately returns EOL status without checking vulnerabilities, and we cannot determine if vulnerabilities also exist. This means that even if you set `failOnEol: false`, the scan will still fail when EOL is detected unless you also set `failOnVulnerability: false`.
-
-**Example scenarios:**
-
-```ts
-// Scenario 1-1: EOL detected (failOnVulnerability: true, failOnEol: false)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: true,  // Want to fail on vulnerabilities
-  failOnEol: false,           // Don't want to fail on EOL
-  // ❌ This will still FAIL because there might be vulnerabilities
-});
-
-// Scenario 1-2: EOL detected (failOnVulnerability: false, failOnEol: false)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: false, // Don't want to fail on vulnerabilities
-  failOnEol: false,           // Don't want to fail on EOL
-  // ✅ This will SUCCEED
-});
-
-// Scenario 1-3: EOL detected (failOnEol: true)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnEol: true,            // Want to fail on EOL
-  // failOnVulnerability: doesn't matter
-  // ❌ This will FAIL regardless of failOnVulnerability setting
-});
-
-// Scenario 2-1: Only vulnerabilities detected (failOnVulnerability: false, failOnEol: true)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: false, // Don't want to fail on vulnerabilities
-  failOnEol: true,            // Want to fail on EOL
-  // ✅ This will SUCCEED because no EOL is detected
-});
-
-// Scenario 2-2: Only vulnerabilities detected (failOnVulnerability: false, failOnEol: false)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: false, // Don't want to fail on vulnerabilities
-  failOnEol: false,           // Don't want to fail on EOL
-  // ✅ This will SUCCEED
-});
-
-// Scenario 2-3: Only vulnerabilities detected (failOnVulnerability: true)
-new ImageScannerWithTrivy(this, 'Scanner', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: true,  // Want to fail on vulnerabilities
-  // failOnEol: doesn't matter
-  // ❌ This will FAIL regardless of failOnEol setting
-});
-```
 
 ## Trivy's official documentation
 

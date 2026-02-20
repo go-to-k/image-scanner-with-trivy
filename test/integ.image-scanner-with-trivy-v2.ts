@@ -38,7 +38,6 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   severity: [Severity.CRITICAL],
   scanners: [Scanners.VULN, Scanners.SECRET],
   failOnVulnerability: true,
-  failOnEol: true,
   trivyIgnore: TrivyIgnore.fromRules([
     'CVE-2023-37920',
     'CVE-2025-7783',
