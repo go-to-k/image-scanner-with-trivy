@@ -68,9 +68,8 @@ export class TrivyIgnore {
     fileType: TrivyIgnoreFileType = TrivyIgnoreFileType.TRIVYIGNORE,
   ): TrivyIgnore {
     const content = readFileSync(path, 'utf-8');
-    // Pass lines as-is without stripping comments or empty lines.
-    // Trivy itself handles comment lines (starting with `#`) and empty lines when reading the ignore file,
-    // so pre-filtering here would be redundant and could cause unexpected behavior.
+    // Pass lines as-is without stripping comments or empty lines
+    // because Trivy itself handles comment lines (starting with `#`) and empty lines when reading the ignore file.
     return new TrivyIgnore(content.split('\n'), fileType);
   }
 
