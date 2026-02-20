@@ -49,6 +49,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   }
 
   // TODO: v1のためにexitCodeとexitOnEolの後方互換性担保？
+  // (しないならsrc/custom-resource-props.tsのexitCodeとexitOnEolを削除していい)
 
   // Always set --exit-code 1 regardless of props.failOnVulnerability.
   // This is necessary to detect vulnerabilities for SNS notifications even when the failOnVulnerability setting is false.
