@@ -296,7 +296,7 @@ const DEFAULT_MEMORY_SIZE = 3008;
  * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
  */
 export class ImageScannerWithTrivyV2 extends Construct {
-  private readonly _defaultLogGroup?: ILogGroup;
+  private readonly defaultLogGroup?: ILogGroup;
 
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
@@ -311,7 +311,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       );
     }
 
-    this._defaultLogGroup = props.defaultLogGroup;
+    this.defaultLogGroup = props.defaultLogGroup;
     const lambdaPurpose = 'Custom::ImageScannerWithTrivyV2CustomResourceLambda';
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
@@ -331,7 +331,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       retryAttempts: 0,
       memorySize: props.memorySize ?? DEFAULT_MEMORY_SIZE,
       ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update trivy DB: /tmp/trivy/db/trivy.db
-      logGroup: this._defaultLogGroup,
+      logGroup: this.defaultLogGroup,
     });
 
     props.repository.grantPull(customResourceLambda);
@@ -352,7 +352,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       visit: (node) => {
         if (
           node instanceof ImageScannerWithTrivyV2 &&
-          node.defaultLogGroup?.node.path !== this._defaultLogGroup?.node.path
+          node._defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
         ) {
           Annotations.of(this).addWarningV2(
             '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
@@ -390,7 +390,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
   }
 
   /** @internal */
-  get defaultLogGroup(): ILogGroup | undefined {
-    return this._defaultLogGroup;
+  get _defaultLogGroup(): ILogGroup | undefined {
+    return this.defaultLogGroup;
   }
 }
