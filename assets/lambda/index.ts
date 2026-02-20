@@ -48,6 +48,9 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
   }
 
+  // Always set --exit-code 1 and --exit-on-eol 2 regardless of props.failOnVulnerability and props.failOnEol.
+  // This is necessary to detect vulnerabilities and EOL for SNS notifications even when failOn* settings are false.
+  // The actual deployment failure is controlled by the exit code handling logic below (not by Trivy's exit code).
   const cmd = `/opt/trivy image --no-progress ${options.join(' ')} --exit-code 1 --exit-on-eol 2 ${props.imageUri}`;
   console.log('command: ' + cmd);
   console.log('imageUri: ' + props.imageUri);
@@ -66,25 +69,40 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     sendVulnsNotification(props.vulnsTopicArn);
   }
 
+  // Exit code handling logic based on Trivy's behavior:
+  // When both EOL and vulnerabilities are detected if `--exit-code 1 --exit-on-eol 2` specified, Trivy prioritizes EOL check and returns exit code 2.
+  // This means:
+  // - response.status === 2: EOL detected (vulnerabilities may or may not exist)
+  // - response.status === 1: Vulnerabilities detected, but NO EOL
+  // See: https://github.com/aquasecurity/trivy/blob/release/v0.69/pkg/commands/operation/operation.go#L122-L131
+  //
+  // So, even if `failOnEol` is set to false and `response.status` is 2,
+  // we should still fail UNLESS `failOnVulnerability` is also false.
+  // This is because when status === 2 (EOL detected), we cannot determine if vulnerabilities also exist,
+  // so we fail if the user wants to fail on either condition.
   if (
-    (response.status === 1 && props.failOnVulnerability) ||
-    (response.status === 2 && props.failOnEol)
+    (response.status === 1 && !props.failOnVulnerability) ||
+    (response.status === 2 && !props.failOnVulnerability && !props.failOnEol)
   ) {
-    const status =
-      response.status === 1 ? 'vulnerabilities detected' : 'end-of-life (EOL) image detected';
-    const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
-
-    if (props.suppressErrorOnRollback === 'true' && (await isRollbackInProgress(event.StackId))) {
-      console.log(
-        `Vulnerabilities may be detected, but suppressing errors during rollback (suppressErrorOnRollback=true).\n${errorMessage}`,
-      );
-      return funcResponse;
-    }
-
-    throw new Error(errorMessage);
+    return funcResponse;
   }
 
-  return funcResponse;
+  const status =
+    response.status === 1
+      ? 'vulnerabilities detected'
+      : response.status === 2
+        ? 'end-of-life (EOL) image detected'
+        : `unexpected exit code ${response.status}`;
+  const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
+
+  if (props.suppressErrorOnRollback === 'true' && (await isRollbackInProgress(event.StackId))) {
+    console.log(
+      `Vulnerabilities may be detected, but suppressing errors during rollback (suppressErrorOnRollback=true).\n${errorMessage}`,
+    );
+    return funcResponse;
+  }
+
+  throw new Error(errorMessage);
 };
 
 const makeOptions = (props: ScannerCustomResourceProps): string[] => {

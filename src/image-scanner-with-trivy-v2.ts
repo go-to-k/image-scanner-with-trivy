@@ -208,6 +208,11 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
    *
+   * **Important:** Trivy checks EOL first, then vulnerabilities. If EOL is detected, Trivy immediately
+   * returns EOL status without checking vulnerabilities. Therefore, when EOL is detected, we cannot
+   * determine if vulnerabilities also exist. Thus, even if you set `failOnEol: false`, the scan
+   * will still fail when EOL is detected unless you also set `failOnVulnerability: false`.
+   *
    * @default true
    *
    * @see https://trivy.dev/docs/latest/configuration/others/#exit-on-eol
@@ -291,9 +296,12 @@ export interface ImageScannerWithTrivyV2Props {
   /**
    * SNS topic for vulnerabilities notification
    *
-   * If specified, an SNS topic notification will be sent when vulnerabilities are detected.
+   * If specified, an SNS topic notification will be sent when vulnerabilities or EOL (End of Life) OS are detected.
    *
-   * You can specify an SNS topic associated with AWS Chatbot to notify in a message format compatible with AWS Chatbot.
+   * The notification is sent regardless of the `failOnVulnerability` and `failOnEol` settings.
+   * This means you can choose to receive notifications even when you don't want the deployment to fail.
+   *
+   * You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
    *
    * @default - no notification
    */
