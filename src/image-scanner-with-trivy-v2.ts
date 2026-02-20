@@ -17,7 +17,7 @@ import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
 import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
-import { platform } from 'os';
+import { ITopic } from 'aws-cdk-lib/aws-sns';
 
 /**
  * File type for TrivyIgnore file path
@@ -287,6 +287,17 @@ export interface ImageScannerWithTrivyV2Props {
    * @default true
    */
   readonly suppressErrorOnRollback?: boolean;
+
+  /**
+   * SNS topic for vulnerabilities notification
+   *
+   * If specified, an SNS topic notification will be sent when vulnerabilities are detected.
+   *
+   * You can specify an SNS topic associated with AWS Chatbot to notify in a message format compatible with AWS Chatbot.
+   *
+   * @default - no notification
+   */
+  readonly vulnsNotificationTopic?: ITopic;
 }
 
 // Maximum Lambda memory size for default AWS account without quota limit increase
@@ -381,6 +392,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       platform: props.targetImagePlatform?.value ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),
+      vulnsTopicArn: props.vulnsNotificationTopic?.topicArn,
     };
 
     new CustomResource(this, 'Resource', {
