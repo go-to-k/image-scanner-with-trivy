@@ -17,6 +17,7 @@ import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
 import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
+import { platform } from 'os';
 
 /**
  * File type for TrivyIgnore file path
@@ -373,8 +374,8 @@ export class ImageScannerWithTrivyV2 extends Construct {
       severity: props.severity ?? [Severity.CRITICAL],
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
-      exitCode: (props.failOnVulnerability ?? true) ? 1 : 0,
-      exitOnEol: (props.failOnEol ?? true) ? 1 : 0,
+      failOnVulnerability: props.failOnVulnerability ?? true,
+      failOnEol: props.failOnEol ?? true,
       trivyIgnore: props.trivyIgnore?.rules ?? [],
       trivyIgnoreFileType: props.trivyIgnore?.fileType,
       platform: props.targetImagePlatform?.value ?? '',

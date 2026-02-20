@@ -37,27 +37,42 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     Data: {} as { [key: string]: string },
   };
 
-  if (requestType === 'Create' || requestType === 'Update') {
-    const options = makeOptions(props);
+  if (requestType !== 'Create' && requestType !== 'Update') {
+    return funcResponse;
+  }
 
-    if (props.trivyIgnore.length) {
-      console.log('trivyignore: ' + JSON.stringify(props.trivyIgnore));
-      makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
-    }
+  const options = makeOptions(props);
 
-    const cmd = `/opt/trivy image --no-progress ${options.join(' ')} ${props.imageUri}`;
-    console.log('command: ' + cmd);
-    console.log('imageUri: ' + props.imageUri);
+  if (props.trivyIgnore.length) {
+    console.log('trivyignore: ' + JSON.stringify(props.trivyIgnore));
+    makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
+  }
 
-    const response = spawnSync(cmd, {
-      shell: true,
-    });
+  const cmd = `/opt/trivy image --no-progress ${options.join(' ')} --exit-code 1 --exit-on-eol 2 ${props.imageUri}`;
+  console.log('command: ' + cmd);
+  console.log('imageUri: ' + props.imageUri);
 
-    await outputScanLogs(response, props.imageUri, props.output);
+  const response = spawnSync(cmd, {
+    shell: true,
+  });
 
-    if (response.status === 0) return funcResponse;
+  await outputScanLogs(response, props.imageUri, props.output);
 
-    const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${response.status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
+  if (response.status === 0) {
+    return funcResponse;
+  }
+
+  if (props.vulnsTopicArn) {
+    sendVulnsNotification(props.vulnsTopicArn);
+  }
+
+  if (
+    (response.status === 1 && props.failOnVulnerability) ||
+    (response.status === 2 && props.failOnEol)
+  ) {
+    const status =
+      response.status === 1 ? 'vulnerabilities detected' : 'end-of-life (EOL) image detected';
+    const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
 
     if (props.suppressErrorOnRollback === 'true' && (await isRollbackInProgress(event.StackId))) {
       console.log(
@@ -80,11 +95,11 @@ const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   if (props.scanners.length) options.push(`--scanners ${props.scanners.join(',')}`);
   if (props.imageConfigScanners.length)
     options.push(`--image-config-scanners ${props.imageConfigScanners.join(',')}`);
-  if (props.exitCode) options.push(`--exit-code ${props.exitCode}`);
-  if (props.exitOnEol) options.push(`--exit-on-eol ${props.exitOnEol}`);
   if (props.trivyIgnore.length) {
     const ignoreFilePath =
-      props.trivyIgnoreFileType === 'TRIVYIGNORE_YAML' ? TRIVY_IGNORE_YAML_FILE_PATH : TRIVY_IGNORE_FILE_PATH;
+      props.trivyIgnoreFileType === 'TRIVYIGNORE_YAML'
+        ? TRIVY_IGNORE_YAML_FILE_PATH
+        : TRIVY_IGNORE_FILE_PATH;
     options.push(`--ignorefile ${ignoreFilePath}`);
   }
   if (props.platform) options.push(`--platform ${props.platform}`);
@@ -93,7 +108,8 @@ const makeOptions = (props: ScannerCustomResourceProps): string[] => {
 };
 
 const makeTrivyIgnoreFile = (trivyIgnore: string[], fileType?: string) => {
-  const filePath = fileType === 'TRIVYIGNORE_YAML' ? TRIVY_IGNORE_YAML_FILE_PATH : TRIVY_IGNORE_FILE_PATH;
+  const filePath =
+    fileType === 'TRIVYIGNORE_YAML' ? TRIVY_IGNORE_YAML_FILE_PATH : TRIVY_IGNORE_FILE_PATH;
   writeFileSync(filePath, trivyIgnore.join('\n'), 'utf-8');
 };
 
@@ -182,4 +198,36 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
   throw new Error(
     `Stack not found or no stacks returned from DescribeStacks command, stackId: ${stackId}`,
   );
+};
+
+const sendVulnsNotification = async (topicArn: string) => {
+  // Chatbot形式にする？
+  // 詳細は含めない（ログを見に行ってもらう）
+  /*
+  {
+    "version": String, 
+    "source": String, 
+    "id": String,    
+    "content": {
+        "textType": String, 
+        "title": String,  
+        "description": String, 
+        "nextSteps": [ String, String, ... ], 
+        "keywords": [ String, String, ... ] 
+    },
+    "metadata": {                     
+        "threadId": String,
+        "summary": String,
+        "eventType": String,
+        "relatedResources": [ String, String, ... ],
+        "additionalContext" : {
+            "customerProvidedKey1": String,
+            "customerProvidedKey2": String
+            ...
+        },
+        "enableCustomActions": true,
+    }
+  }
+  */
+  // 参考: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
 };
