@@ -13,6 +13,7 @@ export interface ScannerCustomResourceProps {
   readonly exitCode: number;
   readonly exitOnEol: number;
   readonly trivyIgnore: string[];
+  readonly trivyIgnoreFileType?: string;
   readonly platform: string;
   readonly output?: ScanLogsOutputOptions;
   readonly suppressErrorOnRollback: string;

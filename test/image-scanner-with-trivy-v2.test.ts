@@ -1,3 +1,6 @@
+import { writeFileSync, mkdtempSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { App, Stack } from 'aws-cdk-lib';
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
@@ -8,6 +11,8 @@ import {
   Scanners,
   Severity,
   TargetImagePlatform,
+  TrivyIgnore,
+  TrivyIgnoreFileType,
 } from '../src';
 
 const getTemplate = (): Template => {
@@ -24,7 +29,7 @@ const getTemplate = (): Template => {
     scanners: [Scanners.VULN, Scanners.SECRET],
     failOnVulnerability: true,
     failOnEol: true,
-    trivyIgnore: ['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01'],
+    trivyIgnore: TrivyIgnore.fromRules(['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01']),
     memorySize: 3008,
     targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
     defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
@@ -277,5 +282,91 @@ describe('ImageScannerWithTrivyV2', () => {
         memorySize: 3007,
       });
     }).toThrowError(/You can specify between \`3008\` and \`10240\` for \`memorySize\`, got 3007/);
+  });
+});
+
+describe('TrivyIgnore', () => {
+  describe('TrivyIgnore.fromRules', () => {
+    test('stores given rules as-is', () => {
+      const rules = ['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01', '# comment', ''];
+      const result = TrivyIgnore.fromRules(rules);
+      expect(result.rules).toEqual(rules);
+    });
+
+    test('fileType is set to undefined', () => {
+      const rules = ['CVE-2018-14618', 'CVE-2019-14697 exp:2023-01-01', '# comment', ''];
+      const result = TrivyIgnore.fromRules(rules);
+
+      expect(result.fileType).toBe(undefined);
+    });
+  });
+
+  describe('TrivyIgnore.fromFilePath', () => {
+    let tmpDir: string;
+
+    beforeEach(() => {
+      tmpDir = mkdtempSync(join(tmpdir(), 'trivy-ignore-test-'));
+    });
+
+    describe('.trivyignore', () => {
+      test('reads file content as-is, line by line', () => {
+        const filePath = join(tmpDir, '.trivyignore');
+        const lines = [
+          '# Accept the risk',
+          'CVE-2018-14618',
+          '',
+          'CVE-2019-14697 exp:2023-01-01',
+          'AVD-DS-0002',
+        ];
+        writeFileSync(filePath, lines.join('\n'), 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath);
+
+        expect(result.rules).toEqual(lines);
+      });
+
+      test('fileType is set to TRIVYIGNORE as default', () => {
+        const filePath = join(tmpDir, '.trivyignore');
+        writeFileSync(filePath, 'CVE-2022-40897\n', 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath);
+
+        expect(result.fileType).toBe(TrivyIgnoreFileType.TRIVYIGNORE);
+      });
+    });
+
+    describe('.trivyignore.yaml', () => {
+      test('reads file content as-is, line by line', () => {
+        const filePath = join(tmpDir, '.trivyignore.yaml');
+        const lines = [
+          'vulnerabilities:',
+          '  - id: CVE-2022-40897',
+          '    paths:',
+          '      - "usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA"',
+          '    statement: Accept the risk',
+          '  - id: CVE-2023-2650',
+          'misconfigurations:',
+          '  - id: AVD-DS-0001',
+          'secrets:',
+          '  - id: aws-access-key-id',
+          'licenses:',
+          '  - id: GPL-3.0 # License name is used as ID',
+        ];
+        writeFileSync(filePath, lines.join('\n'), 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath, TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+
+        expect(result.rules).toEqual(lines);
+      });
+
+      test('fileType is set to TRIVYIGNORE_YAML', () => {
+        const filePath = join(tmpDir, '.trivyignore.yaml');
+        writeFileSync(filePath, 'vulnerabilities:\n  - id: CVE-2022-40897\n', 'utf-8');
+
+        const result = TrivyIgnore.fromFilePath(filePath, TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+
+        expect(result.fileType).toBe(TrivyIgnoreFileType.TRIVYIGNORE_YAML);
+      });
+    });
   });
 });

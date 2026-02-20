@@ -86,6 +86,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
 });
 project.setScript('cdk', 'cdk');
 project.setScript('build', 'tsc -p tsconfig.dev.json && npx projen build');
+project.setScript('test', 'tsc -p tsconfig.dev.json && npx projen test');
+project.setScript('test:watch', 'tsc -p tsconfig.dev.json && npx projen test:watch');
 project.setScript('integ', 'tsc -p tsconfig.dev.json && integ-runner');
 project.setScript('integ:update', 'pnpm integ --update-on-failed');
 project.projectBuild.compileTask.prependExec('pnpm install --frozen-lockfile && pnpm build', {

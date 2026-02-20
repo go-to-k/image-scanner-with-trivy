@@ -693,7 +693,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.severity">severity</a></code> | <code><a href="#image-scanner-with-trivy.Severity">Severity</a>[]</code> | Severity Selection. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.suppressErrorOnRollback">suppressErrorOnRollback</a></code> | <code>boolean</code> | Suppress errors during rollback scanner Lambda execution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.targetImagePlatform">targetImagePlatform</a></code> | <code><a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a></code> | Scan Image on a specific Architecture and OS. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore">trivyIgnore</a></code> | <code>string[]</code> | By Finding IDs. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore">trivyIgnore</a></code> | <code><a href="#image-scanner-with-trivy.TrivyIgnore">TrivyIgnore</a></code> | Ignore rules or ignore file for Trivy. |
 
 ---
 
@@ -944,42 +944,20 @@ Scan Image on a specific Architecture and OS.
 ##### `trivyIgnore`<sup>Optional</sup> <a name="trivyIgnore" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore"></a>
 
 ```typescript
-public readonly trivyIgnore: string[];
+public readonly trivyIgnore: TrivyIgnore;
 ```
 
-- *Type:* string[]
-- *Default:* []
+- *Type:* <a href="#image-scanner-with-trivy.TrivyIgnore">TrivyIgnore</a>
+- *Default:* no ignore rules
 
-By Finding IDs.
+Ignore rules or ignore file for Trivy.
 
-The ignore rules written to the .trivyignore in trivy.
-Put each line you write in the file into one element of the array.
+Use `TrivyIgnore.fromRules()` to specify inline ignore rules (equivalent to writing lines
+in a `.trivyignore` file), or `TrivyIgnore.fromFilePath()` to point to an existing ignore file.
 
-> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignore](https://trivy.dev/docs/latest/configuration/filtering/#trivyignore)
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml](https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml)
 
 ---
-
-*Example*
-
-```typescript
-    $ cat .trivyignore
-    # Accept the risk
-    CVE-2018-14618
-
-    # Accept the risk until 2023-01-01
-    CVE-2019-14697 exp:2023-01-01
-
-    # No impact in our settings
-    CVE-2019-1543
-
-    # Ignore misconfigurations
-    AVD-DS-0002
-
-    # Ignore secrets
-    generic-unwanted-rule
-    aws-account-id
-```
-
 
 ### ScanLogsOutputOptions <a name="ScanLogsOutputOptions" id="image-scanner-with-trivy.ScanLogsOutputOptions"></a>
 
@@ -1160,6 +1138,102 @@ Linux ARM64 platform.
 
 ---
 
+### TrivyIgnore <a name="TrivyIgnore" id="image-scanner-with-trivy.TrivyIgnore"></a>
+
+Union-like class for specifying Trivy ignore configuration.
+
+You can either specify ignore rules inline, or point to an existing ignore file.
+
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnore.fromFilePath">fromFilePath</a></code> | Specify the path to an existing trivyignore file. |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnore.fromRules">fromRules</a></code> | Specify ignore rules inline (equivalent to writing lines in a .trivyignore file). |
+
+---
+
+##### `fromFilePath` <a name="fromFilePath" id="image-scanner-with-trivy.TrivyIgnore.fromFilePath"></a>
+
+```typescript
+import { TrivyIgnore } from 'image-scanner-with-trivy'
+
+TrivyIgnore.fromFilePath(path: string, fileType?: TrivyIgnoreFileType)
+```
+
+Specify the path to an existing trivyignore file.
+
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml](https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml)
+
+###### `path`<sup>Required</sup> <a name="path" id="image-scanner-with-trivy.TrivyIgnore.fromFilePath.parameter.path"></a>
+
+- *Type:* string
+
+Path to the ignore file.
+
+---
+
+###### `fileType`<sup>Optional</sup> <a name="fileType" id="image-scanner-with-trivy.TrivyIgnore.fromFilePath.parameter.fileType"></a>
+
+- *Type:* <a href="#image-scanner-with-trivy.TrivyIgnoreFileType">TrivyIgnoreFileType</a>
+
+File format.
+
+Defaults to `TrivyIgnoreFileType.TRIVYIGNORE`.
+
+---
+
+##### `fromRules` <a name="fromRules" id="image-scanner-with-trivy.TrivyIgnore.fromRules"></a>
+
+```typescript
+import { TrivyIgnore } from 'image-scanner-with-trivy'
+
+TrivyIgnore.fromRules(rules: string[])
+```
+
+Specify ignore rules inline (equivalent to writing lines in a .trivyignore file).
+
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignore](https://trivy.dev/docs/latest/configuration/filtering/#trivyignore)
+
+###### `rules`<sup>Required</sup> <a name="rules" id="image-scanner-with-trivy.TrivyIgnore.fromRules.parameter.rules"></a>
+
+- *Type:* string[]
+
+Each element corresponds to one line in the .trivyignore file.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnore.property.rules">rules</a></code> | <code>string[]</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnore.property.fileType">fileType</a></code> | <code><a href="#image-scanner-with-trivy.TrivyIgnoreFileType">TrivyIgnoreFileType</a></code> | *No description.* |
+
+---
+
+##### `rules`<sup>Required</sup> <a name="rules" id="image-scanner-with-trivy.TrivyIgnore.property.rules"></a>
+
+```typescript
+public readonly rules: string[];
+```
+
+- *Type:* string[]
+
+---
+
+##### `fileType`<sup>Optional</sup> <a name="fileType" id="image-scanner-with-trivy.TrivyIgnore.property.fileType"></a>
+
+```typescript
+public readonly fileType: TrivyIgnoreFileType;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.TrivyIgnoreFileType">TrivyIgnoreFileType</a>
+
+---
+
+
 
 ## Enums <a name="Enums" id="Enums"></a>
 
@@ -1281,6 +1355,37 @@ Enum for Severity Selection.
 
 
 ##### `CRITICAL` <a name="CRITICAL" id="image-scanner-with-trivy.Severity.CRITICAL"></a>
+
+---
+
+
+### TrivyIgnoreFileType <a name="TrivyIgnoreFileType" id="image-scanner-with-trivy.TrivyIgnoreFileType"></a>
+
+File type for TrivyIgnore file path.
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnoreFileType.TRIVYIGNORE">TRIVYIGNORE</a></code> | .trivyignore file. |
+| <code><a href="#image-scanner-with-trivy.TrivyIgnoreFileType.TRIVYIGNORE_YAML">TRIVYIGNORE_YAML</a></code> | .trivyignore.yaml file. |
+
+---
+
+##### `TRIVYIGNORE` <a name="TRIVYIGNORE" id="image-scanner-with-trivy.TrivyIgnoreFileType.TRIVYIGNORE"></a>
+
+.trivyignore file.
+
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignore](https://trivy.dev/docs/latest/configuration/filtering/#trivyignore)
+
+---
+
+
+##### `TRIVYIGNORE_YAML` <a name="TRIVYIGNORE_YAML" id="image-scanner-with-trivy.TrivyIgnoreFileType.TRIVYIGNORE_YAML"></a>
+
+.trivyignore.yaml file.
+
+> [https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml](https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml)
 
 ---
 

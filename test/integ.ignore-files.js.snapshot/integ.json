@@ -1,0 +1,13 @@
+{
+  "version": "39.0.0",
+  "testCases": {
+    "IgnoreFilesTest/DefaultTest": {
+      "stacks": [
+        "IgnoreFilesStack"
+      ],
+      "diffAssets": true,
+      "assertionStack": "IgnoreFilesTest/DefaultTest/DeployAssert",
+      "assertionStackName": "IgnoreFilesTestDefaultTestDeployAssertDBFD124D"
+    }
+  }
+}

@@ -56,7 +56,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDefaultLogGroupOption
   defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });
 
-const test = new IntegTest(app, 'Test', {
+const test = new IntegTest(app, 'ImageScannerWithTrivyTest', {
   testCases: [stack],
   diffAssets: true,
 });
