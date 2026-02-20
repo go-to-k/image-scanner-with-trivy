@@ -48,6 +48,8 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
   }
 
+  // TODO: v1のためにexitCodeとexitOnEolの後方互換性担保？
+
   // Always set --exit-code 1 regardless of props.failOnVulnerability.
   // This is necessary to detect vulnerabilities for SNS notifications even when the failOnVulnerability setting is false.
   // The actual deployment failure is controlled by the exit code handling logic below (not by Trivy's exit code).
