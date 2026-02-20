@@ -317,7 +317,9 @@ export class ImageScannerWithTrivy extends Construct {
       severity: props.severity ?? [Severity.CRITICAL],
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
-      failOnVulnerability: Boolean(props.exitCode ?? 1),
+      exitCode: props.exitCode ?? 1, // TODO: Remove exitCode and exitOnEol properties in the next major version, as they are now controlled by failOnVulnerability.
+      exitOnEol: props.exitOnEol ?? 1, // TODO: Remove exitCode and exitOnEol properties in the next major version, as they are now controlled by failOnVulnerability.
+      failOnVulnerability: true, // dummy value for v2 property
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),

@@ -10,6 +10,14 @@ export interface ScannerCustomResourceProps {
   readonly severity: string[];
   readonly scanners: string[];
   readonly imageConfigScanners: string[];
+  /**
+   * @deprecated
+   */
+  readonly exitCode?: number;
+  /**
+   * @deprecated
+   */
+  readonly exitOnEol?: number;
   readonly failOnVulnerability: boolean;
   readonly trivyIgnore: string[];
   readonly trivyIgnoreFileType?: string;
