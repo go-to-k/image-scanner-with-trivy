@@ -296,10 +296,7 @@ const DEFAULT_MEMORY_SIZE = 3008;
  * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
  */
 export class ImageScannerWithTrivyV2 extends Construct {
-  /**
-   * The default log group for the singleton Lambda function
-   */
-  public readonly defaultLogGroup?: ILogGroup;
+  private readonly _defaultLogGroup?: ILogGroup;
 
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyV2Props) {
     super(scope, id);
@@ -314,7 +311,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       );
     }
 
-    this.defaultLogGroup = props.defaultLogGroup;
+    this._defaultLogGroup = props.defaultLogGroup;
     const lambdaPurpose = 'Custom::ImageScannerWithTrivyV2CustomResourceLambda';
 
     const customResourceLambda = new SingletonFunction(this, 'CustomResourceLambda', {
@@ -334,7 +331,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       retryAttempts: 0,
       memorySize: props.memorySize ?? DEFAULT_MEMORY_SIZE,
       ephemeralStorageSize: Size.gibibytes(10), // for cases that need to update trivy DB: /tmp/trivy/db/trivy.db
-      logGroup: this.defaultLogGroup,
+      logGroup: this._defaultLogGroup,
     });
 
     props.repository.grantPull(customResourceLambda);
@@ -355,7 +352,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       visit: (node) => {
         if (
           node instanceof ImageScannerWithTrivyV2 &&
-          node.defaultLogGroup?.node.path !== this.defaultLogGroup?.node.path
+          node.defaultLogGroup?.node.path !== this._defaultLogGroup?.node.path
         ) {
           Annotations.of(this).addWarningV2(
             '@image-scanner-with-trivy:duplicateLambdaDefaultLogGroup',
@@ -390,5 +387,10 @@ export class ImageScannerWithTrivyV2 extends Construct {
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
     });
+  }
+
+  /** @internal */
+  get defaultLogGroup(): ILogGroup | undefined {
+    return this._defaultLogGroup;
   }
 }
