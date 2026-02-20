@@ -212,6 +212,15 @@ new ImageScannerWithTrivy(this, 'Scanner', {
   // ✅ This will SUCCEED
 });
 
+// Scenario 1-3: EOL detected (failOnEol: true)
+new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  failOnEol: true,            // Want to fail on EOL
+  // failOnVulnerability: doesn't matter
+  // ❌ This will FAIL regardless of failOnVulnerability setting
+});
+
 // Scenario 2-1: Only vulnerabilities detected (failOnVulnerability: false, failOnEol: true)
 new ImageScannerWithTrivy(this, 'Scanner', {
   imageUri: image.imageUri,
@@ -228,6 +237,15 @@ new ImageScannerWithTrivy(this, 'Scanner', {
   failOnVulnerability: false, // Don't want to fail on vulnerabilities
   failOnEol: false,           // Don't want to fail on EOL
   // ✅ This will SUCCEED
+});
+
+// Scenario 2-3: Only vulnerabilities detected (failOnVulnerability: true)
+new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  failOnVulnerability: true,  // Want to fail on vulnerabilities
+  // failOnEol: doesn't matter
+  // ❌ This will FAIL regardless of failOnEol setting
 });
 ```
 
