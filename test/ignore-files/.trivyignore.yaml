@@ -2,6 +2,7 @@ vulnerabilities:
   - id: CVE-2023-37920
   - id: CVE-2025-7783
   - id: CVE-2025-68121
+  - id: CVE-2026-25896
   - id: CVE-2022-40897
     paths:
       - 'usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA'
