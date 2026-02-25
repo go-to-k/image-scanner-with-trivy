@@ -670,8 +670,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda function's default log group. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnEol">failOnEol</a></code> | <code>boolean</code> | Whether to fail on EOL (End of Life) OS. |
-| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Whether to fail on vulnerabilities. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Whether to fail on vulnerabilities or EOL (End of Life) images. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageConfigScanners">imageConfigScanners</a></code> | <code><a href="#image-scanner-with-trivy.ImageConfigScanners">ImageConfigScanners</a>[]</code> | Enum for ImageConfigScanners. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.memorySize">memorySize</a></code> | <code>number</code> | Memory Size (MB) for Scanner Lambda. |
@@ -681,6 +680,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.suppressErrorOnRollback">suppressErrorOnRollback</a></code> | <code>boolean</code> | Suppress errors during rollback scanner Lambda execution. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.targetImagePlatform">targetImagePlatform</a></code> | <code><a href="#image-scanner-with-trivy.TargetImagePlatform">TargetImagePlatform</a></code> | Scan Image on a specific Architecture and OS. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.trivyIgnore">trivyIgnore</a></code> | <code><a href="#image-scanner-with-trivy.TrivyIgnore">TrivyIgnore</a></code> | Ignore rules or ignore file for Trivy. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.vulnsNotificationTopic">vulnsNotificationTopic</a></code> | <code>aws-cdk-lib.aws_sns.ITopic</code> | SNS topic for vulnerabilities notification. |
 
 ---
 
@@ -728,30 +728,6 @@ See `Default Log Group` section in the README for more details.
 
 ---
 
-##### `failOnEol`<sup>Optional</sup> <a name="failOnEol" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnEol"></a>
-
-```typescript
-public readonly failOnEol: boolean;
-```
-
-- *Type:* boolean
-- *Default:* true
-
-Whether to fail on EOL (End of Life) OS.
-
-Sometimes you may surprisingly get 0 vulnerabilities in an old image:
- - Enabling --ignore-unfixed option while all packages have no fixed versions.
- - Scanning a rather outdated OS (e.g. Ubuntu 10.04).
-
-An OS at the end of service/life (EOL) usually gets into this situation, which is definitely full of vulnerabilities.
-If set to `true`, scanning fails on EOL OS with a non-zero exit code.
-
-It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
-
-> [https://trivy.dev/docs/latest/configuration/others/#exit-on-eol](https://trivy.dev/docs/latest/configuration/others/#exit-on-eol)
-
----
-
 ##### `failOnVulnerability`<sup>Optional</sup> <a name="failOnVulnerability" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability"></a>
 
 ```typescript
@@ -761,11 +737,11 @@ public readonly failOnVulnerability: boolean;
 - *Type:* boolean
 - *Default:* true
 
-Whether to fail on vulnerabilities.
+Whether to fail on vulnerabilities or EOL (End of Life) images.
 
-If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities are detected.
+If set to `true`, Trivy exits with a non-zero exit code when vulnerabilities or EOL images are detected.
 
-If set to `false`, Trivy exits with a zero exit code even when vulnerabilities are detected.
+If set to `false`, Trivy exits with a zero exit code even when vulnerabilities or EOL images are detected.
 
 It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
 
@@ -943,6 +919,26 @@ Use `TrivyIgnore.fromRules()` to specify inline ignore rules (equivalent to writ
 in a `.trivyignore` file), or `TrivyIgnore.fromFilePath()` to point to an existing ignore file.
 
 > [https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml](https://trivy.dev/docs/latest/configuration/filtering/#trivyignoreyaml)
+
+---
+
+##### `vulnsNotificationTopic`<sup>Optional</sup> <a name="vulnsNotificationTopic" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.vulnsNotificationTopic"></a>
+
+```typescript
+public readonly vulnsNotificationTopic: ITopic;
+```
+
+- *Type:* aws-cdk-lib.aws_sns.ITopic
+- *Default:* no notification
+
+SNS topic for vulnerabilities notification.
+
+If specified, an SNS topic notification will be sent when vulnerabilities or EOL (End of Life) OS are detected.
+
+The notification is sent regardless of the `failOnVulnerability` setting.
+This means you can choose to receive notifications even when you don't want the deployment to fail.
+
+You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
 
 ---
 

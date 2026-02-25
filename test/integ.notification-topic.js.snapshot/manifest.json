@@ -1,28 +1,28 @@
 {
   "version": "39.0.0",
   "artifacts": {
-    "IgnoreFilesStack.assets": {
+    "NotificationTopicStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "IgnoreFilesStack.assets.json",
+        "file": "NotificationTopicStack.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "IgnoreFilesStack": {
+    "NotificationTopicStack": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "IgnoreFilesStack.template.json",
+        "templateFile": "NotificationTopicStack.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/99ddf4fe3d1fe8d1e6adf212430bcc05ae10ca64533c03a01a6462a6726df38f.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/fccc5f7918c31393daadf89894a6355c6be4cb8cdf57db278b794b38d3d85504.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "IgnoreFilesStack.assets"
+          "NotificationTopicStack.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -31,10 +31,22 @@
         }
       },
       "dependencies": [
-        "IgnoreFilesStack.assets"
+        "NotificationTopicStack.assets"
       ],
       "metadata": {
-        "/IgnoreFilesStack/ScanLogsOutputLogGroup": [
+        "/NotificationTopicStack/Topic": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/NotificationTopicStack/Topic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TopicBFC7AF6E"
+          }
+        ],
+        "/NotificationTopicStack/NotificationQueue": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -42,13 +54,50 @@
             }
           }
         ],
-        "/IgnoreFilesStack/ScanLogsOutputLogGroup/Resource": [
+        "/NotificationTopicStack/NotificationQueue/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ScanLogsOutputLogGroup242F0DED"
+            "data": "NotificationQueue36610CC1"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/CustomResourceLambda": [
+        "/NotificationTopicStack/NotificationQueue/Policy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "queues": [
+                "*"
+              ]
+            }
+          }
+        ],
+        "/NotificationTopicStack/NotificationQueue/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationQueuePolicyCC060EA6"
+          }
+        ],
+        "/NotificationTopicStack/NotificationQueue/NotificationTopicStackTopic113DD655": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "topic": "*",
+              "endpoint": "*",
+              "protocol": "sqs",
+              "rawMessageDelivery": "*",
+              "filterPolicy": "*",
+              "filterPolicyWithMessageBody": "*",
+              "region": "*",
+              "deadLetterQueue": "*"
+            }
+          }
+        ],
+        "/NotificationTopicStack/NotificationQueue/NotificationTopicStackTopic113DD655/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationQueueNotificationTopicStackTopic113DD6556A485313"
+          }
+        ],
+        "/NotificationTopicStack/ImageScanner/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -66,7 +115,7 @@
             }
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -94,7 +143,7 @@
             }
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/ServiceRole": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -142,19 +191,19 @@
             }
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/ServiceRole/Resource": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IgnoreYamlProviderframeworkonEventServiceRole62C8BB14"
+            "data": "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -192,31 +241,31 @@
             }
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IgnoreYamlProviderframeworkonEventServiceRoleDefaultPolicy874DDED1"
+            "data": "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Provider/framework-onEvent/Resource": [
+        "/NotificationTopicStack/ImageScanner/Provider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IgnoreYamlProviderframeworkonEvent72432365"
+            "data": "ImageScannerProviderframeworkonEvent6D1AC9AC"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Resource": [
+        "/NotificationTopicStack/ImageScanner/Resource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IgnoreFilesStack/IgnoreYaml/Resource/Default": [
+        "/NotificationTopicStack/ImageScanner/Resource/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IgnoreYaml964910DE"
+            "data": "ImageScanner4A30E3A5"
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -232,7 +281,7 @@
             }
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -294,53 +343,21 @@
                 {}
               ]
             }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB"
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -392,53 +409,21 @@
                 {}
               ]
             }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D"
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -450,229 +435,61 @@
             }
           }
         ],
-        "/IgnoreFilesStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource": [
+        "/NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1EventInvokeConfig658F865C"
           }
         ],
-        "/IgnoreFilesStack/LatestNodeRuntimeMap": [
+        "/NotificationTopicStack/LatestNodeRuntimeMap": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
           }
         ],
-        "/IgnoreFilesStack/Ignore/CustomResourceLambda": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "uuid": "*",
-              "lambdaPurpose": "*",
-              "runtime": "*",
-              "handler": "*",
-              "code": "*",
-              "architecture": "*",
-              "timeout": "*",
-              "retryAttempts": "*",
-              "memorySize": "*",
-              "ephemeralStorageSize": "*",
-              "logGroup": "*"
-            }
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "code": "*",
-              "description": "*",
-              "runtime": "*",
-              "handler": "*",
-              "timeout": "*",
-              "logGroup": "*",
-              "vpc": "*",
-              "vpcSubnets": "*",
-              "securityGroups": "*",
-              "role": "*",
-              "functionName": "*",
-              "environmentEncryption": "*"
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addEnvironment": [
-                "*",
-                "*"
-              ]
-            }
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/ServiceRole": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "assumedBy": {
-                "principalAccount": "*",
-                "assumeRoleAction": "*"
-              },
-              "managedPolicies": [
-                {
-                  "managedPolicyArn": "*"
-                }
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachInlinePolicy": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachInlinePolicy": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addToPrincipalPolicy": [
-                {}
-              ]
-            }
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/ServiceRole/Resource": [
+        "/NotificationTopicStack/Exports/Output{\"Ref\":\"NotificationQueue36610CC1\"}": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "IgnoreProviderframeworkonEventServiceRoleA7E53E9B"
+            "data": "ExportsOutputRefNotificationQueue36610CC1185DED79"
           }
         ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachToRole": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "attachToRole": [
-                "*"
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          },
-          {
-            "type": "aws:cdk:analytics:method",
-            "data": {
-              "addStatements": [
-                {}
-              ]
-            }
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IgnoreProviderframeworkonEventServiceRoleDefaultPolicyA88B7DC9"
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Provider/framework-onEvent/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "IgnoreProviderframeworkonEvent9A38CBFE"
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Resource": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": "*"
-          }
-        ],
-        "/IgnoreFilesStack/Ignore/Resource/Default": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "Ignore37B2725C"
-          }
-        ],
-        "/IgnoreFilesStack/Exports/Output{\"Ref\":\"ScanLogsOutputLogGroup242F0DED\"}": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
-          }
-        ],
-        "/IgnoreFilesStack/BootstrapVersion": [
+        "/NotificationTopicStack/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/IgnoreFilesStack/CheckBootstrapVersion": [
+        "/NotificationTopicStack/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "IgnoreFilesStack"
+      "displayName": "NotificationTopicStack"
     },
-    "IgnoreFilesTestDefaultTestDeployAssertDBFD124D.assets": {
+    "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "IgnoreFilesTestDefaultTestDeployAssertDBFD124D.assets.json",
+        "file": "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "IgnoreFilesTestDefaultTestDeployAssertDBFD124D": {
+    "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "IgnoreFilesTestDefaultTestDeployAssertDBFD124D.template.json",
+        "templateFile": "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/6921a5c17190e71ef5381950602c54bf9922e3f78e066bc6af6fad689b40371f.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c58f9ef0cab8b1754d3d5afe61f1a228a97bab033f8cb149f0052812eb266df1.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "IgnoreFilesTestDefaultTestDeployAssertDBFD124D.assets"
+          "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -681,11 +498,11 @@
         }
       },
       "dependencies": [
-        "IgnoreFilesStack",
-        "IgnoreFilesTestDefaultTestDeployAssertDBFD124D.assets"
+        "NotificationTopicStack",
+        "NotificationTopicTestDefaultTestDeployAssertDC7CC3EB.assets"
       ],
       "metadata": {
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/Default": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/Default": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -699,98 +516,98 @@
             "data": "*"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/Default/Default": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/Default/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9"
+            "data": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/IsCompleteProvider/Invoke": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/IsCompleteProvider/Invoke": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForIsCompleteProviderInvoke42EB9F5C"
+            "data": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForIsCompleteProviderInvoke9CAFD8CD"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/TimeoutProvider/Invoke": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/TimeoutProvider/Invoke": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForTimeoutProviderInvokeDB4AF93A"
+            "data": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForTimeoutProviderInvoke08F0A5C8"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/Role": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/Role": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F"
+            "data": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/Resource": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForE2DE9D23"
+            "data": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitFor5CFF4F48"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/AssertionResults": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/AssertionResults": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AssertionResultsAwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9"
+            "data": "AssertionResultsAwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Role918961BB"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aRoleB84BD8CE"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/BootstrapVersion": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/IgnoreFilesTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+        "/NotificationTopicTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "IgnoreFilesTest/DefaultTest/DeployAssert"
+      "displayName": "NotificationTopicTest/DefaultTest/DeployAssert"
     },
     "Tree": {
       "type": "cdk:tree",

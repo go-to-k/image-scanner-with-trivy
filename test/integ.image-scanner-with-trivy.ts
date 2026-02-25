@@ -5,6 +5,13 @@ import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { ImageScannerWithTrivy, ScanLogsOutput, Scanners, Severity } from '../src';
 
+const IGNORE_FOR_PASSING_TESTS = [
+  'CVE-2023-37920',
+  'CVE-2025-7783',
+  'CVE-2025-68121',
+  'CVE-2026-25896',
+];
+
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyStack');
 
@@ -21,7 +28,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithMinimalOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121'],
+  trivyIgnore: IGNORE_FOR_PASSING_TESTS,
 });
 
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
@@ -33,9 +40,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
   exitCode: 1,
   exitOnEol: 1,
   trivyIgnore: [
-    'CVE-2023-37920',
-    'CVE-2025-7783',
-    'CVE-2025-68121',
+    ...IGNORE_FOR_PASSING_TESTS,
     'CVE-2019-14697 exp:2023-01-01',
     'generic-unwanted-rule',
   ],
@@ -51,7 +56,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithAllOptions', {
 new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDefaultLogGroupOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: ['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121'],
+  trivyIgnore: [...IGNORE_FOR_PASSING_TESTS],
   defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
   defaultLogGroupRetentionDays: RetentionDays.ONE_DAY,
 });
@@ -59,6 +64,7 @@ new ImageScannerWithTrivy(stack, 'ImageScannerWithTrivyWithDefaultLogGroupOption
 const test = new IntegTest(app, 'ImageScannerWithTrivyTest', {
   testCases: [stack],
   diffAssets: true,
+  stackUpdateWorkflow: false, // Disable stack update workflow to prevent test failures from new vulnerabilities discovered in previously successful snapshots.
 });
 
 test.assertions

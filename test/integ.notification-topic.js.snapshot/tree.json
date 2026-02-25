@@ -4,46 +4,17 @@
     "id": "App",
     "path": "",
     "children": {
-      "ImageScannerWithTrivyV2Stack": {
-        "id": "ImageScannerWithTrivyV2Stack",
-        "path": "ImageScannerWithTrivyV2Stack",
+      "NotificationTopicStack": {
+        "id": "NotificationTopicStack",
+        "path": "NotificationTopicStack",
         "children": {
-          "ScanLogsOutputLogGroup": {
-            "id": "ScanLogsOutputLogGroup",
-            "path": "ImageScannerWithTrivyV2Stack/ScanLogsOutputLogGroup",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "ImageScannerWithTrivyV2Stack/ScanLogsOutputLogGroup/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
-                  "aws:cdk:cloudformation:props": {
-                    "retentionInDays": 731
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
-                  "version": "2.178.1"
-                }
-              }
-            },
-            "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
-              "version": "2.178.1",
-              "metadata": [
-                {
-                  "removalPolicy": "destroy"
-                }
-              ]
-            }
-          },
           "DockerImage": {
             "id": "DockerImage",
-            "path": "ImageScannerWithTrivyV2Stack/DockerImage",
+            "path": "NotificationTopicStack/DockerImage",
             "children": {
               "Staging": {
                 "id": "Staging",
-                "path": "ImageScannerWithTrivyV2Stack/DockerImage/Staging",
+                "path": "NotificationTopicStack/DockerImage/Staging",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.AssetStaging",
                   "version": "2.178.1"
@@ -51,7 +22,7 @@
               },
               "Repository": {
                 "id": "Repository",
-                "path": "ImageScannerWithTrivyV2Stack/DockerImage/Repository",
+                "path": "NotificationTopicStack/DockerImage/Repository",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ecr.RepositoryBase",
                   "version": "2.178.1",
@@ -64,13 +35,170 @@
               "version": "2.178.1"
             }
           },
-          "ImageScannerWithTrivyV2WithMinimalOptions": {
-            "id": "ImageScannerWithTrivyV2WithMinimalOptions",
-            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions",
+          "Topic": {
+            "id": "Topic",
+            "path": "NotificationTopicStack/Topic",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "NotificationTopicStack/Topic/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {}
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                  "version": "2.178.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sns.Topic",
+              "version": "2.178.1",
+              "metadata": [
+                "*"
+              ]
+            }
+          },
+          "NotificationQueue": {
+            "id": "NotificationQueue",
+            "path": "NotificationTopicStack/NotificationQueue",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "NotificationTopicStack/NotificationQueue/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                  "aws:cdk:cloudformation:props": {}
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.CfnQueue",
+                  "version": "2.178.1"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "NotificationTopicStack/NotificationQueue/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "NotificationTopicStack/NotificationQueue/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SQS::QueuePolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sqs:SendMessage",
+                              "Condition": {
+                                "ArnEquals": {
+                                  "aws:SourceArn": {
+                                    "Ref": "TopicBFC7AF6E"
+                                  }
+                                }
+                              },
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "sns.amazonaws.com"
+                              },
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "NotificationQueue36610CC1",
+                                  "Arn"
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "queues": [
+                          {
+                            "Ref": "NotificationQueue36610CC1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sqs.CfnQueuePolicy",
+                      "version": "2.178.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.QueuePolicy",
+                  "version": "2.178.1",
+                  "metadata": [
+                    {
+                      "queues": [
+                        "*"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "NotificationTopicStackTopic113DD655": {
+                "id": "NotificationTopicStackTopic113DD655",
+                "path": "NotificationTopicStack/NotificationQueue/NotificationTopicStackTopic113DD655",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "NotificationTopicStack/NotificationQueue/NotificationTopicStackTopic113DD655/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                      "aws:cdk:cloudformation:props": {
+                        "endpoint": {
+                          "Fn::GetAtt": [
+                            "NotificationQueue36610CC1",
+                            "Arn"
+                          ]
+                        },
+                        "protocol": "sqs",
+                        "topicArn": {
+                          "Ref": "TopicBFC7AF6E"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sns.CfnSubscription",
+                      "version": "2.178.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.Subscription",
+                  "version": "2.178.1",
+                  "metadata": [
+                    {
+                      "topic": "*",
+                      "endpoint": "*",
+                      "protocol": "sqs",
+                      "rawMessageDelivery": "*",
+                      "filterPolicy": "*",
+                      "filterPolicyWithMessageBody": "*",
+                      "region": "*",
+                      "deadLetterQueue": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sqs.Queue",
+              "version": "2.178.1",
+              "metadata": [
+                {
+                  "removalPolicy": "destroy"
+                }
+              ]
+            }
+          },
+          "ImageScanner": {
+            "id": "ImageScanner",
+            "path": "NotificationTopicStack/ImageScanner",
             "children": {
               "CustomResourceLambda": {
                 "id": "CustomResourceLambda",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/CustomResourceLambda",
+                "path": "NotificationTopicStack/ImageScanner/CustomResourceLambda",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
                   "version": "2.178.1",
@@ -93,19 +221,19 @@
               },
               "Provider": {
                 "id": "Provider",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider",
+                "path": "NotificationTopicStack/ImageScanner/Provider",
                 "children": {
                   "framework-onEvent": {
                     "id": "framework-onEvent",
-                    "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent",
+                    "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent",
                     "children": {
                       "ServiceRole": {
                         "id": "ServiceRole",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/ServiceRole",
+                        "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole",
                         "children": {
                           "ImportServiceRole": {
                             "id": "ImportServiceRole",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
+                            "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.Resource",
                               "version": "2.178.1",
@@ -116,7 +244,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/ServiceRole/Resource",
+                            "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                               "aws:cdk:cloudformation:props": {
@@ -155,11 +283,11 @@
                           },
                           "DefaultPolicy": {
                             "id": "DefaultPolicy",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
+                            "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
+                                "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                                   "aws:cdk:cloudformation:props": {
@@ -204,10 +332,10 @@
                                       ],
                                       "Version": "2012-10-17"
                                     },
-                                    "policyName": "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy0D0A3260",
+                                    "policyName": "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3",
                                     "roles": [
                                       {
-                                        "Ref": "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22"
+                                        "Ref": "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
                                       }
                                     ]
                                   }
@@ -287,11 +415,11 @@
                       },
                       "Code": {
                         "id": "Code",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/Code",
+                        "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/Code",
                         "children": {
                           "Stage": {
                             "id": "Stage",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/Code/Stage",
+                            "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/Code/Stage",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.AssetStaging",
                               "version": "2.178.1"
@@ -299,7 +427,7 @@
                           },
                           "AssetBucket": {
                             "id": "AssetBucket",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/Code/AssetBucket",
+                            "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/Code/AssetBucket",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                               "version": "2.178.1",
@@ -314,7 +442,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider/framework-onEvent/Resource",
+                        "path": "NotificationTopicStack/ImageScanner/Provider/framework-onEvent/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                           "aws:cdk:cloudformation:props": {
@@ -324,7 +452,7 @@
                               },
                               "s3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
                             },
-                            "description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider)",
+                            "description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScanner/Provider)",
                             "environment": {
                               "variables": {
                                 "USER_ON_EVENT_FUNCTION_ARN": {
@@ -338,7 +466,7 @@
                             "handler": "framework.onEvent",
                             "role": {
                               "Fn::GetAtt": [
-                                "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22",
+                                "ImageScannerProviderframeworkonEventServiceRoleFCB1902E",
                                 "Arn"
                               ]
                             },
@@ -395,11 +523,11 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Resource",
+                "path": "NotificationTopicStack/ImageScanner/Resource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Resource/Default",
+                    "path": "NotificationTopicStack/ImageScanner/Resource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.178.1"
@@ -422,15 +550,15 @@
           },
           "Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": {
             "id": "Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1",
-            "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1",
+            "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole",
+                "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.178.1",
@@ -441,7 +569,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -480,11 +608,11 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource",
+                        "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
@@ -527,23 +655,17 @@
                                   "Resource": "*"
                                 },
                                 {
+                                  "Action": "sns:Publish",
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Ref": "TopicBFC7AF6E"
+                                  }
+                                },
+                                {
                                   "Action": "cloudformation:DescribeStacks",
                                   "Effect": "Allow",
                                   "Resource": {
                                     "Ref": "AWS::StackId"
-                                  }
-                                },
-                                {
-                                  "Action": [
-                                    "logs:CreateLogStream",
-                                    "logs:PutLogEvents"
-                                  ],
-                                  "Effect": "Allow",
-                                  "Resource": {
-                                    "Fn::GetAtt": [
-                                      "ScanLogsOutputLogGroup242F0DED",
-                                      "Arn"
-                                    ]
                                   }
                                 }
                               ],
@@ -576,21 +698,6 @@
                         {
                           "attachToRole": [
                             "*"
-                          ]
-                        },
-                        {
-                          "addStatements": [
-                            {}
-                          ]
-                        },
-                        {
-                          "addStatements": [
-                            {}
-                          ]
-                        },
-                        {
-                          "addStatements": [
-                            {}
                           ]
                         },
                         {
@@ -661,32 +768,17 @@
                       "addToPrincipalPolicy": [
                         {}
                       ]
-                    },
-                    {
-                      "addToPrincipalPolicy": [
-                        {}
-                      ]
-                    },
-                    {
-                      "addToPrincipalPolicy": [
-                        {}
-                      ]
-                    },
-                    {
-                      "addToPrincipalPolicy": [
-                        {}
-                      ]
                     }
                   ]
                 }
               },
               "AssetImage": {
                 "id": "AssetImage",
-                "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage",
+                "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage",
                 "children": {
                   "Staging": {
                     "id": "Staging",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Staging",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Staging",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.178.1"
@@ -694,7 +786,7 @@
                   },
                   "Repository": {
                     "id": "Repository",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Repository",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Repository",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_ecr.RepositoryBase",
                       "version": "2.178.1",
@@ -709,7 +801,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource",
+                "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -742,11 +834,11 @@
               },
               "EventInvokeConfig": {
                 "id": "EventInvokeConfig",
-                "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig",
+                "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "ImageScannerWithTrivyV2Stack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource",
+                    "path": "NotificationTopicStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                       "aws:cdk:cloudformation:props": {
@@ -798,405 +890,19 @@
           },
           "LatestNodeRuntimeMap": {
             "id": "LatestNodeRuntimeMap",
-            "path": "ImageScannerWithTrivyV2Stack/LatestNodeRuntimeMap",
+            "path": "NotificationTopicStack/LatestNodeRuntimeMap",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnMapping",
               "version": "2.178.1"
             }
           },
-          "DefaultLogGroup": {
-            "id": "DefaultLogGroup",
-            "path": "ImageScannerWithTrivyV2Stack/DefaultLogGroup",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "ImageScannerWithTrivyV2Stack/DefaultLogGroup/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
-                  "aws:cdk:cloudformation:props": {
-                    "retentionInDays": 1
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
-                  "version": "2.178.1"
-                }
-              }
-            },
-            "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
-              "version": "2.178.1",
-              "metadata": [
-                {
-                  "removalPolicy": "destroy",
-                  "retention": 1
-                }
-              ]
-            }
-          },
-          "ImageScannerWithTrivyV2WithAllOptions": {
-            "id": "ImageScannerWithTrivyV2WithAllOptions",
-            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions",
-            "children": {
-              "CustomResourceLambda": {
-                "id": "CustomResourceLambda",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/CustomResourceLambda",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
-                  "version": "2.178.1",
-                  "metadata": [
-                    {
-                      "uuid": "*",
-                      "lambdaPurpose": "*",
-                      "runtime": "*",
-                      "handler": "*",
-                      "code": "*",
-                      "architecture": "*",
-                      "timeout": "*",
-                      "retryAttempts": "*",
-                      "memorySize": "*",
-                      "ephemeralStorageSize": "*",
-                      "logGroup": "*"
-                    }
-                  ]
-                }
-              },
-              "Provider": {
-                "id": "Provider",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider",
-                "children": {
-                  "framework-onEvent": {
-                    "id": "framework-onEvent",
-                    "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent",
-                    "children": {
-                      "ServiceRole": {
-                        "id": "ServiceRole",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/ServiceRole",
-                        "children": {
-                          "ImportServiceRole": {
-                            "id": "ImportServiceRole",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.Resource",
-                              "version": "2.178.1",
-                              "metadata": [
-                                "*"
-                              ]
-                            }
-                          },
-                          "Resource": {
-                            "id": "Resource",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/ServiceRole/Resource",
-                            "attributes": {
-                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
-                              "aws:cdk:cloudformation:props": {
-                                "assumeRolePolicyDocument": {
-                                  "Statement": [
-                                    {
-                                      "Action": "sts:AssumeRole",
-                                      "Effect": "Allow",
-                                      "Principal": {
-                                        "Service": "lambda.amazonaws.com"
-                                      }
-                                    }
-                                  ],
-                                  "Version": "2012-10-17"
-                                },
-                                "managedPolicyArns": [
-                                  {
-                                    "Fn::Join": [
-                                      "",
-                                      [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-                                      ]
-                                    ]
-                                  }
-                                ]
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                              "version": "2.178.1"
-                            }
-                          },
-                          "DefaultPolicy": {
-                            "id": "DefaultPolicy",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
-                            "children": {
-                              "Resource": {
-                                "id": "Resource",
-                                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
-                                "attributes": {
-                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
-                                  "aws:cdk:cloudformation:props": {
-                                    "policyDocument": {
-                                      "Statement": [
-                                        {
-                                          "Action": "lambda:InvokeFunction",
-                                          "Effect": "Allow",
-                                          "Resource": [
-                                            {
-                                              "Fn::GetAtt": [
-                                                "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-                                                "Arn"
-                                              ]
-                                            },
-                                            {
-                                              "Fn::Join": [
-                                                "",
-                                                [
-                                                  {
-                                                    "Fn::GetAtt": [
-                                                      "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-                                                      "Arn"
-                                                    ]
-                                                  },
-                                                  ":*"
-                                                ]
-                                              ]
-                                            }
-                                          ]
-                                        },
-                                        {
-                                          "Action": "lambda:GetFunction",
-                                          "Effect": "Allow",
-                                          "Resource": {
-                                            "Fn::GetAtt": [
-                                              "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-                                              "Arn"
-                                            ]
-                                          }
-                                        }
-                                      ],
-                                      "Version": "2012-10-17"
-                                    },
-                                    "policyName": "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy26A5CABD",
-                                    "roles": [
-                                      {
-                                        "Ref": "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377"
-                                      }
-                                    ]
-                                  }
-                                },
-                                "constructInfo": {
-                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                                  "version": "2.178.1"
-                                }
-                              }
-                            },
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_iam.Policy",
-                              "version": "2.178.1",
-                              "metadata": [
-                                "*",
-                                {
-                                  "attachToRole": [
-                                    "*"
-                                  ]
-                                },
-                                {
-                                  "attachToRole": [
-                                    "*"
-                                  ]
-                                },
-                                {
-                                  "addStatements": [
-                                    {}
-                                  ]
-                                },
-                                {
-                                  "addStatements": [
-                                    {}
-                                  ]
-                                }
-                              ]
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_iam.Role",
-                          "version": "2.178.1",
-                          "metadata": [
-                            {
-                              "assumedBy": {
-                                "principalAccount": "*",
-                                "assumeRoleAction": "*"
-                              },
-                              "managedPolicies": [
-                                {
-                                  "managedPolicyArn": "*"
-                                }
-                              ]
-                            },
-                            {
-                              "addToPrincipalPolicy": [
-                                {}
-                              ]
-                            },
-                            {
-                              "attachInlinePolicy": [
-                                "*"
-                              ]
-                            },
-                            {
-                              "attachInlinePolicy": [
-                                "*"
-                              ]
-                            },
-                            {
-                              "addToPrincipalPolicy": [
-                                {}
-                              ]
-                            }
-                          ]
-                        }
-                      },
-                      "Code": {
-                        "id": "Code",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/Code",
-                        "children": {
-                          "Stage": {
-                            "id": "Stage",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/Code/Stage",
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.AssetStaging",
-                              "version": "2.178.1"
-                            }
-                          },
-                          "AssetBucket": {
-                            "id": "AssetBucket",
-                            "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/Code/AssetBucket",
-                            "constructInfo": {
-                              "fqn": "aws-cdk-lib.aws_s3.BucketBase",
-                              "version": "2.178.1",
-                              "metadata": []
-                            }
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
-                          "version": "2.178.1"
-                        }
-                      },
-                      "Resource": {
-                        "id": "Resource",
-                        "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider/framework-onEvent/Resource",
-                        "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
-                          "aws:cdk:cloudformation:props": {
-                            "code": {
-                              "s3Bucket": {
-                                "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
-                              },
-                              "s3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
-                            },
-                            "description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider)",
-                            "environment": {
-                              "variables": {
-                                "USER_ON_EVENT_FUNCTION_ARN": {
-                                  "Fn::GetAtt": [
-                                    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-                                    "Arn"
-                                  ]
-                                }
-                              }
-                            },
-                            "handler": "framework.onEvent",
-                            "role": {
-                              "Fn::GetAtt": [
-                                "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377",
-                                "Arn"
-                              ]
-                            },
-                            "runtime": {
-                              "Fn::FindInMap": [
-                                "LatestNodeRuntimeMap",
-                                {
-                                  "Ref": "AWS::Region"
-                                },
-                                "value"
-                              ]
-                            },
-                            "timeout": 900
-                          }
-                        },
-                        "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
-                          "version": "2.178.1"
-                        }
-                      }
-                    },
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_lambda.Function",
-                      "version": "2.178.1",
-                      "metadata": [
-                        {
-                          "code": "*",
-                          "description": "*",
-                          "runtime": "*",
-                          "handler": "*",
-                          "timeout": "*",
-                          "logGroup": "*",
-                          "vpc": "*",
-                          "vpcSubnets": "*",
-                          "securityGroups": "*",
-                          "role": "*",
-                          "functionName": "*",
-                          "environmentEncryption": "*"
-                        },
-                        {
-                          "addEnvironment": [
-                            "*",
-                            "*"
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.custom_resources.Provider",
-                  "version": "2.178.1"
-                }
-              },
-              "Resource": {
-                "id": "Resource",
-                "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Resource",
-                "children": {
-                  "Default": {
-                    "id": "Default",
-                    "path": "ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Resource/Default",
-                    "constructInfo": {
-                      "fqn": "aws-cdk-lib.CfnResource",
-                      "version": "2.178.1"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CustomResource",
-                  "version": "2.178.1",
-                  "metadata": [
-                    "*"
-                  ]
-                }
-              }
-            },
-            "constructInfo": {
-              "fqn": "constructs.Construct",
-              "version": "10.0.5"
-            }
-          },
           "Exports": {
             "id": "Exports",
-            "path": "ImageScannerWithTrivyV2Stack/Exports",
+            "path": "NotificationTopicStack/Exports",
             "children": {
-              "Output{\"Ref\":\"ScanLogsOutputLogGroup242F0DED\"}": {
-                "id": "Output{\"Ref\":\"ScanLogsOutputLogGroup242F0DED\"}",
-                "path": "ImageScannerWithTrivyV2Stack/Exports/Output{\"Ref\":\"ScanLogsOutputLogGroup242F0DED\"}",
+              "Output{\"Ref\":\"NotificationQueue36610CC1\"}": {
+                "id": "Output{\"Ref\":\"NotificationQueue36610CC1\"}",
+                "path": "NotificationTopicStack/Exports/Output{\"Ref\":\"NotificationQueue36610CC1\"}",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.178.1"
@@ -1210,7 +916,7 @@
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "ImageScannerWithTrivyV2Stack/BootstrapVersion",
+            "path": "NotificationTopicStack/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.178.1"
@@ -1218,7 +924,7 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "ImageScannerWithTrivyV2Stack/CheckBootstrapVersion",
+            "path": "NotificationTopicStack/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.178.1"
@@ -1230,17 +936,17 @@
           "version": "2.178.1"
         }
       },
-      "ImageScannerWithTrivyV2Test": {
-        "id": "ImageScannerWithTrivyV2Test",
-        "path": "ImageScannerWithTrivyV2Test",
+      "NotificationTopicTest": {
+        "id": "NotificationTopicTest",
+        "path": "NotificationTopicTest",
         "children": {
           "DefaultTest": {
             "id": "DefaultTest",
-            "path": "ImageScannerWithTrivyV2Test/DefaultTest",
+            "path": "NotificationTopicTest/DefaultTest",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "ImageScannerWithTrivyV2Test/DefaultTest/Default",
+                "path": "NotificationTopicTest/DefaultTest/Default",
                 "constructInfo": {
                   "fqn": "constructs.Construct",
                   "version": "10.0.5"
@@ -1248,19 +954,19 @@
               },
               "DeployAssert": {
                 "id": "DeployAssert",
-                "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert",
+                "path": "NotificationTopicTest/DefaultTest/DeployAssert",
                 "children": {
-                  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9": {
-                    "id": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9",
+                  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43": {
+                    "id": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43",
                     "children": {
                       "SdkProvider": {
                         "id": "SdkProvider",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/SdkProvider",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/SdkProvider",
                         "children": {
                           "AssertionsProvider": {
                             "id": "AssertionsProvider",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/SdkProvider/AssertionsProvider",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/SdkProvider/AssertionsProvider",
                             "constructInfo": {
                               "fqn": "constructs.Construct",
                               "version": "10.0.5"
@@ -1274,11 +980,11 @@
                       },
                       "Default": {
                         "id": "Default",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/Default",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/Default",
                         "children": {
                           "Default": {
                             "id": "Default",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/Default/Default",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/Default/Default",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1297,15 +1003,15 @@
                       },
                       "WaitFor": {
                         "id": "WaitFor",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor",
                         "children": {
                           "IsCompleteProvider": {
                             "id": "IsCompleteProvider",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/IsCompleteProvider",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/IsCompleteProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/IsCompleteProvider/AssertionsProvider",
+                                "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/IsCompleteProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1313,7 +1019,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/IsCompleteProvider/Invoke",
+                                "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/IsCompleteProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1327,11 +1033,11 @@
                           },
                           "TimeoutProvider": {
                             "id": "TimeoutProvider",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/TimeoutProvider",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/TimeoutProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/TimeoutProvider/AssertionsProvider",
+                                "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/TimeoutProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1339,7 +1045,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/TimeoutProvider/Invoke",
+                                "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/TimeoutProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1353,7 +1059,7 @@
                           },
                           "Role": {
                             "id": "Role",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/Role",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/Role",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1361,7 +1067,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/WaitFor/Resource",
+                            "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/WaitFor/Resource",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1375,7 +1081,7 @@
                       },
                       "AssertionResults": {
                         "id": "AssertionResults",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9/AssertionResults",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43/AssertionResults",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnOutput",
                           "version": "2.178.1"
@@ -1389,11 +1095,11 @@
                   },
                   "SingletonFunction1488541a7b23466481b69b4408076b81": {
                     "id": "SingletonFunction1488541a7b23466481b69b4408076b81",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1401,7 +1107,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1409,7 +1115,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1423,7 +1129,7 @@
                   },
                   "LatestNodeRuntimeMap": {
                     "id": "LatestNodeRuntimeMap",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnMapping",
                       "version": "2.178.1"
@@ -1431,11 +1137,11 @@
                   },
                   "SingletonFunction76b3e830a873425f8453eddd85c86925": {
                     "id": "SingletonFunction76b3e830a873425f8453eddd85c86925",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1443,7 +1149,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1451,7 +1157,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1465,11 +1171,11 @@
                   },
                   "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a": {
                     "id": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1477,7 +1183,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1485,7 +1191,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
+                        "path": "NotificationTopicTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1499,7 +1205,7 @@
                   },
                   "BootstrapVersion": {
                     "id": "BootstrapVersion",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/BootstrapVersion",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/BootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnParameter",
                       "version": "2.178.1"
@@ -1507,7 +1213,7 @@
                   },
                   "CheckBootstrapVersion": {
                     "id": "CheckBootstrapVersion",
-                    "path": "ImageScannerWithTrivyV2Test/DefaultTest/DeployAssert/CheckBootstrapVersion",
+                    "path": "NotificationTopicTest/DefaultTest/DeployAssert/CheckBootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnRule",
                       "version": "2.178.1"

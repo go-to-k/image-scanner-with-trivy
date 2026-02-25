@@ -233,6 +233,13 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
               "Resource": "*",
             },
             {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "TopicBFC7AF6E",
+              },
+            },
+            {
               "Action": "cloudformation:DescribeStacks",
               "Effect": "Allow",
               "Resource": {
@@ -287,8 +294,7 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
           ],
         },
         "addr": "c8975ed5ca70f5b7fb62b5850d4eb8b6e7a6f39e54",
-        "exitCode": 1,
-        "exitOnEol": 1,
+        "failOnVulnerability": "true",
         "ignoreUnfixed": "true",
         "imageConfigScanners": [],
         "imageUri": "imageUri",
@@ -312,6 +318,9 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
           "CVE-2023-37920",
           "CVE-2019-14697 exp:2023-01-01",
         ],
+        "vulnsTopicArn": {
+          "Ref": "TopicBFC7AF6E",
+        },
       },
       "Type": "Custom::ImageScannerWithTrivyV2",
       "UpdateReplacePolicy": "Delete",
@@ -449,6 +458,9 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
       },
       "Type": "AWS::Logs::LogGroup",
       "UpdateReplacePolicy": "Retain",
+    },
+    "TopicBFC7AF6E": {
+      "Type": "AWS::SNS::Topic",
     },
   },
   "Rules": {

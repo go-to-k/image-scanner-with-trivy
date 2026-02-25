@@ -29,7 +29,7 @@
     "watch": "npx projen watch",
     "projen": "npx projen",
     "cdk": "cdk",
-    "integ": "tsc -p tsconfig.dev.json && integ-runner",
+    "integ": "tsc -p tsconfig.dev.json && cd assets/lambda && pnpm install --frozen-lockfile && pnpm build && cd - && integ-runner",
     "integ:update": "pnpm integ --update-on-failed"
   },
   "author": {

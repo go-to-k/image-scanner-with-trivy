@@ -1,14 +1,67 @@
 {
  "Resources": {
-  "ScanLogsOutputLogGroup242F0DED": {
-   "Type": "AWS::Logs::LogGroup",
-   "Properties": {
-    "RetentionInDays": 731
-   },
+  "TopicBFC7AF6E": {
+   "Type": "AWS::SNS::Topic"
+  },
+  "NotificationQueue36610CC1": {
+   "Type": "AWS::SQS::Queue",
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22": {
+  "NotificationQueuePolicyCC060EA6": {
+   "Type": "AWS::SQS::QueuePolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sqs:SendMessage",
+       "Condition": {
+        "ArnEquals": {
+         "aws:SourceArn": {
+          "Ref": "TopicBFC7AF6E"
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "sns.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "NotificationQueue36610CC1",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Queues": [
+     {
+      "Ref": "NotificationQueue36610CC1"
+     }
+    ]
+   }
+  },
+  "NotificationQueueNotificationTopicStackTopic113DD6556A485313": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "NotificationQueue36610CC1",
+      "Arn"
+     ]
+    },
+    "Protocol": "sqs",
+    "TopicArn": {
+     "Ref": "TopicBFC7AF6E"
+    }
+   },
+   "DependsOn": [
+    "NotificationQueuePolicyCC060EA6"
+   ]
+  },
+  "ImageScannerProviderframeworkonEventServiceRoleFCB1902E": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -39,7 +92,7 @@
     ]
    }
   },
-  "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy0D0A3260": {
+  "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -83,15 +136,15 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy0D0A3260",
+    "PolicyName": "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3",
     "Roles": [
      {
-      "Ref": "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22"
+      "Ref": "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
      }
     ]
    }
   },
-  "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEvent741E8A99": {
+  "ImageScannerProviderframeworkonEvent6D1AC9AC": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
@@ -100,7 +153,7 @@
      },
      "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithMinimalOptions/Provider)",
+    "Description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScanner/Provider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -114,7 +167,7 @@
     "Handler": "framework.onEvent",
     "Role": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22",
+      "ImageScannerProviderframeworkonEventServiceRoleFCB1902E",
       "Arn"
      ]
     },
@@ -130,20 +183,20 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy0D0A3260",
-    "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEventServiceRoleEB4DDA22"
+    "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3",
+    "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
    ]
   },
-  "ImageScannerWithTrivyV2WithMinimalOptionsA507A726": {
+  "ImageScanner4A30E3A5": {
    "Type": "Custom::ImageScannerWithTrivyV2",
    "Properties": {
     "ServiceToken": {
      "Fn::GetAtt": [
-      "ImageScannerWithTrivyV2WithMinimalOptionsProviderframeworkonEvent741E8A99",
+      "ImageScannerProviderframeworkonEvent6D1AC9AC",
       "Arn"
      ]
     },
-    "addr": "c80307492f3797501c87e2babb4375c2e9439dd19d",
+    "addr": "c8a447d4b9ddcd890ce073be7f8ab8eff47506b828",
     "imageUri": {
      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:e53560ec8fe61c615dcdc73bed009d49447bb56f2c794a812c169fddcc968f67"
     },
@@ -153,15 +206,13 @@
     ],
     "scanners": [],
     "imageConfigScanners": [],
-    "failOnVulnerability": "true",
-    "trivyIgnore": [
-     "CVE-2023-37920",
-     "CVE-2025-7783",
-     "CVE-2025-68121",
-     "CVE-2026-25896"
-    ],
+    "failOnVulnerability": "false",
+    "trivyIgnore": [],
     "platform": "",
-    "suppressErrorOnRollback": "true"
+    "suppressErrorOnRollback": "true",
+    "vulnsTopicArn": {
+     "Ref": "TopicBFC7AF6E"
+    }
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -239,23 +290,17 @@
        "Resource": "*"
       },
       {
+       "Action": "sns:Publish",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "TopicBFC7AF6E"
+       }
+      },
+      {
        "Action": "cloudformation:DescribeStacks",
        "Effect": "Allow",
        "Resource": {
         "Ref": "AWS::StackId"
-       }
-      },
-      {
-       "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-       ],
-       "Effect": "Allow",
-       "Resource": {
-        "Fn::GetAtt": [
-         "ScanLogsOutputLogGroup242F0DED",
-         "Arn"
-        ]
        }
       }
      ],
@@ -307,183 +352,6 @@
     "MaximumRetryAttempts": 0,
     "Qualifier": "$LATEST"
    }
-  },
-  "DefaultLogGroup696834B2": {
-   "Type": "AWS::Logs::LogGroup",
-   "Properties": {
-    "RetentionInDays": 1
-   },
-   "UpdateReplacePolicy": "Delete",
-   "DeletionPolicy": "Delete"
-  },
-  "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377": {
-   "Type": "AWS::IAM::Role",
-   "Properties": {
-    "AssumeRolePolicyDocument": {
-     "Statement": [
-      {
-       "Action": "sts:AssumeRole",
-       "Effect": "Allow",
-       "Principal": {
-        "Service": "lambda.amazonaws.com"
-       }
-      }
-     ],
-     "Version": "2012-10-17"
-    },
-    "ManagedPolicyArns": [
-     {
-      "Fn::Join": [
-       "",
-       [
-        "arn:",
-        {
-         "Ref": "AWS::Partition"
-        },
-        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-       ]
-      ]
-     }
-    ]
-   }
-  },
-  "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy26A5CABD": {
-   "Type": "AWS::IAM::Policy",
-   "Properties": {
-    "PolicyDocument": {
-     "Statement": [
-      {
-       "Action": "lambda:InvokeFunction",
-       "Effect": "Allow",
-       "Resource": [
-        {
-         "Fn::GetAtt": [
-          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::Join": [
-          "",
-          [
-           {
-            "Fn::GetAtt": [
-             "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-             "Arn"
-            ]
-           },
-           ":*"
-          ]
-         ]
-        }
-       ]
-      },
-      {
-       "Action": "lambda:GetFunction",
-       "Effect": "Allow",
-       "Resource": {
-        "Fn::GetAtt": [
-         "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-         "Arn"
-        ]
-       }
-      }
-     ],
-     "Version": "2012-10-17"
-    },
-    "PolicyName": "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy26A5CABD",
-    "Roles": [
-     {
-      "Ref": "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377"
-     }
-    ]
-   }
-  },
-  "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEvent72835AA6": {
-   "Type": "AWS::Lambda::Function",
-   "Properties": {
-    "Code": {
-     "S3Bucket": {
-      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
-     },
-     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
-    },
-    "Description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyV2Stack/ImageScannerWithTrivyV2WithAllOptions/Provider)",
-    "Environment": {
-     "Variables": {
-      "USER_ON_EVENT_FUNCTION_ARN": {
-       "Fn::GetAtt": [
-        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
-        "Arn"
-       ]
-      }
-     }
-    },
-    "Handler": "framework.onEvent",
-    "Role": {
-     "Fn::GetAtt": [
-      "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377",
-      "Arn"
-     ]
-    },
-    "Runtime": {
-     "Fn::FindInMap": [
-      "LatestNodeRuntimeMap",
-      {
-       "Ref": "AWS::Region"
-      },
-      "value"
-     ]
-    },
-    "Timeout": 900
-   },
-   "DependsOn": [
-    "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy26A5CABD",
-    "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEventServiceRoleCA7E5377"
-   ]
-  },
-  "ImageScannerWithTrivyV2WithAllOptions645DE965": {
-   "Type": "Custom::ImageScannerWithTrivyV2",
-   "Properties": {
-    "ServiceToken": {
-     "Fn::GetAtt": [
-      "ImageScannerWithTrivyV2WithAllOptionsProviderframeworkonEvent72835AA6",
-      "Arn"
-     ]
-    },
-    "addr": "c854d4c807659aa352e279ae524147d6f458208a4b",
-    "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:e53560ec8fe61c615dcdc73bed009d49447bb56f2c794a812c169fddcc968f67"
-    },
-    "ignoreUnfixed": "false",
-    "severity": [
-     "CRITICAL"
-    ],
-    "scanners": [
-     "vuln",
-     "secret"
-    ],
-    "imageConfigScanners": [],
-    "failOnVulnerability": "true",
-    "trivyIgnore": [
-     "CVE-2023-37920",
-     "CVE-2025-7783",
-     "CVE-2025-68121",
-     "CVE-2026-25896",
-     "CVE-2019-14697 exp:2023-01-01",
-     "generic-unwanted-rule"
-    ],
-    "platform": "linux/arm64",
-    "output": {
-     "type": "cloudWatchLogs",
-     "logGroupName": {
-      "Ref": "ScanLogsOutputLogGroup242F0DED"
-     }
-    },
-    "suppressErrorOnRollback": "true"
-   },
-   "UpdateReplacePolicy": "Delete",
-   "DeletionPolicy": "Delete"
   }
  },
  "Mappings": {
@@ -611,12 +479,12 @@
   }
  },
  "Outputs": {
-  "ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E": {
+  "ExportsOutputRefNotificationQueue36610CC1185DED79": {
    "Value": {
-    "Ref": "ScanLogsOutputLogGroup242F0DED"
+    "Ref": "NotificationQueue36610CC1"
    },
    "Export": {
-    "Name": "ImageScannerWithTrivyV2Stack:ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
+    "Name": "NotificationTopicStack:ExportsOutputRefNotificationQueue36610CC1185DED79"
    }
   }
  },

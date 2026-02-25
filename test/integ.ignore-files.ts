@@ -28,7 +28,6 @@ new ImageScannerWithTrivyV2(stack, 'IgnoreYaml', {
   imageUri: image.imageUri,
   repository: image.repository,
   failOnVulnerability: true,
-  failOnEol: true,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   trivyIgnore: TrivyIgnore.fromFilePath(
     resolve(__dirname, 'ignore-files/.trivyignore.yaml'),
@@ -41,7 +40,6 @@ new ImageScannerWithTrivyV2(stack, 'Ignore', {
   imageUri: image.imageUri,
   repository: image.repository,
   failOnVulnerability: true,
-  failOnEol: true,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
   trivyIgnore: TrivyIgnore.fromFilePath(
     resolve(__dirname, 'ignore-files/.trivyignore'),
@@ -53,6 +51,7 @@ new ImageScannerWithTrivyV2(stack, 'Ignore', {
 const test = new IntegTest(app, 'IgnoreFilesTest', {
   testCases: [stack],
   diffAssets: true,
+  stackUpdateWorkflow: false, // Disable stack update workflow to prevent test failures from new vulnerabilities discovered in previously successful snapshots.
 });
 
 test.assertions

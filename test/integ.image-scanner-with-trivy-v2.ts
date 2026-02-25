@@ -12,6 +12,13 @@ import {
   TrivyIgnore,
 } from '../src';
 
+const IGNORE_FOR_PASSING_TESTS = [
+  'CVE-2023-37920',
+  'CVE-2025-7783',
+  'CVE-2025-68121',
+  'CVE-2026-25896',
+];
+
 const app = new App();
 const stack = new Stack(app, 'ImageScannerWithTrivyV2Stack');
 
@@ -28,7 +35,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithMinimalOptions', {
   imageUri: image.imageUri,
   repository: image.repository,
-  trivyIgnore: TrivyIgnore.fromRules(['CVE-2023-37920', 'CVE-2025-7783', 'CVE-2025-68121']),
+  trivyIgnore: TrivyIgnore.fromRules([...IGNORE_FOR_PASSING_TESTS]),
 });
 
 new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
@@ -38,11 +45,8 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   severity: [Severity.CRITICAL],
   scanners: [Scanners.VULN, Scanners.SECRET],
   failOnVulnerability: true,
-  failOnEol: true,
   trivyIgnore: TrivyIgnore.fromRules([
-    'CVE-2023-37920',
-    'CVE-2025-7783',
-    'CVE-2025-68121',
+    ...IGNORE_FOR_PASSING_TESTS,
     'CVE-2019-14697 exp:2023-01-01',
     'generic-unwanted-rule',
   ]),
@@ -59,6 +63,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
 const test = new IntegTest(app, 'ImageScannerWithTrivyV2Test', {
   testCases: [stack],
   diffAssets: true,
+  stackUpdateWorkflow: false, // Disable stack update workflow to prevent test failures from new vulnerabilities discovered in previously successful snapshots.
 });
 
 test.assertions

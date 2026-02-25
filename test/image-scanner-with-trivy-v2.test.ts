@@ -4,7 +4,9 @@ import { join } from 'path';
 import { App, Stack } from 'aws-cdk-lib';
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
+import { Effect } from 'aws-cdk-lib/aws-iam';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { Topic } from 'aws-cdk-lib/aws-sns';
 import {
   ImageScannerWithTrivyV2,
   ScanLogsOutput,
@@ -20,6 +22,7 @@ const getTemplate = (): Template => {
   const stack = new Stack(app, 'TestStack');
 
   const repository = new Repository(stack, 'ImageRepository', {});
+  const topic = new Topic(stack, 'Topic');
 
   new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
     imageUri: 'imageUri',
@@ -28,13 +31,13 @@ const getTemplate = (): Template => {
     severity: [Severity.CRITICAL, Severity.HIGH],
     scanners: [Scanners.VULN, Scanners.SECRET],
     failOnVulnerability: true,
-    failOnEol: true,
     trivyIgnore: TrivyIgnore.fromRules(['CVE-2023-37920', 'CVE-2019-14697 exp:2023-01-01']),
     memorySize: 3008,
     targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
     defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
     suppressErrorOnRollback: true,
+    vulnsNotificationTopic: topic,
   });
   return Template.fromStack(stack);
 };
@@ -48,6 +51,60 @@ describe('ImageScannerWithTrivyV2', () => {
 
   test('ImageScannerWithTrivyV2 created', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivyV2', 1);
+  });
+
+  describe('permissions', () => {
+    test('has ECR permissions to pull the image', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: [
+                'ecr:BatchCheckLayerAvailability',
+                'ecr:GetDownloadUrlForLayer',
+                'ecr:BatchGetImage',
+              ],
+              Effect: Effect.ALLOW,
+              Resource: {
+                'Fn::GetAtt': ['ImageRepositoryBBCBC9DF', 'Arn'],
+              },
+            },
+          ]),
+        },
+      });
+    });
+
+    test('grants publish permissions to SNS topic if vulnsNotificationTopic is set', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: 'sns:Publish',
+              Effect: Effect.ALLOW,
+              Resource: {
+                Ref: 'TopicBFC7AF6E',
+              },
+            },
+          ]),
+        },
+      });
+    });
+
+    test('grants CloudFormation DescribeStacks permissions when suppressErrorOnRollback is true', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: 'cloudformation:DescribeStacks',
+              Effect: Effect.ALLOW,
+              Resource: {
+                Ref: 'AWS::StackId',
+              },
+            },
+          ]),
+        },
+      });
+    });
   });
 
   describe('suppressErrorOnRollback', () => {
@@ -210,51 +267,6 @@ describe('ImageScannerWithTrivyV2', () => {
           "You have to set the same log group for 'defaultLogGroup' for each ImageScannerWithTrivyV2 construct in the same stack.",
         ),
       );
-    });
-  });
-
-  test.each([
-    [1, true],
-    [0, false],
-    [1, undefined],
-  ])(
-    'exitCode is set to %p when failOnVulnerability is %p',
-    (expectedExitCode, failOnVulnerability) => {
-      const app = new App();
-      const stack = new Stack(app, 'TestStack');
-
-      const repository = new Repository(stack, 'ImageRepository', {});
-
-      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
-        imageUri: 'imageUri',
-        repository: repository,
-        failOnVulnerability,
-      });
-
-      Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
-        exitCode: expectedExitCode,
-      });
-    },
-  );
-
-  test.each([
-    [1, true],
-    [0, false],
-    [1, undefined],
-  ])('exitOnEol is set to %p when failOnEol is %p', (expectedExitOnEol, failOnEol) => {
-    const app = new App();
-    const stack = new Stack(app, 'TestStack');
-
-    const repository = new Repository(stack, 'ImageRepository', {});
-
-    new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
-      imageUri: 'imageUri',
-      repository: repository,
-      failOnEol,
-    });
-
-    Template.fromStack(stack).hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
-      exitOnEol: expectedExitOnEol,
     });
   });
 

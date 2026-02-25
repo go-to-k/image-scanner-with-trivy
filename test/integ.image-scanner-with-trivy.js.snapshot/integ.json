@@ -6,6 +6,7 @@
         "ImageScannerWithTrivyStack"
       ],
       "diffAssets": true,
+      "stackUpdateWorkflow": false,
       "assertionStack": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert",
       "assertionStackName": "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0"
     }

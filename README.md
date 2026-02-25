@@ -151,6 +151,39 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 });
 ```
 
+### SNS Notification for Vulnerabilities
+
+You can configure an SNS topic to receive notifications when vulnerabilities or EOL (End of Life) OS are detected.
+
+The notification is sent **regardless of the `failOnVulnerability` setting**. This means you can receive notifications even when you don't want the deployment to fail.
+
+```ts
+import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { Topic } from 'aws-cdk-lib/aws-sns';
+
+const repository = new Repository(this, 'ImageRepository', {
+  removalPolicy: RemovalPolicy.DESTROY,
+  autoDeleteImages: true,
+});
+
+const image = new DockerImageAsset(this, 'DockerImage', {
+  directory: resolve(__dirname, './'),
+});
+
+const notificationTopic = new Topic(this, 'VulnerabilityNotificationTopic');
+
+new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // Receive notifications for vulnerabilities and EOL detection
+  vulnsNotificationTopic: notificationTopic,
+  // You can choose not to fail the deployment while still receiving notifications
+  failOnVulnerability: false,
+});
+```
+
+You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
+
 ## Trivy's official documentation
 
 To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!
