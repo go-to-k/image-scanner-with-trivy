@@ -12,6 +12,7 @@ import {
   DescribeStacksCommand,
   ResourceStatus,
 } from '@aws-sdk/client-cloudformation';
+import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { CdkCustomResourceHandler, CdkCustomResourceResponse } from 'aws-lambda';
 import { ScannerCustomResourceProps } from '../../src/custom-resource-props';
 import {
@@ -25,6 +26,7 @@ const TRIVY_IGNORE_YAML_FILE_PATH = '/tmp/.trivyignore.yaml';
 
 const cwClient = new CloudWatchLogsClient();
 const cfnClient = new CloudFormationClient();
+const snsClient = new SNSClient();
 
 export const handler: CdkCustomResourceHandler = async function (event) {
   const requestType = event.RequestType;
@@ -69,7 +71,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
 
   if (props.vulnsTopicArn) {
-    sendVulnsNotification(props.vulnsTopicArn, errorMessage);
+    await sendVulnsNotification(props.vulnsTopicArn, errorMessage, props.imageUri);
   }
 
   if (!props.failOnVulnerability) {
@@ -205,16 +207,43 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
   );
 };
 
-const sendVulnsNotification = async (topicArn: string, errorMessage: string) => {
-  /*
-  {
-    "version": String, 
-    "source": String, 
-    "content": {
-        "title": String,  
-        "description": "エラー内容+Log ARN", 
-    }
+const sendVulnsNotification = async (topicArn: string, errorMessage: string, imageUri: string) => {
+  // AWS Chatbot message format
+  // Reference: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
+  const chatbotMessage = {
+    version: '1.0',
+    source: 'custom',
+    content: {
+      title: '🔒 Image Scanner with Trivy - Vulnerability Alert',
+      description: `Image: ${imageUri}\n\nDetails:\n${errorMessage}`,
+    },
+  };
+
+  // Email subject and body
+  const subject = `Image Scanner with Trivy - Vulnerability Alert - ${imageUri}`;
+  const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\n${errorMessage}`;
+
+  // SNS message structure: Supports both Email and Chatbot
+  // Default is plain text for Email
+  // Use JSON format for HTTPS protocol (Chatbot)
+  const messageStructure = {
+    default: plainTextMessage,
+    email: plainTextMessage,
+    https: JSON.stringify(chatbotMessage),
+  };
+
+  try {
+    await snsClient.send(
+      new PublishCommand({
+        TopicArn: topicArn,
+        Subject: subject,
+        Message: JSON.stringify(messageStructure),
+        MessageStructure: 'json',
+      }),
+    );
+    console.log(`Vulnerability notification sent to SNS topic: ${topicArn}`);
+  } catch (error) {
+    console.error(`Failed to send vulnerability notification to SNS: ${error}`);
+    // Don't block deployment on notification failure
   }
-  */
-  // 参考: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
 };
