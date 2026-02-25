@@ -206,7 +206,6 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
 };
 
 const sendVulnsNotification = async (topicArn: string, errorMessage: string) => {
-  // 参考: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
   /*
   {
     "version": String, 
@@ -217,4 +216,5 @@ const sendVulnsNotification = async (topicArn: string, errorMessage: string) => 
     }
   }
   */
+  // 参考: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
 };
