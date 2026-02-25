@@ -42,6 +42,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
     'CVE-2023-37920',
     'CVE-2025-7783',
     'CVE-2025-68121',
+    'CVE-2026-25896',
     'CVE-2019-14697 exp:2023-01-01',
     'generic-unwanted-rule',
   ]),
