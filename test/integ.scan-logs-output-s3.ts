@@ -2,8 +2,8 @@ import { resolve } from 'path';
 import { AwsApiCall, ExpectedResult, IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { ImageScannerWithTrivyV2, ScanLogsOutput, TargetImagePlatform, TrivyIgnore } from '../src';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { ImageScannerWithTrivyV2, ScanLogsOutput, TargetImagePlatform, TrivyIgnore } from '../src';
 
 const IGNORE_FOR_PASSING_TESTS = [
   'CVE-2023-37920',
