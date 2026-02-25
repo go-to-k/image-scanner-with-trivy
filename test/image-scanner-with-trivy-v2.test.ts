@@ -4,7 +4,9 @@ import { join } from 'path';
 import { App, Stack } from 'aws-cdk-lib';
 import { Annotations, Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
+import { Effect } from 'aws-cdk-lib/aws-iam';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { Topic } from 'aws-cdk-lib/aws-sns';
 import {
   ImageScannerWithTrivyV2,
   ScanLogsOutput,
@@ -14,8 +16,6 @@ import {
   TrivyIgnore,
   TrivyIgnoreFileType,
 } from '../src';
-import { Topic } from 'aws-cdk-lib/aws-sns';
-import { Effect } from 'aws-cdk-lib/aws-iam';
 
 const getTemplate = (): Template => {
   const app = new App();

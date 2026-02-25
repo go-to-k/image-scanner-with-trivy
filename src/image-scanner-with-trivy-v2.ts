@@ -12,12 +12,12 @@ import {
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
 import { ILogGroup } from 'aws-cdk-lib/aws-logs';
+import { ITopic } from 'aws-cdk-lib/aws-sns';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
 import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
-import { ITopic } from 'aws-cdk-lib/aws-sns';
 
 /**
  * File type for TrivyIgnore file path

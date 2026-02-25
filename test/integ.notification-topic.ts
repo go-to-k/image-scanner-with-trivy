@@ -2,10 +2,10 @@ import { resolve } from 'path';
 import { ExpectedResult, IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { ImageScannerWithTrivyV2 } from '../src';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { ImageScannerWithTrivyV2 } from '../src';
 
 const app = new App();
 const stack = new Stack(app, 'NotificationTopicStack');
