@@ -219,8 +219,7 @@ const sendVulnsNotification = async (topicArn: string, errorMessage: string, ima
     },
   };
 
-  // Email subject and body
-  const subject = `Image Scanner with Trivy - Vulnerability Alert - ${imageUri}`;
+  // Email
   const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\n${errorMessage}`;
 
   // SNS message structure: Supports both Email and Chatbot
@@ -236,7 +235,6 @@ const sendVulnsNotification = async (topicArn: string, errorMessage: string, ima
     await snsClient.send(
       new PublishCommand({
         TopicArn: topicArn,
-        Subject: subject,
         Message: JSON.stringify(messageStructure),
         MessageStructure: 'json',
       }),
