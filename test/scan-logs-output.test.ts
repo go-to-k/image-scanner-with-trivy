@@ -2,6 +2,7 @@ import { App, Stack } from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { ImageScannerWithTrivyV2, ScanLogsOutput } from '../src';
 
 const getTemplate = (): Template => {
@@ -19,31 +20,134 @@ const getTemplate = (): Template => {
 };
 
 describe('scanLogsOutput settings', () => {
-  const template = getTemplate();
+  describe('CloudWatch Logs', () => {
+    const template = getTemplate();
 
-  test('correctly sets output configuration to cloudwatch logs', () => {
-    template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
-      output: {
-        type: 'cloudWatchLogs',
-        logGroupName: {
-          Ref: 'LogGroupF5B46931',
+    test('correctly sets output configuration to cloudwatch logs', () => {
+      template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        output: {
+          type: 'cloudWatchLogs',
+          logGroupName: {
+            Ref: 'LogGroupF5B46931',
+          },
         },
-      },
+      });
     });
 
-    template.hasResourceProperties('AWS::IAM::Policy', {
-      PolicyDocument: {
-        Version: '2012-10-17',
-        Statement: Match.arrayWith([
-          {
-            Action: ['logs:CreateLogStream', 'logs:PutLogEvents'],
-            Effect: 'Allow',
-            Resource: {
-              'Fn::GetAtt': ['LogGroupF5B46931', 'Arn'],
+    test('grants write permission to log group', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Version: '2012-10-17',
+          Statement: Match.arrayWith([
+            {
+              Action: ['logs:CreateLogStream', 'logs:PutLogEvents'],
+              Effect: 'Allow',
+              Resource: {
+                'Fn::GetAtt': ['LogGroupF5B46931', 'Arn'],
+              },
             },
+          ]),
+        },
+      });
+    });
+  });
+
+  describe('S3', () => {
+    const getS3Template = (): Template => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const repository = new Repository(stack, 'ImageRepository', {});
+      const bucket = new Bucket(stack, 'ScanLogsBucket');
+
+      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
+        imageUri: 'imageUri',
+        repository: repository,
+        scanLogsOutput: ScanLogsOutput.s3({ bucket }),
+      });
+      return Template.fromStack(stack);
+    };
+
+    const template = getS3Template();
+
+    test('correctly sets output configuration to S3', () => {
+      template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        output: {
+          type: 's3',
+          bucketName: {
+            Ref: 'ScanLogsBucket7F7F8D4E',
           },
-        ]),
-      },
+        },
+      });
+    });
+
+    test('grants write permission to S3 bucket', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Version: '2012-10-17',
+          Statement: Match.arrayWith([
+            {
+              Action: [
+                's3:DeleteObject*',
+                's3:PutObject',
+                's3:PutObjectLegalHold',
+                's3:PutObjectRetention',
+                's3:PutObjectTagging',
+                's3:PutObjectVersionTagging',
+                's3:Abort*',
+              ],
+              Effect: 'Allow',
+              Resource: [
+                {
+                  'Fn::GetAtt': ['ScanLogsBucket7F7F8D4E', 'Arn'],
+                },
+                {
+                  'Fn::Join': [
+                    '',
+                    [
+                      {
+                        'Fn::GetAtt': ['ScanLogsBucket7F7F8D4E', 'Arn'],
+                      },
+                      '/*',
+                    ],
+                  ],
+                },
+              ],
+            },
+          ]),
+        },
+      });
+    });
+  });
+
+  describe('S3 with prefix', () => {
+    const getS3TemplateWithPrefix = (): Template => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      const repository = new Repository(stack, 'ImageRepository', {});
+      const bucket = new Bucket(stack, 'ScanLogsBucket');
+
+      new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
+        imageUri: 'imageUri',
+        repository: repository,
+        scanLogsOutput: ScanLogsOutput.s3({ bucket, prefix: 'scan-logs/' }),
+      });
+      return Template.fromStack(stack);
+    };
+
+    const template = getS3TemplateWithPrefix();
+
+    test('correctly sets output configuration to S3 with prefix', () => {
+      template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        output: {
+          type: 's3',
+          bucketName: {
+            Ref: 'ScanLogsBucket7F7F8D4E',
+          },
+          prefix: 'scan-logs/',
+        },
+      });
     });
   });
 });
