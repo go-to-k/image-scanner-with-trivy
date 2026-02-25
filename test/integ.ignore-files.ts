@@ -51,6 +51,7 @@ new ImageScannerWithTrivyV2(stack, 'Ignore', {
 const test = new IntegTest(app, 'IgnoreFilesTest', {
   testCases: [stack],
   diffAssets: true,
+  stackUpdateWorkflow: false, // Disable stack update workflow to prevent the test from passing due to the old behavior of not failing on vulnerabilities during updates.
 });
 
 test.assertions
