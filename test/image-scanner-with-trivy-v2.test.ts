@@ -14,12 +14,15 @@ import {
   TrivyIgnore,
   TrivyIgnoreFileType,
 } from '../src';
+import { Topic } from 'aws-cdk-lib/aws-sns';
+import { Effect } from 'aws-cdk-lib/aws-iam';
 
 const getTemplate = (): Template => {
   const app = new App();
   const stack = new Stack(app, 'TestStack');
 
   const repository = new Repository(stack, 'ImageRepository', {});
+  const topic = new Topic(stack, 'Topic');
 
   new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
     imageUri: 'imageUri',
@@ -34,6 +37,7 @@ const getTemplate = (): Template => {
     defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup'),
     scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(stack, 'LogGroup') }),
     suppressErrorOnRollback: true,
+    vulnsNotificationTopic: topic,
   });
   return Template.fromStack(stack);
 };
@@ -47,6 +51,44 @@ describe('ImageScannerWithTrivyV2', () => {
 
   test('ImageScannerWithTrivyV2 created', () => {
     template.resourceCountIs('Custom::ImageScannerWithTrivyV2', 1);
+  });
+
+  describe('permissions', () => {
+    test('has ECR permissions to pull the image', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: [
+                'ecr:BatchCheckLayerAvailability',
+                'ecr:GetDownloadUrlForLayer',
+                'ecr:BatchGetImage',
+              ],
+              Effect: Effect.ALLOW,
+              Resource: {
+                'Fn::GetAtt': ['ImageRepositoryBBCBC9DF', 'Arn'],
+              },
+            },
+          ]),
+        },
+      });
+    });
+
+    test('grants publish permissions to SNS topic if vulnsNotificationTopic is set', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: 'sns:Publish',
+              Effect: Effect.ALLOW,
+              Resource: {
+                Ref: 'TopicBFC7AF6E',
+              },
+            },
+          ]),
+        },
+      });
+    });
   });
 
   describe('suppressErrorOnRollback', () => {

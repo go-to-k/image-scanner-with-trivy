@@ -333,6 +333,10 @@ export class ImageScannerWithTrivyV2 extends Construct {
 
     props.repository.grantPull(customResourceLambda);
 
+    if (props.vulnsNotificationTopic) {
+      props.vulnsNotificationTopic.grantPublish(customResourceLambda);
+    }
+
     // Grant CloudFormation DescribeStacks permission for rollback detection when suppressErrorOnRollback is enabled
     const suppressErrorOnRollback = props.suppressErrorOnRollback ?? true;
     if (suppressErrorOnRollback) {
