@@ -89,6 +89,22 @@ describe('ImageScannerWithTrivyV2', () => {
         },
       });
     });
+
+    test('grants CloudFormation DescribeStacks permissions when suppressErrorOnRollback is true', () => {
+      template.hasResourceProperties('AWS::IAM::Policy', {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: 'cloudformation:DescribeStacks',
+              Effect: Effect.ALLOW,
+              Resource: {
+                Ref: 'AWS::StackId',
+              },
+            },
+          ]),
+        },
+      });
+    });
   });
 
   describe('suppressErrorOnRollback', () => {
