@@ -145,7 +145,7 @@
     },
     "addr": "c80307492f3797501c87e2babb4375c2e9439dd19d",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:73cdb1ef85b598f17ee441d1b1b45598b8a33bc93017b55a43eb55d6d000ed99"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -153,7 +153,7 @@
     ],
     "scanners": [],
     "imageConfigScanners": [],
-    "failOnVulnerability": true,
+    "failOnVulnerability": "true",
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
@@ -277,7 +277,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:73cdb1ef85b598f17ee441d1b1b45598b8a33bc93017b55a43eb55d6d000ed99"
      }
     },
     "EphemeralStorage": {
@@ -453,7 +453,7 @@
     },
     "addr": "c854d4c807659aa352e279ae524147d6f458208a4b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:73cdb1ef85b598f17ee441d1b1b45598b8a33bc93017b55a43eb55d6d000ed99"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -464,7 +464,7 @@
      "secret"
     ],
     "imageConfigScanners": [],
-    "failOnVulnerability": true,
+    "failOnVulnerability": "true",
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
