@@ -206,7 +206,6 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
 };
 
 const sendVulnsNotification = async (topicArn: string, errorMessage: string) => {
-  // Chatbot形式にする？
   /*
   {
     "version": String, 
