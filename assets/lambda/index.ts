@@ -21,6 +21,7 @@ import {
   ScanLogsOutputType,
   CloudWatchLogsOutputOptions,
   S3OutputOptions,
+  SbomFormat,
 } from '../../src/scan-logs-output';
 
 const TRIVY_IGNORE_FILE_PATH = '/tmp/.trivyignore';
@@ -46,20 +47,20 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     return funcResponse;
   }
 
-  const options = makeOptions(props);
-
   if (props.trivyIgnore.length) {
     console.log('trivyignore: ' + JSON.stringify(props.trivyIgnore));
     makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
   }
 
-  const cmd = `/opt/trivy image --no-progress ${options.join(' ')} ${props.imageUri}`;
-  console.log('command: ' + cmd);
-  console.log('imageUri: ' + props.imageUri);
+  // Determine if SBOM format is specified for S3 output
+  const sbomFormat =
+    props.output?.type === ScanLogsOutputType.S3
+      ? (props.output as S3OutputOptions).sbomFormat
+      : undefined;
 
-  const response = spawnSync(cmd, {
-    shell: true,
-  });
+  // Execute Trivy command (with SBOM format if specified, otherwise normal scan)
+  const options = makeOptions(props, sbomFormat);
+  const response = executeTrivyCommand(props.imageUri, options);
 
   await outputScanLogs(response, props.imageUri, props.output);
 
@@ -91,9 +92,18 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   throw new Error(errorMessage);
 };
 
-const makeOptions = (props: ScannerCustomResourceProps): string[] => {
+const makeOptions = (props: ScannerCustomResourceProps, sbomFormat?: SbomFormat): string[] => {
   const options: string[] = [];
 
+  // Common options
+  options.push('--no-progress');
+
+  // SBOM format options
+  if (sbomFormat) {
+    options.push(`--format ${sbomFormat}`);
+  }
+
+  // Common vulnerability scanning options
   if (props.ignoreUnfixed === 'true') options.push('--ignore-unfixed');
   if (props.severity.length) options.push(`--severity ${props.severity.join(',')}`);
   if (props.scanners.length) options.push(`--scanners ${props.scanners.join(',')}`);
@@ -115,6 +125,13 @@ const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   if (props.platform) options.push(`--platform ${props.platform}`);
 
   return options;
+};
+
+const executeTrivyCommand = (imageUri: string, options: string[]): SpawnSyncReturns<Buffer> => {
+  const cmd = `/opt/trivy image ${options.join(' ')} ${imageUri}`;
+  console.log('imageUri: ' + imageUri);
+  console.log('command: ' + cmd);
+  return spawnSync(cmd, { shell: true });
 };
 
 const makeTrivyIgnoreFile = (trivyIgnore: string[], fileType?: string) => {
@@ -216,29 +233,46 @@ const outputScanLogsToS3 = async (
   const stderrContent = response.stderr.toString();
   const stdoutContent = response.stdout.toString();
 
-  // Upload stderr and stdout as separate files
-  await Promise.all([
-    s3Client.send(
-      new PutObjectCommand({
-        Bucket: output.bucketName,
-        Key: `${basePath}/stderr.txt`,
-        Body: stderrContent,
-        ContentType: 'text/plain',
-      }),
-    ),
-    s3Client.send(
-      new PutObjectCommand({
-        Bucket: output.bucketName,
-        Key: `${basePath}/stdout.txt`,
-        Body: stdoutContent,
-        ContentType: 'text/plain',
-      }),
-    ),
-  ]);
+  if (output.sbomFormat) {
+    // SBOM mode: stdout contains SBOM JSON
+    const extension = output.sbomFormat === SbomFormat.SPDX ? 'spdx' : 'json';
+    const contentType = output.sbomFormat === SbomFormat.SPDX ? 'text/plain' : 'application/json';
 
-  console.log(
-    `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}/stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}/stdout.txt`,
-  );
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: output.bucketName,
+        Key: `${basePath}-sbom.${extension}`,
+        Body: stdoutContent,
+        ContentType: contentType,
+      }),
+    );
+
+    console.log(`SBOM output to S3: s3://${output.bucketName}/${basePath}-sbom.${extension}`);
+  } else {
+    // Normal scan mode: upload stderr and stdout
+    await Promise.all([
+      s3Client.send(
+        new PutObjectCommand({
+          Bucket: output.bucketName,
+          Key: `${basePath}-stderr.txt`,
+          Body: stderrContent,
+          ContentType: 'text/plain',
+        }),
+      ),
+      s3Client.send(
+        new PutObjectCommand({
+          Bucket: output.bucketName,
+          Key: `${basePath}-stdout.txt`,
+          Body: stdoutContent,
+          ContentType: 'text/plain',
+        }),
+      ),
+    ]);
+
+    console.log(
+      `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}-stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}-stdout.txt`,
+    );
+  }
 };
 
 const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
