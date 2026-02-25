@@ -130,7 +130,7 @@ const executeTrivyCommand = (imageUri: string, options: string[]): SpawnSyncRetu
   console.log('command: ' + cmd);
   return spawnSync(cmd, {
     shell: true,
-    maxBuffer: 50 * 1024 * 1024, // 50MB (default is 1MB)
+    maxBuffer: 50 * 1024 * 1024, // 50MB (default is 1MB). SBOM output can be large and cause ENOBUFS (SIGPIPE) errors with the default buffer size.
   });
 };
 
