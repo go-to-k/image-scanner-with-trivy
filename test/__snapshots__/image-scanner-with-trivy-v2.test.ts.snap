@@ -294,7 +294,7 @@ exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
           ],
         },
         "addr": "c8975ed5ca70f5b7fb62b5850d4eb8b6e7a6f39e54",
-        "failOnVulnerability": true,
+        "failOnVulnerability": "true",
         "ignoreUnfixed": "true",
         "imageConfigScanners": [],
         "imageUri": "imageUri",
