@@ -52,14 +52,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
   }
 
-  // Determine if SBOM format is specified for S3 output
-  const sbomFormat =
-    props.output?.type === ScanLogsOutputType.S3
-      ? (props.output as S3OutputOptions).sbomFormat
-      : undefined;
-
-  // Execute Trivy command (with SBOM format if specified, otherwise normal scan)
-  const options = makeOptions(props, sbomFormat);
+  const options = makeOptions(props);
   const response = executeTrivyCommand(props.imageUri, options);
 
   await outputScanLogs(response, props.imageUri, props.output);
@@ -92,13 +85,17 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   throw new Error(errorMessage);
 };
 
-const makeOptions = (props: ScannerCustomResourceProps, sbomFormat?: SbomFormat): string[] => {
+const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   const options: string[] = [];
 
   // Common options
   options.push('--no-progress');
 
   // SBOM format options
+  const sbomFormat =
+    props.output?.type === ScanLogsOutputType.S3
+      ? (props.output as S3OutputOptions).sbomFormat
+      : undefined;
   if (sbomFormat) {
     options.push(`--format ${sbomFormat}`);
   }
