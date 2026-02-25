@@ -47,10 +47,8 @@ test.assertions
     WaitTimeSeconds: 20,
   })
   .assertAtPath(
-    'Messages.0.Body',
-    ExpectedResult.stringLikeRegexp(
-      '"Message"\\s*:\\s*"Image Scanner with Trivy detected vulnerabilities',
-    ),
+    'Messages.0.Body.Message',
+    ExpectedResult.stringLikeRegexp('Image Scanner with Trivy detected vulnerabilities'),
   )
   .waitForAssertions({
     interval: Duration.seconds(5),
