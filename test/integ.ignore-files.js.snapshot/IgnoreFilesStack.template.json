@@ -145,7 +145,7 @@
     },
     "addr": "c848fe116fce2bc6f874321ad7ed1bbfe54dd53f18",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -153,13 +153,13 @@
     ],
     "scanners": [],
     "imageConfigScanners": [],
-    "exitCode": 1,
-    "exitOnEol": 1,
+    "failOnVulnerability": true,
     "trivyIgnore": [
      "vulnerabilities:",
      "  - id: CVE-2023-37920",
      "  - id: CVE-2025-7783",
      "  - id: CVE-2025-68121",
+     "  - id: CVE-2026-25896",
      "  - id: CVE-2022-40897",
      "    paths:",
      "      - 'usr/local/lib/python3.9/site-packages/setuptools-58.1.0.dist-info/METADATA'",
@@ -315,7 +315,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
      }
     },
     "EphemeralStorage": {
@@ -483,7 +483,7 @@
     },
     "addr": "c8b5ae7a39832c5bb2001fea1367b708ab9ce2da46",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -491,13 +491,13 @@
     ],
     "scanners": [],
     "imageConfigScanners": [],
-    "exitCode": 1,
-    "exitOnEol": 1,
+    "failOnVulnerability": true,
     "trivyIgnore": [
      "# Accept the risk",
      "CVE-2023-37920",
      "CVE-2025-7783",
      "CVE-2025-68121",
+     "CVE-2026-25896",
      "CVE-2018-14618",
      "",
      "# Accept the risk until 2023-01-01",

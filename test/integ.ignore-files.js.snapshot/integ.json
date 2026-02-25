@@ -6,6 +6,7 @@
         "IgnoreFilesStack"
       ],
       "diffAssets": true,
+      "stackUpdateWorkflow": false,
       "assertionStack": "IgnoreFilesTest/DefaultTest/DeployAssert",
       "assertionStackName": "IgnoreFilesTestDefaultTestDeployAssertDBFD124D"
     }

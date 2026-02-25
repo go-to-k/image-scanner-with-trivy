@@ -145,7 +145,7 @@
     },
     "addr": "c80307492f3797501c87e2babb4375c2e9439dd19d",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -153,12 +153,12 @@
     ],
     "scanners": [],
     "imageConfigScanners": [],
-    "exitCode": 1,
-    "exitOnEol": 1,
+    "failOnVulnerability": true,
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
-     "CVE-2025-68121"
+     "CVE-2025-68121",
+     "CVE-2026-25896"
     ],
     "platform": "",
     "suppressErrorOnRollback": "true"
@@ -277,7 +277,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
      }
     },
     "EphemeralStorage": {
@@ -453,7 +453,7 @@
     },
     "addr": "c854d4c807659aa352e279ae524147d6f458208a4b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:dae2835e8a02de6516adb4fec78d0f57ca2d35d74851ebae4e356ce5b4574ebe"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:852659cff3a1b9bf1b38d43c9c7d1ac1dc7795e39741314b2bfeb0ca3fb4061d"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -464,12 +464,12 @@
      "secret"
     ],
     "imageConfigScanners": [],
-    "exitCode": 1,
-    "exitOnEol": 1,
+    "failOnVulnerability": true,
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
      "CVE-2025-68121",
+     "CVE-2026-25896",
      "CVE-2019-14697 exp:2023-01-01",
      "generic-unwanted-rule"
     ],
