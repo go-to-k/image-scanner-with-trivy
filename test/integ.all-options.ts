@@ -1,11 +1,10 @@
 import { resolve } from 'path';
-import { ExpectedResult, IntegTest } from '@aws-cdk/integ-tests-alpha';
+import { IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import {
   ImageScannerWithTrivyV2,
-  ScanLogsOutput,
   Scanners,
   Severity,
   TargetImagePlatform,
@@ -20,11 +19,7 @@ const IGNORE_FOR_PASSING_TESTS = [
 ];
 
 const app = new App();
-const stack = new Stack(app, 'ImageScannerWithTrivyV2Stack');
-
-const scanLogsOutputLogGroup = new LogGroup(stack, 'ScanLogsOutputLogGroup', {
-  removalPolicy: RemovalPolicy.DESTROY,
-});
+const stack = new Stack(app, 'AllOptionsStack');
 
 const image = new DockerImageAsset(stack, 'DockerImage', {
   directory: resolve(__dirname, '../assets/lambda'),
@@ -32,13 +27,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
   platform: Platform.LINUX_ARM64,
 });
 
-new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithMinimalOptions', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  trivyIgnore: TrivyIgnore.fromRules([...IGNORE_FOR_PASSING_TESTS]),
-});
-
-new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
+new ImageScannerWithTrivyV2(stack, 'Scanner', {
   imageUri: image.imageUri,
   repository: image.repository,
   ignoreUnfixed: false,
@@ -52,7 +41,6 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   ]),
   memorySize: 3008,
   targetImagePlatform: TargetImagePlatform.LINUX_ARM64,
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: scanLogsOutputLogGroup }),
   defaultLogGroup: new LogGroup(stack, 'DefaultLogGroup', {
     removalPolicy: RemovalPolicy.DESTROY,
     retention: RetentionDays.ONE_DAY,
@@ -60,16 +48,8 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2WithAllOptions', {
   suppressErrorOnRollback: true,
 });
 
-const test = new IntegTest(app, 'ImageScannerWithTrivyV2Test', {
+new IntegTest(app, 'AllOptionsTest', {
   testCases: [stack],
   diffAssets: true,
   stackUpdateWorkflow: false, // Disable stack update workflow to prevent test failures from new vulnerabilities discovered in previously successful snapshots.
 });
-
-test.assertions
-  .awsApiCall('CloudWatchLogs', 'filterLogEvents', {
-    logGroupName: scanLogsOutputLogGroup.logGroupName,
-    limit: 1,
-  })
-  .assertAtPath('events.0.message', ExpectedResult.stringLikeRegexp('.+'))
-  .waitForAssertions();
