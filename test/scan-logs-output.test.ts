@@ -74,7 +74,7 @@ describe('S3', () => {
       output: {
         type: 's3',
         bucketName: {
-          Ref: 'ScanLogsBucket7F7F8D4E',
+          Ref: 'ScanLogsBucketD650306F',
         },
       },
     });
@@ -100,14 +100,14 @@ describe('S3', () => {
             Effect: 'Allow',
             Resource: [
               {
-                'Fn::GetAtt': ['ScanLogsBucket7F7F8D4E', 'Arn'],
+                'Fn::GetAtt': ['ScanLogsBucketD650306F', 'Arn'],
               },
               {
                 'Fn::Join': [
                   '',
                   [
                     {
-                      'Fn::GetAtt': ['ScanLogsBucket7F7F8D4E', 'Arn'],
+                      'Fn::GetAtt': ['ScanLogsBucketD650306F', 'Arn'],
                     },
                     '/*',
                   ],
@@ -127,7 +127,7 @@ describe('S3', () => {
       output: {
         type: 's3',
         bucketName: {
-          Ref: 'ScanLogsBucket7F7F8D4E',
+          Ref: 'ScanLogsBucketD650306F',
         },
         prefix: 'scan-logs/',
       },
