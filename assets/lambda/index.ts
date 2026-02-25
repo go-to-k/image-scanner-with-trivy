@@ -48,13 +48,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     makeTrivyIgnoreFile(props.trivyIgnore, props.trivyIgnoreFileType);
   }
 
-  // TODO: v1のためにexitCodeとexitOnEolの後方互換性担保？
-  // (しないならsrc/custom-resource-props.tsのexitCodeとexitOnEolを削除していい)
-
-  // Always set --exit-code 1 regardless of props.failOnVulnerability.
-  // This is necessary to detect vulnerabilities for SNS notifications even when the failOnVulnerability setting is false.
-  // The actual deployment failure is controlled by the exit code handling logic below (not by Trivy's exit code).
-  const cmd = `/opt/trivy image --no-progress ${options.join(' ')} --exit-code 1 --exit-on-eol 1 ${props.imageUri}`;
+  const cmd = `/opt/trivy image --no-progress ${options.join(' ')} ${props.imageUri}`;
   console.log('command: ' + cmd);
   console.log('imageUri: ' + props.imageUri);
 
@@ -100,6 +94,12 @@ const makeOptions = (props: ScannerCustomResourceProps): string[] => {
   if (props.scanners.length) options.push(`--scanners ${props.scanners.join(',')}`);
   if (props.imageConfigScanners.length)
     options.push(`--image-config-scanners ${props.imageConfigScanners.join(',')}`);
+  // TODO: Remove exitCode and exitOnEol properties in the next major version, as they are now controlled by failOnVulnerability.
+  if (props.exitCode) options.push(`--exit-code ${props.exitCode}`);
+  if (props.exitOnEol) options.push(`--exit-on-eol ${props.exitOnEol}`);
+  // Always set them in V2 to ensure vulnerabilities are detected for SNS notifications, even when failOnVulnerability is false.
+  // The actual deployment failure is controlled by the exit code handling logic in the handler, not by Trivy's exit code.
+  if (props.exitCode == undefined) options.push('--exit-code 1 --exit-on-eol 1');
   if (props.trivyIgnore.length) {
     const ignoreFilePath =
       props.trivyIgnoreFileType === 'TRIVYIGNORE_YAML'
