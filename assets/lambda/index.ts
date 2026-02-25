@@ -211,28 +211,34 @@ const outputScanLogsToS3 = async (
       ? output.prefix
       : `${output.prefix}/`
     : '';
-  const key = `${prefix}${sanitizedUri}/${sanitizedTag}/${timestamp}.txt`;
+  const basePath = `${prefix}${sanitizedUri}/${sanitizedTag}/${timestamp}`;
 
-  const logContent = `Image: ${imageUri}
-Timestamp: ${timestamp}
+  const stderrContent = response.stderr.toString();
+  const stdoutContent = response.stdout.toString();
 
-=== STDERR ===
-${response.stderr.toString()}
+  // Upload stderr and stdout as separate files
+  await Promise.all([
+    s3Client.send(
+      new PutObjectCommand({
+        Bucket: output.bucketName,
+        Key: `${basePath}/stderr.txt`,
+        Body: stderrContent,
+        ContentType: 'text/plain',
+      }),
+    ),
+    s3Client.send(
+      new PutObjectCommand({
+        Bucket: output.bucketName,
+        Key: `${basePath}/stdout.txt`,
+        Body: stdoutContent,
+        ContentType: 'text/plain',
+      }),
+    ),
+  ]);
 
-=== STDOUT ===
-${response.stdout.toString()}
-`;
-
-  await s3Client.send(
-    new PutObjectCommand({
-      Bucket: output.bucketName,
-      Key: key,
-      Body: logContent,
-      ContentType: 'text/plain',
-    }),
+  console.log(
+    `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}/stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}/stdout.txt`,
   );
-
-  console.log(`Scan logs output to S3: s3://${output.bucketName}/${key}`);
 };
 
 const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
