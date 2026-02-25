@@ -1,6 +1,6 @@
 {
  "Resources": {
-  "ScanLogsOutputS3Bucket967BEFAF": {
+  "ScanLogsSbomBucketFB430D24": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
     "Tags": [
@@ -13,11 +13,11 @@
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "ScanLogsOutputS3BucketPolicy793FC942": {
+  "ScanLogsSbomBucketPolicy910C76C1": {
    "Type": "AWS::S3::BucketPolicy",
    "Properties": {
     "Bucket": {
-     "Ref": "ScanLogsOutputS3Bucket967BEFAF"
+     "Ref": "ScanLogsSbomBucketFB430D24"
     },
     "PolicyDocument": {
      "Statement": [
@@ -40,7 +40,7 @@
        "Resource": [
         {
          "Fn::GetAtt": [
-          "ScanLogsOutputS3Bucket967BEFAF",
+          "ScanLogsSbomBucketFB430D24",
           "Arn"
          ]
         },
@@ -50,7 +50,7 @@
           [
            {
             "Fn::GetAtt": [
-             "ScanLogsOutputS3Bucket967BEFAF",
+             "ScanLogsSbomBucketFB430D24",
              "Arn"
             ]
            },
@@ -65,7 +65,7 @@
     }
    }
   },
-  "ScanLogsOutputS3BucketAutoDeleteObjectsCustomResource902064E1": {
+  "ScanLogsSbomBucketAutoDeleteObjectsCustomResource0E743C83": {
    "Type": "Custom::S3AutoDeleteObjects",
    "Properties": {
     "ServiceToken": {
@@ -75,11 +75,11 @@
      ]
     },
     "BucketName": {
-     "Ref": "ScanLogsOutputS3Bucket967BEFAF"
+     "Ref": "ScanLogsSbomBucketFB430D24"
     }
    },
    "DependsOn": [
-    "ScanLogsOutputS3BucketPolicy793FC942"
+    "ScanLogsSbomBucketPolicy910C76C1"
    ],
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -139,7 +139,7 @@
       [
        "Lambda function for auto-deleting objects in ",
        {
-        "Ref": "ScanLogsOutputS3Bucket967BEFAF"
+        "Ref": "ScanLogsSbomBucketFB430D24"
        },
        " S3 bucket."
       ]
@@ -150,7 +150,7 @@
     "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
    ]
   },
-  "ScannerProviderframeworkonEventServiceRole5EA00D06": {
+  "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -181,7 +181,7 @@
     ]
    }
   },
-  "ScannerProviderframeworkonEventServiceRoleDefaultPolicy3BF43B7A": {
+  "ScannerCycloneDXProviderframeworkonEventServiceRoleDefaultPolicy8BB05CCB": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -225,15 +225,15 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "ScannerProviderframeworkonEventServiceRoleDefaultPolicy3BF43B7A",
+    "PolicyName": "ScannerCycloneDXProviderframeworkonEventServiceRoleDefaultPolicy8BB05CCB",
     "Roles": [
      {
-      "Ref": "ScannerProviderframeworkonEventServiceRole5EA00D06"
+      "Ref": "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B"
      }
     ]
    }
   },
-  "ScannerProviderframeworkonEvent93283B50": {
+  "ScannerCycloneDXProviderframeworkonEvent5482B5C3": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
@@ -242,7 +242,7 @@
      },
      "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3Stack/Scanner/Provider)",
+    "Description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -256,7 +256,7 @@
     "Handler": "framework.onEvent",
     "Role": {
      "Fn::GetAtt": [
-      "ScannerProviderframeworkonEventServiceRole5EA00D06",
+      "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B",
       "Arn"
      ]
     },
@@ -272,20 +272,20 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "ScannerProviderframeworkonEventServiceRoleDefaultPolicy3BF43B7A",
-    "ScannerProviderframeworkonEventServiceRole5EA00D06"
+    "ScannerCycloneDXProviderframeworkonEventServiceRoleDefaultPolicy8BB05CCB",
+    "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B"
    ]
   },
-  "Scanner1EAEC57B": {
+  "ScannerCycloneDX10265708": {
    "Type": "Custom::ImageScannerWithTrivyV2",
    "Properties": {
     "ServiceToken": {
      "Fn::GetAtt": [
-      "ScannerProviderframeworkonEvent93283B50",
+      "ScannerCycloneDXProviderframeworkonEvent5482B5C3",
       "Arn"
      ]
     },
-    "addr": "c8fb10390dda33b749a3d48616ff1e53e93a5edcc4",
+    "addr": "c8e3642abe69d60f4c5354f3178dddb1ec83dea284",
     "imageUri": {
      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:04f93164eb9e780d2904f60ec4c299032c585fdfbcf6e30deafd0e7e1b22fa6b"
     },
@@ -306,8 +306,10 @@
     "output": {
      "type": "s3",
      "bucketName": {
-      "Ref": "ScanLogsOutputS3Bucket967BEFAF"
-     }
+      "Ref": "ScanLogsSbomBucketFB430D24"
+     },
+     "prefix": "cyclonedx",
+     "sbomFormat": "cyclonedx"
     },
     "suppressErrorOnRollback": "true"
    },
@@ -407,7 +409,7 @@
        "Resource": [
         {
          "Fn::GetAtt": [
-          "ScanLogsOutputS3Bucket967BEFAF",
+          "ScanLogsSbomBucketFB430D24",
           "Arn"
          ]
         },
@@ -417,7 +419,7 @@
           [
            {
             "Fn::GetAtt": [
-             "ScanLogsOutputS3Bucket967BEFAF",
+             "ScanLogsSbomBucketFB430D24",
              "Arn"
             ]
            },
@@ -476,6 +478,338 @@
     "MaximumRetryAttempts": 0,
     "Qualifier": "$LATEST"
    }
+  },
+  "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "ScannerSpdxJsonProviderframeworkonEventServiceRoleDefaultPolicyF94DB1E7": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ScannerSpdxJsonProviderframeworkonEventServiceRoleDefaultPolicyF94DB1E7",
+    "Roles": [
+     {
+      "Ref": "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1"
+     }
+    ]
+   }
+  },
+  "ScannerSpdxJsonProviderframeworkonEvent51C4911E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ScannerSpdxJsonProviderframeworkonEventServiceRoleDefaultPolicyF94DB1E7",
+    "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1"
+   ]
+  },
+  "ScannerSpdxJsonA1F17D5F": {
+   "Type": "Custom::ImageScannerWithTrivyV2",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "ScannerSpdxJsonProviderframeworkonEvent51C4911E",
+      "Arn"
+     ]
+    },
+    "addr": "c8c8b83e51c624cd09100cd1768893bb60cef62dc9",
+    "imageUri": {
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:04f93164eb9e780d2904f60ec4c299032c585fdfbcf6e30deafd0e7e1b22fa6b"
+    },
+    "ignoreUnfixed": "false",
+    "severity": [
+     "CRITICAL"
+    ],
+    "scanners": [],
+    "imageConfigScanners": [],
+    "failOnVulnerability": "true",
+    "trivyIgnore": [
+     "CVE-2023-37920",
+     "CVE-2025-7783",
+     "CVE-2025-68121",
+     "CVE-2026-25896"
+    ],
+    "platform": "linux/arm64",
+    "output": {
+     "type": "s3",
+     "bucketName": {
+      "Ref": "ScanLogsSbomBucketFB430D24"
+     },
+     "prefix": "spdx-json",
+     "sbomFormat": "spdx-json"
+    },
+    "suppressErrorOnRollback": "true"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "ScannerSpdxProviderframeworkonEventServiceRoleDefaultPolicy608F9B72": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ScannerSpdxProviderframeworkonEventServiceRoleDefaultPolicy608F9B72",
+    "Roles": [
+     {
+      "Ref": "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3"
+     }
+    ]
+   }
+  },
+  "ScannerSpdxProviderframeworkonEvent34E025F0": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerSpdx/Provider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ScannerSpdxProviderframeworkonEventServiceRoleDefaultPolicy608F9B72",
+    "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3"
+   ]
+  },
+  "ScannerSpdx400FE50F": {
+   "Type": "Custom::ImageScannerWithTrivyV2",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "ScannerSpdxProviderframeworkonEvent34E025F0",
+      "Arn"
+     ]
+    },
+    "addr": "c8c83018f20e45cd9fa9519512a5b3b26afe7baeda",
+    "imageUri": {
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:04f93164eb9e780d2904f60ec4c299032c585fdfbcf6e30deafd0e7e1b22fa6b"
+    },
+    "ignoreUnfixed": "false",
+    "severity": [
+     "CRITICAL"
+    ],
+    "scanners": [],
+    "imageConfigScanners": [],
+    "failOnVulnerability": "true",
+    "trivyIgnore": [
+     "CVE-2023-37920",
+     "CVE-2025-7783",
+     "CVE-2025-68121",
+     "CVE-2026-25896"
+    ],
+    "platform": "linux/arm64",
+    "output": {
+     "type": "s3",
+     "bucketName": {
+      "Ref": "ScanLogsSbomBucketFB430D24"
+     },
+     "prefix": "spdx",
+     "sbomFormat": "spdx"
+    },
+    "suppressErrorOnRollback": "true"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
   }
  },
  "Mappings": {
@@ -603,12 +937,12 @@
   }
  },
  "Outputs": {
-  "ExportsOutputRefScanLogsOutputS3Bucket967BEFAF862E2E8D": {
+  "ExportsOutputRefScanLogsSbomBucketFB430D24D1665CC9": {
    "Value": {
-    "Ref": "ScanLogsOutputS3Bucket967BEFAF"
+    "Ref": "ScanLogsSbomBucketFB430D24"
    },
    "Export": {
-    "Name": "ScanLogsOutputS3Stack:ExportsOutputRefScanLogsOutputS3Bucket967BEFAF862E2E8D"
+    "Name": "ScanLogsOutputS3SbomStack:ExportsOutputRefScanLogsSbomBucketFB430D24D1665CC9"
    }
   }
  },
