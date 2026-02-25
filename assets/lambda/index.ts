@@ -62,19 +62,19 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     return funcResponse;
   }
 
-  if (props.vulnsTopicArn) {
-    sendVulnsNotification(props.vulnsTopicArn);
-  }
-
-  if (!props.failOnVulnerability) {
-    return funcResponse;
-  }
-
   const status =
     response.status === 1
       ? 'vulnerabilities or end-of-life (EOL) image detected'
       : `unexpected exit code ${response.status}`;
   const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
+
+  if (props.vulnsTopicArn) {
+    sendVulnsNotification(props.vulnsTopicArn, errorMessage);
+  }
+
+  if (!props.failOnVulnerability) {
+    return funcResponse;
+  }
 
   if (props.suppressErrorOnRollback === 'true' && (await isRollbackInProgress(event.StackId))) {
     console.log(
@@ -205,7 +205,7 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
   );
 };
 
-const sendVulnsNotification = async (topicArn: string) => {
+const sendVulnsNotification = async (topicArn: string, errorMessage: string) => {
   // Chatbot形式にする？
   /*
   {
