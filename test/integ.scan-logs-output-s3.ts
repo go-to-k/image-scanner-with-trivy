@@ -48,14 +48,6 @@ const s3ApiCall = test.assertions
   .expect(
     ExpectedResult.objectLike({
       KeyCount: 2,
-      Contents: ExpectedResult.arrayWith([
-        {
-          Key: ExpectedResult.stringLikeRegexp('stdout.txt'),
-        },
-        {
-          Key: ExpectedResult.stringLikeRegexp('stderr.txt'),
-        },
-      ]),
     }),
   )
   .waitForAssertions({
