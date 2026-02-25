@@ -374,7 +374,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       severity: props.severity ?? [Severity.CRITICAL],
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
-      failOnVulnerability: props.failOnVulnerability ?? true,
+      failOnVulnerability: String(props.failOnVulnerability ?? true),
       trivyIgnore: props.trivyIgnore?.rules ?? [],
       trivyIgnoreFileType: props.trivyIgnore?.fileType,
       platform: props.targetImagePlatform?.value ?? '',

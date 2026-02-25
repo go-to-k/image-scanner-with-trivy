@@ -18,7 +18,7 @@ export interface ScannerCustomResourceProps {
    * @deprecated
    */
   readonly exitOnEol?: number;
-  readonly failOnVulnerability: boolean;
+  readonly failOnVulnerability: string;
   readonly trivyIgnore: string[];
   readonly trivyIgnoreFileType?: string;
   readonly platform: string;

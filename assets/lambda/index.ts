@@ -74,7 +74,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
     await sendVulnsNotification(props.vulnsTopicArn, errorMessage, props.imageUri);
   }
 
-  if (!props.failOnVulnerability) {
+  if (props.failOnVulnerability === 'false') {
     return funcResponse;
   }
 
