@@ -228,8 +228,8 @@ const cloudWatchLogsOutputOptions: CloudWatchLogsOutputOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | *No description.* |
-| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.logGroupName">logGroupName</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | The type of scan logs output. |
+| <code><a href="#image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.logGroupName">logGroupName</a></code> | <code>string</code> | The name of the CloudWatch Logs log group. |
 
 ---
 
@@ -241,6 +241,8 @@ public readonly type: ScanLogsOutputType;
 
 - *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a>
 
+The type of scan logs output.
+
 ---
 
 ##### `logGroupName`<sup>Required</sup> <a name="logGroupName" id="image-scanner-with-trivy.CloudWatchLogsOutputOptions.property.logGroupName"></a>
@@ -250,6 +252,8 @@ public readonly logGroupName: string;
 ```
 
 - *Type:* string
+
+The name of the CloudWatch Logs log group.
 
 ---
 
@@ -942,6 +946,109 @@ You can specify an SNS topic associated with AWS Chatbot, as notifications are s
 
 ---
 
+### S3OutputOptions <a name="S3OutputOptions" id="image-scanner-with-trivy.S3OutputOptions"></a>
+
+Output configuration for scan logs to S3 bucket.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.S3OutputOptions.Initializer"></a>
+
+```typescript
+import { S3OutputOptions } from 'image-scanner-with-trivy'
+
+const s3OutputOptions: S3OutputOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | The type of scan logs output. |
+| <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.bucketName">bucketName</a></code> | <code>string</code> | The name of the S3 bucket. |
+| <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.prefix">prefix</a></code> | <code>string</code> | Optional prefix for S3 objects. |
+
+---
+
+##### `type`<sup>Required</sup> <a name="type" id="image-scanner-with-trivy.S3OutputOptions.property.type"></a>
+
+```typescript
+public readonly type: ScanLogsOutputType;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a>
+
+The type of scan logs output.
+
+---
+
+##### `bucketName`<sup>Required</sup> <a name="bucketName" id="image-scanner-with-trivy.S3OutputOptions.property.bucketName"></a>
+
+```typescript
+public readonly bucketName: string;
+```
+
+- *Type:* string
+
+The name of the S3 bucket.
+
+---
+
+##### `prefix`<sup>Optional</sup> <a name="prefix" id="image-scanner-with-trivy.S3OutputOptions.property.prefix"></a>
+
+```typescript
+public readonly prefix: string;
+```
+
+- *Type:* string
+
+Optional prefix for S3 objects.
+
+---
+
+### S3OutputProps <a name="S3OutputProps" id="image-scanner-with-trivy.S3OutputProps"></a>
+
+Configuration for scan logs output to S3 bucket.
+
+#### Initializer <a name="Initializer" id="image-scanner-with-trivy.S3OutputProps.Initializer"></a>
+
+```typescript
+import { S3OutputProps } from 'image-scanner-with-trivy'
+
+const s3OutputProps: S3OutputProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#image-scanner-with-trivy.S3OutputProps.property.bucket">bucket</a></code> | <code>aws-cdk-lib.aws_s3.IBucket</code> | The S3 bucket to output scan logs. |
+| <code><a href="#image-scanner-with-trivy.S3OutputProps.property.prefix">prefix</a></code> | <code>string</code> | Optional prefix for S3 objects. |
+
+---
+
+##### `bucket`<sup>Required</sup> <a name="bucket" id="image-scanner-with-trivy.S3OutputProps.property.bucket"></a>
+
+```typescript
+public readonly bucket: IBucket;
+```
+
+- *Type:* aws-cdk-lib.aws_s3.IBucket
+
+The S3 bucket to output scan logs.
+
+---
+
+##### `prefix`<sup>Optional</sup> <a name="prefix" id="image-scanner-with-trivy.S3OutputProps.property.prefix"></a>
+
+```typescript
+public readonly prefix: string;
+```
+
+- *Type:* string
+
+Optional prefix for S3 objects.
+
+---
+
 ### ScanLogsOutputOptions <a name="ScanLogsOutputOptions" id="image-scanner-with-trivy.ScanLogsOutputOptions"></a>
 
 Output configurations for scan logs.
@@ -958,7 +1065,7 @@ const scanLogsOutputOptions: ScanLogsOutputOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#image-scanner-with-trivy.ScanLogsOutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | The type of scan logs output. |
 
 ---
 
@@ -969,6 +1076,8 @@ public readonly type: ScanLogsOutputType;
 ```
 
 - *Type:* <a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a>
+
+The type of scan logs output.
 
 ---
 
@@ -1018,6 +1127,7 @@ Returns the output configuration for scan logs.
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs">cloudWatchLogs</a></code> | Scan logs output to CloudWatch Logs log group. |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutput.s3">s3</a></code> | Scan logs output to S3 bucket. |
 
 ---
 
@@ -1034,6 +1144,22 @@ Scan logs output to CloudWatch Logs log group.
 ###### `options`<sup>Required</sup> <a name="options" id="image-scanner-with-trivy.ScanLogsOutput.cloudWatchLogs.parameter.options"></a>
 
 - *Type:* <a href="#image-scanner-with-trivy.CloudWatchLogsOutputProps">CloudWatchLogsOutputProps</a>
+
+---
+
+##### `s3` <a name="s3" id="image-scanner-with-trivy.ScanLogsOutput.s3"></a>
+
+```typescript
+import { ScanLogsOutput } from 'image-scanner-with-trivy'
+
+ScanLogsOutput.s3(options: S3OutputProps)
+```
+
+Scan logs output to S3 bucket.
+
+###### `options`<sup>Required</sup> <a name="options" id="image-scanner-with-trivy.ScanLogsOutput.s3.parameter.options"></a>
+
+- *Type:* <a href="#image-scanner-with-trivy.S3OutputProps">S3OutputProps</a>
 
 ---
 
@@ -1253,11 +1379,21 @@ Enum for ScanLogsOutputType.
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#image-scanner-with-trivy.ScanLogsOutputType.CLOUDWATCH_LOGS">CLOUDWATCH_LOGS</a></code> | *No description.* |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutputType.CLOUDWATCH_LOGS">CLOUDWATCH_LOGS</a></code> | Output scan logs to CloudWatch Logs. |
+| <code><a href="#image-scanner-with-trivy.ScanLogsOutputType.S3">S3</a></code> | Output scan logs to S3 bucket. |
 
 ---
 
 ##### `CLOUDWATCH_LOGS` <a name="CLOUDWATCH_LOGS" id="image-scanner-with-trivy.ScanLogsOutputType.CLOUDWATCH_LOGS"></a>
+
+Output scan logs to CloudWatch Logs.
+
+---
+
+
+##### `S3` <a name="S3" id="image-scanner-with-trivy.ScanLogsOutputType.S3"></a>
+
+Output scan logs to S3 bucket.
 
 ---
 
