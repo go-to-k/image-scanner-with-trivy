@@ -244,20 +244,20 @@ const outputScanLogsToS3 = async (
     await s3Client.send(
       new PutObjectCommand({
         Bucket: output.bucketName,
-        Key: `${basePath}-sbom.${extension}`,
+        Key: `${basePath}/sbom.${extension}`,
         Body: stdoutContent,
         ContentType: contentType,
       }),
     );
 
-    console.log(`SBOM output to S3: s3://${output.bucketName}/${basePath}-sbom.${extension}`);
+    console.log(`SBOM output to S3: s3://${output.bucketName}/${basePath}/sbom.${extension}`);
   } else {
     // Normal scan mode: upload stderr and stdout
     await Promise.all([
       s3Client.send(
         new PutObjectCommand({
           Bucket: output.bucketName,
-          Key: `${basePath}-stderr.txt`,
+          Key: `${basePath}/stderr.txt`,
           Body: stderrContent,
           ContentType: 'text/plain',
         }),
@@ -265,7 +265,7 @@ const outputScanLogsToS3 = async (
       s3Client.send(
         new PutObjectCommand({
           Bucket: output.bucketName,
-          Key: `${basePath}-stdout.txt`,
+          Key: `${basePath}/stdout.txt`,
           Body: stdoutContent,
           ContentType: 'text/plain',
         }),
@@ -273,7 +273,7 @@ const outputScanLogsToS3 = async (
     ]);
 
     console.log(
-      `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}-stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}-stdout.txt`,
+      `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}/stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}/stdout.txt`,
     );
   }
 };

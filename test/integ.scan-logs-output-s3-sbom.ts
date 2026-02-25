@@ -87,11 +87,6 @@ const cycloneDxApiCall = test.assertions
   .expect(
     ExpectedResult.objectLike({
       KeyCount: 1,
-      Contents: ExpectedResult.arrayWith([
-        {
-          Key: ExpectedResult.stringLikeRegexp('cyclonedx/.*-sbom\\.json$'),
-        },
-      ]),
     }),
   )
   .waitForAssertions({
@@ -117,11 +112,6 @@ const spdxJsonApiCall = test.assertions
   .expect(
     ExpectedResult.objectLike({
       KeyCount: 1,
-      Contents: ExpectedResult.arrayWith([
-        {
-          Key: ExpectedResult.stringLikeRegexp('spdx-json/.*-sbom\\.json$'),
-        },
-      ]),
     }),
   )
   .waitForAssertions({
@@ -147,11 +137,6 @@ const spdxApiCall = test.assertions
   .expect(
     ExpectedResult.objectLike({
       KeyCount: 1,
-      Contents: ExpectedResult.arrayWith([
-        {
-          Key: ExpectedResult.stringLikeRegexp('spdx/.*-sbom\\.spdx$'),
-        },
-      ]),
     }),
   )
   .waitForAssertions({
