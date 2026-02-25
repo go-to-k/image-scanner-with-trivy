@@ -131,7 +131,10 @@ const executeTrivyCommand = (imageUri: string, options: string[]): SpawnSyncRetu
   const cmd = `/opt/trivy image ${options.join(' ')} ${imageUri}`;
   console.log('imageUri: ' + imageUri);
   console.log('command: ' + cmd);
-  return spawnSync(cmd, { shell: true });
+  return spawnSync(cmd, {
+    shell: true,
+    maxBuffer: 50 * 1024 * 1024, // 50MB (default is 1MB)
+  });
 };
 
 const makeTrivyIgnoreFile = (trivyIgnore: string[], fileType?: string) => {
