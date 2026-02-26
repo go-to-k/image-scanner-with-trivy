@@ -35,6 +35,41 @@
               "version": "2.178.1"
             }
           },
+          "BlockedConstruct": {
+            "id": "BlockedConstruct",
+            "path": "AllOptionsStack/BlockedConstruct",
+            "children": {
+              "BlockedQueue": {
+                "id": "BlockedQueue",
+                "path": "AllOptionsStack/BlockedConstruct/BlockedQueue",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "AllOptionsStack/BlockedConstruct/BlockedQueue/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SQS::Queue",
+                      "aws:cdk:cloudformation:props": {}
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sqs.CfnQueue",
+                      "version": "2.178.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sqs.Queue",
+                  "version": "2.178.1",
+                  "metadata": [
+                    "*"
+                  ]
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.5"
+            }
+          },
           "DefaultLogGroup": {
             "id": "DefaultLogGroup",
             "path": "AllOptionsStack/DefaultLogGroup",
