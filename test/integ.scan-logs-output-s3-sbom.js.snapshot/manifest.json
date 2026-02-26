@@ -1,28 +1,28 @@
 {
   "version": "39.0.0",
   "artifacts": {
-    "ImageScannerWithTrivyStack.assets": {
+    "ScanLogsOutputS3SbomStack.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "ImageScannerWithTrivyStack.assets.json",
+        "file": "ScanLogsOutputS3SbomStack.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "ImageScannerWithTrivyStack": {
+    "ScanLogsOutputS3SbomStack": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "ImageScannerWithTrivyStack.template.json",
+        "templateFile": "ScanLogsOutputS3SbomStack.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/085aeacdbc3580ad360dd4242a0d064b54ecb04acea0aecd62c0a186f7da9b4f.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/9bb240af59d3708e5cdc0770f4ef7d38b551fc32ac164d360280c1cf010f35a0.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "ImageScannerWithTrivyStack.assets"
+          "ScanLogsOutputS3SbomStack.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -31,24 +31,75 @@
         }
       },
       "dependencies": [
-        "ImageScannerWithTrivyStack.assets"
+        "ScanLogsOutputS3SbomStack.assets"
       ],
       "metadata": {
-        "/ImageScannerWithTrivyStack/LogGroup": [
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
-              "removalPolicy": "destroy"
+              "removalPolicy": "destroy",
+              "autoDeleteObjects": true
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/LogGroup/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "LogGroupF5B46931"
+            "data": "ScanLogsSbomBucketFB430D24"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/CustomResourceLambda": [
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Policy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "bucket": "*"
+            }
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScanLogsSbomBucketPolicy910C76C1"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/AutoDeleteObjectsCustomResource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScanLogsSbomBucketAutoDeleteObjectsCustomResource0E743C83"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+          {
+            "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+            "data": true
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -61,11 +112,12 @@
               "timeout": "*",
               "retryAttempts": "*",
               "memorySize": "*",
-              "ephemeralStorageSize": "*"
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -93,7 +145,7 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -141,19 +193,19 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA"
+            "data": "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -191,31 +243,31 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy68DCB519"
+            "data": "ScannerCycloneDXProviderframeworkonEventServiceRoleDefaultPolicy8BB05CCB"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEvent64D7E4F2"
+            "data": "ScannerCycloneDXProviderframeworkonEvent5482B5C3"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Resource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Resource/Default": [
+        "/ScanLogsOutputS3SbomStack/ScannerCycloneDX/Resource/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithMinimalOptionsEF57702A"
+            "data": "ScannerCycloneDX10265708"
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -226,11 +278,12 @@
               "timeout": "*",
               "retryAttempts": "*",
               "memorySize": "*",
-              "ephemeralStorageSize": "*"
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -340,21 +393,37 @@
                 {}
               ]
             }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/ImportServiceRole": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/Resource": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aServiceRole676D3F17"
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB"
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/DefaultPolicy": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -454,21 +523,37 @@
                 {}
               ]
             }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/DefaultPolicy/Resource": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aServiceRoleDefaultPolicyB1A38321"
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D"
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/Resource": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/EventInvokeConfig": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -480,19 +565,13 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/EventInvokeConfig/Resource": [
+        "/ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aEventInvokeConfig2DEF6CCE"
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1EventInvokeConfig658F865C"
           }
         ],
-        "/ImageScannerWithTrivyStack/LatestNodeRuntimeMap": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "LatestNodeRuntimeMap"
-          }
-        ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/CustomResourceLambda": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -505,11 +584,12 @@
               "timeout": "*",
               "retryAttempts": "*",
               "memorySize": "*",
-              "ephemeralStorageSize": "*"
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -537,7 +617,7 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -585,19 +665,19 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E"
+            "data": "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -635,47 +715,31 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy471D37E6"
+            "data": "ScannerSpdxJsonProviderframeworkonEventServiceRoleDefaultPolicyF94DB1E7"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEvent1625CE73"
+            "data": "ScannerSpdxJsonProviderframeworkonEvent51C4911E"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Resource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Resource/Default": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdxJson/Resource/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithAllOptions35A21CF5"
+            "data": "ScannerSpdxJsonA1F17D5F"
           }
         ],
-        "/ImageScannerWithTrivyStack/DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda": [
-          {
-            "type": "aws:cdk:analytics:construct",
-            "data": {
-              "logGroupName": "*",
-              "retention": 1,
-              "removalPolicy": "destroy"
-            }
-          }
-        ],
-        "/ImageScannerWithTrivyStack/DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda/Resource": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "DefaultLogGroupForCustomImageScannerWithTrivyCustomResourceLambda9AB0FBF0"
-          }
-        ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/CustomResourceLambda": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/CustomResourceLambda": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -688,11 +752,12 @@
               "timeout": "*",
               "retryAttempts": "*",
               "memorySize": "*",
-              "ephemeralStorageSize": "*"
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -720,7 +785,7 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": {
@@ -768,19 +833,19 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814"
+            "data": "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -818,73 +883,73 @@
             }
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleDefaultPolicy04B421DF"
+            "data": "ScannerSpdxProviderframeworkonEventServiceRoleDefaultPolicy608F9B72"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventC444DCB0"
+            "data": "ScannerSpdxProviderframeworkonEvent34E025F0"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Resource": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Resource": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Resource/Default": [
+        "/ScanLogsOutputS3SbomStack/ScannerSpdx/Resource/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ImageScannerWithTrivyWithDefaultLogGroupOptionsF42B413F"
+            "data": "ScannerSpdx400FE50F"
           }
         ],
-        "/ImageScannerWithTrivyStack/Exports/Output{\"Ref\":\"LogGroupF5B46931\"}": [
+        "/ScanLogsOutputS3SbomStack/Exports/Output{\"Ref\":\"ScanLogsSbomBucketFB430D24\"}": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ExportsOutputRefLogGroupF5B4693119CE9848"
+            "data": "ExportsOutputRefScanLogsSbomBucketFB430D24D1665CC9"
           }
         ],
-        "/ImageScannerWithTrivyStack/BootstrapVersion": [
+        "/ScanLogsOutputS3SbomStack/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/ImageScannerWithTrivyStack/CheckBootstrapVersion": [
+        "/ScanLogsOutputS3SbomStack/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "ImageScannerWithTrivyStack"
+      "displayName": "ScanLogsOutputS3SbomStack"
     },
-    "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0.assets": {
+    "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0.assets.json",
+        "file": "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0": {
+    "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0.template.json",
+        "templateFile": "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503.template.json",
         "terminationProtection": false,
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/00ad82c41b6b4443392cb41dac1e0eecd2e9f51d2f5b6144e1e63f1eb45e4535.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/f9434a81b573b4b05e7dc1f545b66990f5e877ca4013bc486ffa2ae05459af6f.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0.assets"
+          "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -893,11 +958,11 @@
         }
       },
       "dependencies": [
-        "ImageScannerWithTrivyStack",
-        "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0.assets"
+        "ScanLogsOutputS3SbomStack",
+        "ScanLogsOutputS3SbomTestDefaultTestDeployAssert59CD7503.assets"
       ],
       "metadata": {
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/Default": [
           {
             "type": "aws:cdk:analytics:construct",
             "data": "*"
@@ -911,98 +976,198 @@
             "data": "*"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default/Default": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/Default/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16"
+            "data": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/Invoke": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/IsCompleteProvider/Invoke": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16WaitForIsCompleteProviderInvokeF225F370"
+            "data": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852eWaitForIsCompleteProviderInvokeE4F4A43D"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/Invoke": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/TimeoutProvider/Invoke": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16WaitForTimeoutProviderInvoke3D53BF90"
+            "data": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852eWaitForTimeoutProviderInvoke29DD40DB"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Role": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/Role": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16WaitForRoleCADCC327"
+            "data": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852eWaitForRoleECE26B04"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Resource": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16WaitFor2A13A675"
+            "data": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852eWaitForCCD68135"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/AssertionResults": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/AssertionResults": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AssertionResultsAwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16"
+            "data": "AssertionResultsAwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
           {
             "type": "aws:cdk:logicalId",
             "data": "LatestNodeRuntimeMap"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Role918961BB"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aRoleB84BD8CE"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler": [
           {
             "type": "aws:cdk:logicalId",
             "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/BootstrapVersion": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/IsCompleteProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48dWaitForIsCompleteProviderInvokeD5C1FCDA"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/TimeoutProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48dWaitForTimeoutProviderInvoke10D54A42"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48dWaitForRoleD373D3AC"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48dWaitForD8633E69"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsAwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/IsCompleteProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8WaitForIsCompleteProviderInvoke99A5C2D6"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/TimeoutProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8WaitForTimeoutProviderInvokeEBB61F8C"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8WaitForRole71D9178A"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8WaitFor90112FBC"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsAwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8"
+          }
+        ],
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "BootstrapVersion"
           }
         ],
-        "/ImageScannerWithTrivyTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+        "/ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CheckBootstrapVersion"
           }
         ]
       },
-      "displayName": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert"
+      "displayName": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert"
     },
     "Tree": {
       "type": "cdk:tree",

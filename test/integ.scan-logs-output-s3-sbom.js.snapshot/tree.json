@@ -4,46 +4,190 @@
     "id": "App",
     "path": "",
     "children": {
-      "ImageScannerWithTrivyStack": {
-        "id": "ImageScannerWithTrivyStack",
-        "path": "ImageScannerWithTrivyStack",
+      "ScanLogsOutputS3SbomStack": {
+        "id": "ScanLogsOutputS3SbomStack",
+        "path": "ScanLogsOutputS3SbomStack",
         "children": {
-          "LogGroup": {
-            "id": "LogGroup",
-            "path": "ImageScannerWithTrivyStack/LogGroup",
+          "ScanLogsSbomBucket": {
+            "id": "ScanLogsSbomBucket",
+            "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/LogGroup/Resource",
+                "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Resource",
                 "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
-                    "retentionInDays": 731
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      }
+                    ]
                   }
                 },
                 "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.178.1"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "ScanLogsSbomBucketFB430D24"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "ScanLogsSbomBucketFB430D24",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "ScanLogsSbomBucketFB430D24",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.178.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.178.1",
+                  "metadata": [
+                    {
+                      "bucket": "*"
+                    }
+                  ]
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "ScanLogsOutputS3SbomStack/ScanLogsSbomBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.178.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.178.1",
+                  "metadata": [
+                    "*"
+                  ]
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.178.1",
+              "metadata": [
+                {
+                  "removalPolicy": "destroy",
+                  "autoDeleteObjects": true
+                }
+              ]
+            }
+          },
+          "LatestNodeRuntimeMap": {
+            "id": "LatestNodeRuntimeMap",
+            "path": "ScanLogsOutputS3SbomStack/LatestNodeRuntimeMap",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnMapping",
+              "version": "2.178.1"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.178.1"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.178.1"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "ScanLogsOutputS3SbomStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.178.1"
                 }
               }
             },
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
-              "version": "2.178.1",
-              "metadata": [
-                {
-                  "removalPolicy": "destroy"
-                }
-              ]
+              "fqn": "aws-cdk-lib.CustomResourceProviderBase",
+              "version": "2.178.1"
             }
           },
           "DockerImage": {
             "id": "DockerImage",
-            "path": "ImageScannerWithTrivyStack/DockerImage",
+            "path": "ScanLogsOutputS3SbomStack/DockerImage",
             "children": {
               "Staging": {
                 "id": "Staging",
-                "path": "ImageScannerWithTrivyStack/DockerImage/Staging",
+                "path": "ScanLogsOutputS3SbomStack/DockerImage/Staging",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.AssetStaging",
                   "version": "2.178.1"
@@ -51,7 +195,7 @@
               },
               "Repository": {
                 "id": "Repository",
-                "path": "ImageScannerWithTrivyStack/DockerImage/Repository",
+                "path": "ScanLogsOutputS3SbomStack/DockerImage/Repository",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ecr.RepositoryBase",
                   "version": "2.178.1",
@@ -64,13 +208,13 @@
               "version": "2.178.1"
             }
           },
-          "ImageScannerWithTrivyWithMinimalOptions": {
-            "id": "ImageScannerWithTrivyWithMinimalOptions",
-            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions",
+          "ScannerCycloneDX": {
+            "id": "ScannerCycloneDX",
+            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX",
             "children": {
               "CustomResourceLambda": {
                 "id": "CustomResourceLambda",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/CustomResourceLambda",
+                "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/CustomResourceLambda",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
                   "version": "2.178.1",
@@ -85,26 +229,27 @@
                       "timeout": "*",
                       "retryAttempts": "*",
                       "memorySize": "*",
-                      "ephemeralStorageSize": "*"
+                      "ephemeralStorageSize": "*",
+                      "logGroup": "*"
                     }
                   ]
                 }
               },
               "Provider": {
                 "id": "Provider",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider",
+                "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider",
                 "children": {
                   "framework-onEvent": {
                     "id": "framework-onEvent",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent",
                     "children": {
                       "ServiceRole": {
                         "id": "ServiceRole",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole",
                         "children": {
                           "ImportServiceRole": {
                             "id": "ImportServiceRole",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.Resource",
                               "version": "2.178.1",
@@ -115,7 +260,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/Resource",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                               "aws:cdk:cloudformation:props": {
@@ -154,11 +299,11 @@
                           },
                           "DefaultPolicy": {
                             "id": "DefaultPolicy",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
+                                "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                                   "aws:cdk:cloudformation:props": {
@@ -170,7 +315,7 @@
                                           "Resource": [
                                             {
                                               "Fn::GetAtt": [
-                                                "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                 "Arn"
                                               ]
                                             },
@@ -180,7 +325,7 @@
                                                 [
                                                   {
                                                     "Fn::GetAtt": [
-                                                      "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                      "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                       "Arn"
                                                     ]
                                                   },
@@ -195,7 +340,7 @@
                                           "Effect": "Allow",
                                           "Resource": {
                                             "Fn::GetAtt": [
-                                              "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                              "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                               "Arn"
                                             ]
                                           }
@@ -203,10 +348,10 @@
                                       ],
                                       "Version": "2012-10-17"
                                     },
-                                    "policyName": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleDefaultPolicy68DCB519",
+                                    "policyName": "ScannerCycloneDXProviderframeworkonEventServiceRoleDefaultPolicy8BB05CCB",
                                     "roles": [
                                       {
-                                        "Ref": "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA"
+                                        "Ref": "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B"
                                       }
                                     ]
                                   }
@@ -286,11 +431,11 @@
                       },
                       "Code": {
                         "id": "Code",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/Code",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/Code",
                         "children": {
                           "Stage": {
                             "id": "Stage",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/Code/Stage",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/Code/Stage",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.AssetStaging",
                               "version": "2.178.1"
@@ -298,7 +443,7 @@
                           },
                           "AssetBucket": {
                             "id": "AssetBucket",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/Code/AssetBucket",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/Code/AssetBucket",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                               "version": "2.178.1",
@@ -313,7 +458,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider/framework-onEvent/Resource",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider/framework-onEvent/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                           "aws:cdk:cloudformation:props": {
@@ -323,12 +468,12 @@
                               },
                               "s3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
                             },
-                            "description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Provider)",
+                            "description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerCycloneDX/Provider)",
                             "environment": {
                               "variables": {
                                 "USER_ON_EVENT_FUNCTION_ARN": {
                                   "Fn::GetAtt": [
-                                    "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                     "Arn"
                                   ]
                                 }
@@ -337,7 +482,7 @@
                             "handler": "framework.onEvent",
                             "role": {
                               "Fn::GetAtt": [
-                                "ImageScannerWithTrivyWithMinimalOptionsProviderframeworkonEventServiceRoleB5C1B8BA",
+                                "ScannerCycloneDXProviderframeworkonEventServiceRole9C24F52B",
                                 "Arn"
                               ]
                             },
@@ -394,11 +539,11 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Resource",
+                "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Resource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithMinimalOptions/Resource/Default",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerCycloneDX/Resource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.178.1"
@@ -419,17 +564,17 @@
               "version": "10.0.5"
             }
           },
-          "Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a": {
-            "id": "Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a",
-            "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a",
+          "Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": {
+            "id": "Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1",
+            "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole",
+                "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/ImportServiceRole",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.178.1",
@@ -440,7 +585,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/Resource",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -479,11 +624,11 @@
                   },
                   "DefaultPolicy": {
                     "id": "DefaultPolicy",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/DefaultPolicy",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/ServiceRole/DefaultPolicy/Resource",
+                        "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                           "aws:cdk:cloudformation:props": {
@@ -534,24 +679,45 @@
                                 },
                                 {
                                   "Action": [
-                                    "logs:CreateLogStream",
-                                    "logs:PutLogEvents"
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
                                   ],
                                   "Effect": "Allow",
-                                  "Resource": {
-                                    "Fn::GetAtt": [
-                                      "LogGroupF5B46931",
-                                      "Arn"
-                                    ]
-                                  }
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "ScanLogsSbomBucketFB430D24",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "ScanLogsSbomBucketFB430D24",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
                                 }
                               ],
                               "Version": "2012-10-17"
                             },
-                            "policyName": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aServiceRoleDefaultPolicyB1A38321",
+                            "policyName": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D",
                             "roles": [
                               {
-                                "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aServiceRole676D3F17"
+                                "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB"
                               }
                             ]
                           }
@@ -575,6 +741,16 @@
                         {
                           "attachToRole": [
                             "*"
+                          ]
+                        },
+                        {
+                          "addStatements": [
+                            {}
+                          ]
+                        },
+                        {
+                          "addStatements": [
+                            {}
                           ]
                         },
                         {
@@ -705,17 +881,27 @@
                       "addToPrincipalPolicy": [
                         {}
                       ]
+                    },
+                    {
+                      "addToPrincipalPolicy": [
+                        {}
+                      ]
+                    },
+                    {
+                      "addToPrincipalPolicy": [
+                        {}
+                      ]
                     }
                   ]
                 }
               },
               "AssetImage": {
                 "id": "AssetImage",
-                "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/AssetImage",
+                "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage",
                 "children": {
                   "Staging": {
                     "id": "Staging",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/AssetImage/Staging",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Staging",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.AssetStaging",
                       "version": "2.178.1"
@@ -723,7 +909,7 @@
                   },
                   "Repository": {
                     "id": "Repository",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/AssetImage/Repository",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/AssetImage/Repository",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_ecr.RepositoryBase",
                       "version": "2.178.1",
@@ -738,7 +924,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/Resource",
+                "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                   "aws:cdk:cloudformation:props": {
@@ -757,7 +943,7 @@
                     "packageType": "Image",
                     "role": {
                       "Fn::GetAtt": [
-                        "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319aServiceRole676D3F17",
+                        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB",
                         "Arn"
                       ]
                     },
@@ -771,16 +957,16 @@
               },
               "EventInvokeConfig": {
                 "id": "EventInvokeConfig",
-                "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/EventInvokeConfig",
+                "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "ImageScannerWithTrivyStack/Custom::ImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a/EventInvokeConfig/Resource",
+                    "path": "ScanLogsOutputS3SbomStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Lambda::EventInvokeConfig",
                       "aws:cdk:cloudformation:props": {
                         "functionName": {
-                          "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+                          "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
                         },
                         "maximumRetryAttempts": 0,
                         "qualifier": "$LATEST"
@@ -819,26 +1005,19 @@
                   "timeout": "*",
                   "retryAttempts": "*",
                   "memorySize": "*",
-                  "ephemeralStorageSize": "*"
+                  "ephemeralStorageSize": "*",
+                  "logGroup": "*"
                 }
               ]
             }
           },
-          "LatestNodeRuntimeMap": {
-            "id": "LatestNodeRuntimeMap",
-            "path": "ImageScannerWithTrivyStack/LatestNodeRuntimeMap",
-            "constructInfo": {
-              "fqn": "aws-cdk-lib.CfnMapping",
-              "version": "2.178.1"
-            }
-          },
-          "ImageScannerWithTrivyWithAllOptions": {
-            "id": "ImageScannerWithTrivyWithAllOptions",
-            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions",
+          "ScannerSpdxJson": {
+            "id": "ScannerSpdxJson",
+            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson",
             "children": {
               "CustomResourceLambda": {
                 "id": "CustomResourceLambda",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/CustomResourceLambda",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/CustomResourceLambda",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
                   "version": "2.178.1",
@@ -853,26 +1032,27 @@
                       "timeout": "*",
                       "retryAttempts": "*",
                       "memorySize": "*",
-                      "ephemeralStorageSize": "*"
+                      "ephemeralStorageSize": "*",
+                      "logGroup": "*"
                     }
                   ]
                 }
               },
               "Provider": {
                 "id": "Provider",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider",
                 "children": {
                   "framework-onEvent": {
                     "id": "framework-onEvent",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent",
                     "children": {
                       "ServiceRole": {
                         "id": "ServiceRole",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole",
                         "children": {
                           "ImportServiceRole": {
                             "id": "ImportServiceRole",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.Resource",
                               "version": "2.178.1",
@@ -883,7 +1063,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/Resource",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                               "aws:cdk:cloudformation:props": {
@@ -922,11 +1102,11 @@
                           },
                           "DefaultPolicy": {
                             "id": "DefaultPolicy",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
+                                "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                                   "aws:cdk:cloudformation:props": {
@@ -938,7 +1118,7 @@
                                           "Resource": [
                                             {
                                               "Fn::GetAtt": [
-                                                "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                 "Arn"
                                               ]
                                             },
@@ -948,7 +1128,7 @@
                                                 [
                                                   {
                                                     "Fn::GetAtt": [
-                                                      "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                      "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                       "Arn"
                                                     ]
                                                   },
@@ -963,7 +1143,7 @@
                                           "Effect": "Allow",
                                           "Resource": {
                                             "Fn::GetAtt": [
-                                              "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                              "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                               "Arn"
                                             ]
                                           }
@@ -971,10 +1151,10 @@
                                       ],
                                       "Version": "2012-10-17"
                                     },
-                                    "policyName": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleDefaultPolicy471D37E6",
+                                    "policyName": "ScannerSpdxJsonProviderframeworkonEventServiceRoleDefaultPolicyF94DB1E7",
                                     "roles": [
                                       {
-                                        "Ref": "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E"
+                                        "Ref": "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1"
                                       }
                                     ]
                                   }
@@ -1054,11 +1234,11 @@
                       },
                       "Code": {
                         "id": "Code",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/Code",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/Code",
                         "children": {
                           "Stage": {
                             "id": "Stage",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/Code/Stage",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/Code/Stage",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.AssetStaging",
                               "version": "2.178.1"
@@ -1066,7 +1246,7 @@
                           },
                           "AssetBucket": {
                             "id": "AssetBucket",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/Code/AssetBucket",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/Code/AssetBucket",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                               "version": "2.178.1",
@@ -1081,7 +1261,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider/framework-onEvent/Resource",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider/framework-onEvent/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                           "aws:cdk:cloudformation:props": {
@@ -1091,12 +1271,12 @@
                               },
                               "s3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
                             },
-                            "description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Provider)",
+                            "description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerSpdxJson/Provider)",
                             "environment": {
                               "variables": {
                                 "USER_ON_EVENT_FUNCTION_ARN": {
                                   "Fn::GetAtt": [
-                                    "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                     "Arn"
                                   ]
                                 }
@@ -1105,7 +1285,7 @@
                             "handler": "framework.onEvent",
                             "role": {
                               "Fn::GetAtt": [
-                                "ImageScannerWithTrivyWithAllOptionsProviderframeworkonEventServiceRoleB40C981E",
+                                "ScannerSpdxJsonProviderframeworkonEventServiceRoleB20803C1",
                                 "Arn"
                               ]
                             },
@@ -1162,11 +1342,11 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Resource",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Resource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithAllOptions/Resource/Default",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerSpdxJson/Resource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.178.1"
@@ -1187,55 +1367,13 @@
               "version": "10.0.5"
             }
           },
-          "DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda": {
-            "id": "DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda",
-            "path": "ImageScannerWithTrivyStack/DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda",
-            "children": {
-              "Resource": {
-                "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/DefaultLogGroupForCustom::ImageScannerWithTrivyCustomResourceLambda/Resource",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
-                  "aws:cdk:cloudformation:props": {
-                    "logGroupName": {
-                      "Fn::Join": [
-                        "",
-                        [
-                          "/aws/lambda/",
-                          {
-                            "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
-                          }
-                        ]
-                      ]
-                    },
-                    "retentionInDays": 1
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
-                  "version": "2.178.1"
-                }
-              }
-            },
-            "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
-              "version": "2.178.1",
-              "metadata": [
-                {
-                  "logGroupName": "*",
-                  "retention": 1,
-                  "removalPolicy": "destroy"
-                }
-              ]
-            }
-          },
-          "ImageScannerWithTrivyWithDefaultLogGroupOptions": {
-            "id": "ImageScannerWithTrivyWithDefaultLogGroupOptions",
-            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions",
+          "ScannerSpdx": {
+            "id": "ScannerSpdx",
+            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx",
             "children": {
               "CustomResourceLambda": {
                 "id": "CustomResourceLambda",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/CustomResourceLambda",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/CustomResourceLambda",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
                   "version": "2.178.1",
@@ -1250,26 +1388,27 @@
                       "timeout": "*",
                       "retryAttempts": "*",
                       "memorySize": "*",
-                      "ephemeralStorageSize": "*"
+                      "ephemeralStorageSize": "*",
+                      "logGroup": "*"
                     }
                   ]
                 }
               },
               "Provider": {
                 "id": "Provider",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider",
                 "children": {
                   "framework-onEvent": {
                     "id": "framework-onEvent",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent",
                     "children": {
                       "ServiceRole": {
                         "id": "ServiceRole",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole",
                         "children": {
                           "ImportServiceRole": {
                             "id": "ImportServiceRole",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/ImportServiceRole",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.Resource",
                               "version": "2.178.1",
@@ -1280,7 +1419,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/Resource",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                               "aws:cdk:cloudformation:props": {
@@ -1319,11 +1458,11 @@
                           },
                           "DefaultPolicy": {
                             "id": "DefaultPolicy",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/DefaultPolicy",
                             "children": {
                               "Resource": {
                                 "id": "Resource",
-                                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
+                                "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource",
                                 "attributes": {
                                   "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                                   "aws:cdk:cloudformation:props": {
@@ -1335,7 +1474,7 @@
                                           "Resource": [
                                             {
                                               "Fn::GetAtt": [
-                                                "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                 "Arn"
                                               ]
                                             },
@@ -1345,7 +1484,7 @@
                                                 [
                                                   {
                                                     "Fn::GetAtt": [
-                                                      "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                                      "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                                       "Arn"
                                                     ]
                                                   },
@@ -1360,7 +1499,7 @@
                                           "Effect": "Allow",
                                           "Resource": {
                                             "Fn::GetAtt": [
-                                              "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                              "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                               "Arn"
                                             ]
                                           }
@@ -1368,10 +1507,10 @@
                                       ],
                                       "Version": "2012-10-17"
                                     },
-                                    "policyName": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleDefaultPolicy04B421DF",
+                                    "policyName": "ScannerSpdxProviderframeworkonEventServiceRoleDefaultPolicy608F9B72",
                                     "roles": [
                                       {
-                                        "Ref": "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814"
+                                        "Ref": "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3"
                                       }
                                     ]
                                   }
@@ -1451,11 +1590,11 @@
                       },
                       "Code": {
                         "id": "Code",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/Code",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/Code",
                         "children": {
                           "Stage": {
                             "id": "Stage",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/Code/Stage",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/Code/Stage",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.AssetStaging",
                               "version": "2.178.1"
@@ -1463,7 +1602,7 @@
                           },
                           "AssetBucket": {
                             "id": "AssetBucket",
-                            "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/Code/AssetBucket",
+                            "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/Code/AssetBucket",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.aws_s3.BucketBase",
                               "version": "2.178.1",
@@ -1478,7 +1617,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider/framework-onEvent/Resource",
+                        "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Provider/framework-onEvent/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
                           "aws:cdk:cloudformation:props": {
@@ -1488,12 +1627,12 @@
                               },
                               "s3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
                             },
-                            "description": "AWS CDK resource provider framework - onEvent (ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Provider)",
+                            "description": "AWS CDK resource provider framework - onEvent (ScanLogsOutputS3SbomStack/ScannerSpdx/Provider)",
                             "environment": {
                               "variables": {
                                 "USER_ON_EVENT_FUNCTION_ARN": {
                                   "Fn::GetAtt": [
-                                    "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+                                    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
                                     "Arn"
                                   ]
                                 }
@@ -1502,7 +1641,7 @@
                             "handler": "framework.onEvent",
                             "role": {
                               "Fn::GetAtt": [
-                                "ImageScannerWithTrivyWithDefaultLogGroupOptionsProviderframeworkonEventServiceRoleD7446814",
+                                "ScannerSpdxProviderframeworkonEventServiceRole0C719BA3",
                                 "Arn"
                               ]
                             },
@@ -1559,11 +1698,11 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Resource",
+                "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Resource",
                 "children": {
                   "Default": {
                     "id": "Default",
-                    "path": "ImageScannerWithTrivyStack/ImageScannerWithTrivyWithDefaultLogGroupOptions/Resource/Default",
+                    "path": "ScanLogsOutputS3SbomStack/ScannerSpdx/Resource/Default",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnResource",
                       "version": "2.178.1"
@@ -1586,11 +1725,11 @@
           },
           "Exports": {
             "id": "Exports",
-            "path": "ImageScannerWithTrivyStack/Exports",
+            "path": "ScanLogsOutputS3SbomStack/Exports",
             "children": {
-              "Output{\"Ref\":\"LogGroupF5B46931\"}": {
-                "id": "Output{\"Ref\":\"LogGroupF5B46931\"}",
-                "path": "ImageScannerWithTrivyStack/Exports/Output{\"Ref\":\"LogGroupF5B46931\"}",
+              "Output{\"Ref\":\"ScanLogsSbomBucketFB430D24\"}": {
+                "id": "Output{\"Ref\":\"ScanLogsSbomBucketFB430D24\"}",
+                "path": "ScanLogsOutputS3SbomStack/Exports/Output{\"Ref\":\"ScanLogsSbomBucketFB430D24\"}",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
                   "version": "2.178.1"
@@ -1604,7 +1743,7 @@
           },
           "BootstrapVersion": {
             "id": "BootstrapVersion",
-            "path": "ImageScannerWithTrivyStack/BootstrapVersion",
+            "path": "ScanLogsOutputS3SbomStack/BootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
               "version": "2.178.1"
@@ -1612,7 +1751,7 @@
           },
           "CheckBootstrapVersion": {
             "id": "CheckBootstrapVersion",
-            "path": "ImageScannerWithTrivyStack/CheckBootstrapVersion",
+            "path": "ScanLogsOutputS3SbomStack/CheckBootstrapVersion",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.178.1"
@@ -1624,17 +1763,17 @@
           "version": "2.178.1"
         }
       },
-      "ImageScannerWithTrivyTest": {
-        "id": "ImageScannerWithTrivyTest",
-        "path": "ImageScannerWithTrivyTest",
+      "ScanLogsOutputS3SbomTest": {
+        "id": "ScanLogsOutputS3SbomTest",
+        "path": "ScanLogsOutputS3SbomTest",
         "children": {
           "DefaultTest": {
             "id": "DefaultTest",
-            "path": "ImageScannerWithTrivyTest/DefaultTest",
+            "path": "ScanLogsOutputS3SbomTest/DefaultTest",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "ImageScannerWithTrivyTest/DefaultTest/Default",
+                "path": "ScanLogsOutputS3SbomTest/DefaultTest/Default",
                 "constructInfo": {
                   "fqn": "constructs.Construct",
                   "version": "10.0.5"
@@ -1642,19 +1781,19 @@
               },
               "DeployAssert": {
                 "id": "DeployAssert",
-                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert",
+                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert",
                 "children": {
-                  "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16": {
-                    "id": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16",
+                  "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e": {
+                    "id": "AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e",
                     "children": {
                       "SdkProvider": {
                         "id": "SdkProvider",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/SdkProvider",
                         "children": {
                           "AssertionsProvider": {
                             "id": "AssertionsProvider",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider/AssertionsProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/SdkProvider/AssertionsProvider",
                             "constructInfo": {
                               "fqn": "constructs.Construct",
                               "version": "10.0.5"
@@ -1668,11 +1807,11 @@
                       },
                       "Default": {
                         "id": "Default",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/Default",
                         "children": {
                           "Default": {
                             "id": "Default",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default/Default",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/Default/Default",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1691,15 +1830,15 @@
                       },
                       "WaitFor": {
                         "id": "WaitFor",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor",
                         "children": {
                           "IsCompleteProvider": {
                             "id": "IsCompleteProvider",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/IsCompleteProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/IsCompleteProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1707,7 +1846,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/IsCompleteProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1721,11 +1860,11 @@
                           },
                           "TimeoutProvider": {
                             "id": "TimeoutProvider",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/TimeoutProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/TimeoutProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1733,7 +1872,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/TimeoutProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1747,7 +1886,7 @@
                           },
                           "Role": {
                             "id": "Role",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Role",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/Role",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1755,7 +1894,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Resource",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/WaitFor/Resource",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1769,7 +1908,7 @@
                       },
                       "AssertionResults": {
                         "id": "AssertionResults",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/AssertionResults",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV28a38abe83a310770915c283f51ec852e/AssertionResults",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnOutput",
                           "version": "2.178.1"
@@ -1783,11 +1922,11 @@
                   },
                   "SingletonFunction1488541a7b23466481b69b4408076b81": {
                     "id": "SingletonFunction1488541a7b23466481b69b4408076b81",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1795,7 +1934,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1803,7 +1942,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1817,7 +1956,7 @@
                   },
                   "LatestNodeRuntimeMap": {
                     "id": "LatestNodeRuntimeMap",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnMapping",
                       "version": "2.178.1"
@@ -1825,11 +1964,11 @@
                   },
                   "SingletonFunction76b3e830a873425f8453eddd85c86925": {
                     "id": "SingletonFunction76b3e830a873425f8453eddd85c86925",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1837,7 +1976,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1845,7 +1984,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1859,11 +1998,11 @@
                   },
                   "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a": {
                     "id": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1871,7 +2010,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1879,7 +2018,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1891,9 +2030,283 @@
                       "version": "10.0.5"
                     }
                   },
+                  "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d": {
+                    "id": "AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d",
+                    "children": {
+                      "SdkProvider": {
+                        "id": "SdkProvider",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/SdkProvider",
+                        "children": {
+                          "AssertionsProvider": {
+                            "id": "AssertionsProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/SdkProvider/AssertionsProvider",
+                            "constructInfo": {
+                              "fqn": "constructs.Construct",
+                              "version": "10.0.5"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                          "version": "2.178.1-alpha.0"
+                        }
+                      },
+                      "Default": {
+                        "id": "Default",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/Default",
+                        "children": {
+                          "Default": {
+                            "id": "Default",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/Default/Default",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CustomResource",
+                          "version": "2.178.1",
+                          "metadata": [
+                            "*",
+                            "*",
+                            "*"
+                          ]
+                        }
+                      },
+                      "WaitFor": {
+                        "id": "WaitFor",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor",
+                        "children": {
+                          "IsCompleteProvider": {
+                            "id": "IsCompleteProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/IsCompleteProvider",
+                            "children": {
+                              "AssertionsProvider": {
+                                "id": "AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/IsCompleteProvider/AssertionsProvider",
+                                "constructInfo": {
+                                  "fqn": "constructs.Construct",
+                                  "version": "10.0.5"
+                                }
+                              },
+                              "Invoke": {
+                                "id": "Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/IsCompleteProvider/Invoke",
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.CfnResource",
+                                  "version": "2.178.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                              "version": "2.178.1-alpha.0"
+                            }
+                          },
+                          "TimeoutProvider": {
+                            "id": "TimeoutProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/TimeoutProvider",
+                            "children": {
+                              "AssertionsProvider": {
+                                "id": "AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/TimeoutProvider/AssertionsProvider",
+                                "constructInfo": {
+                                  "fqn": "constructs.Construct",
+                                  "version": "10.0.5"
+                                }
+                              },
+                              "Invoke": {
+                                "id": "Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/TimeoutProvider/Invoke",
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.CfnResource",
+                                  "version": "2.178.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                              "version": "2.178.1-alpha.0"
+                            }
+                          },
+                          "Role": {
+                            "id": "Role",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/Role",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/WaitFor/Resource",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "@aws-cdk/integ-tests-alpha.WaiterStateMachine",
+                          "version": "2.178.1-alpha.0"
+                        }
+                      },
+                      "AssertionResults": {
+                        "id": "AssertionResults",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2d115d2054ff71eb425854482983cd48d/AssertionResults",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnOutput",
+                          "version": "2.178.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/integ-tests-alpha.AwsApiCall",
+                      "version": "2.178.1-alpha.0"
+                    }
+                  },
+                  "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8": {
+                    "id": "AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8",
+                    "children": {
+                      "SdkProvider": {
+                        "id": "SdkProvider",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/SdkProvider",
+                        "children": {
+                          "AssertionsProvider": {
+                            "id": "AssertionsProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/SdkProvider/AssertionsProvider",
+                            "constructInfo": {
+                              "fqn": "constructs.Construct",
+                              "version": "10.0.5"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                          "version": "2.178.1-alpha.0"
+                        }
+                      },
+                      "Default": {
+                        "id": "Default",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/Default",
+                        "children": {
+                          "Default": {
+                            "id": "Default",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/Default/Default",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CustomResource",
+                          "version": "2.178.1",
+                          "metadata": [
+                            "*",
+                            "*",
+                            "*"
+                          ]
+                        }
+                      },
+                      "WaitFor": {
+                        "id": "WaitFor",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor",
+                        "children": {
+                          "IsCompleteProvider": {
+                            "id": "IsCompleteProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/IsCompleteProvider",
+                            "children": {
+                              "AssertionsProvider": {
+                                "id": "AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/IsCompleteProvider/AssertionsProvider",
+                                "constructInfo": {
+                                  "fqn": "constructs.Construct",
+                                  "version": "10.0.5"
+                                }
+                              },
+                              "Invoke": {
+                                "id": "Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/IsCompleteProvider/Invoke",
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.CfnResource",
+                                  "version": "2.178.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                              "version": "2.178.1-alpha.0"
+                            }
+                          },
+                          "TimeoutProvider": {
+                            "id": "TimeoutProvider",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/TimeoutProvider",
+                            "children": {
+                              "AssertionsProvider": {
+                                "id": "AssertionsProvider",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/TimeoutProvider/AssertionsProvider",
+                                "constructInfo": {
+                                  "fqn": "constructs.Construct",
+                                  "version": "10.0.5"
+                                }
+                              },
+                              "Invoke": {
+                                "id": "Invoke",
+                                "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/TimeoutProvider/Invoke",
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.CfnResource",
+                                  "version": "2.178.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "@aws-cdk/integ-tests-alpha.AssertionsProvider",
+                              "version": "2.178.1-alpha.0"
+                            }
+                          },
+                          "Role": {
+                            "id": "Role",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/Role",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/WaitFor/Resource",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.178.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "@aws-cdk/integ-tests-alpha.WaiterStateMachine",
+                          "version": "2.178.1-alpha.0"
+                        }
+                      },
+                      "AssertionResults": {
+                        "id": "AssertionResults",
+                        "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/AwsApiCallS3listObjectsV2f35d1f929e10e97cec70478b9f3486b8/AssertionResults",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnOutput",
+                          "version": "2.178.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/integ-tests-alpha.AwsApiCall",
+                      "version": "2.178.1-alpha.0"
+                    }
+                  },
                   "BootstrapVersion": {
                     "id": "BootstrapVersion",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/BootstrapVersion",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/BootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnParameter",
                       "version": "2.178.1"
@@ -1901,7 +2314,7 @@
                   },
                   "CheckBootstrapVersion": {
                     "id": "CheckBootstrapVersion",
-                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/CheckBootstrapVersion",
+                    "path": "ScanLogsOutputS3SbomTest/DefaultTest/DeployAssert/CheckBootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnRule",
                       "version": "2.178.1"

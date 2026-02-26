@@ -17,6 +17,24 @@ export enum ScanLogsOutputType {
 }
 
 /**
+ * SBOM (Software Bill of Materials) output format for Trivy scans.
+ */
+export enum SbomFormat {
+  /**
+   * CycloneDX JSON format.
+   */
+  CYCLONEDX = 'cyclonedx',
+  /**
+   * SPDX JSON format.
+   */
+  SPDX_JSON = 'spdx-json',
+  /**
+   * SPDX Tag-Value format (human-readable).
+   */
+  SPDX = 'spdx',
+}
+
+/**
  * Output configurations for scan logs.
  */
 export interface ScanLogsOutputOptions {
@@ -58,6 +76,12 @@ export interface S3OutputOptions extends ScanLogsOutputOptions {
    * Optional prefix for S3 objects.
    */
   readonly prefix?: string;
+  /**
+   * Optional SBOM format to output in addition to scan logs.
+   *
+   * @default - No SBOM output
+   */
+  readonly sbomFormat?: SbomFormat;
 }
 
 /**
@@ -72,6 +96,13 @@ export interface S3OutputProps {
    * Optional prefix for S3 objects.
    */
   readonly prefix?: string;
+  /**
+   * Optional SBOM format to output in addition to scan logs.
+   * When specified, SBOM will be generated and uploaded to S3.
+   *
+   * @default - No SBOM output
+   */
+  readonly sbomFormat?: SbomFormat;
 }
 
 /**
@@ -131,12 +162,17 @@ class S3Output extends ScanLogsOutput {
    * Optional prefix for S3 objects.
    */
   private readonly prefix?: string;
+  /**
+   * Optional SBOM format.
+   */
+  private readonly sbomFormat?: SbomFormat;
 
   constructor(options: S3OutputProps) {
     super();
 
     this.bucket = options.bucket;
     this.prefix = options.prefix;
+    this.sbomFormat = options.sbomFormat;
   }
 
   public bind(grantee: IGrantable): S3OutputOptions {
@@ -146,6 +182,7 @@ class S3Output extends ScanLogsOutput {
       type: ScanLogsOutputType.S3,
       bucketName: this.bucket.bucketName,
       prefix: this.prefix,
+      sbomFormat: this.sbomFormat,
     };
   }
 }

@@ -965,6 +965,7 @@ const s3OutputOptions: S3OutputOptions = { ... }
 | <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.type">type</a></code> | <code><a href="#image-scanner-with-trivy.ScanLogsOutputType">ScanLogsOutputType</a></code> | The type of scan logs output. |
 | <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.bucketName">bucketName</a></code> | <code>string</code> | The name of the S3 bucket. |
 | <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.prefix">prefix</a></code> | <code>string</code> | Optional prefix for S3 objects. |
+| <code><a href="#image-scanner-with-trivy.S3OutputOptions.property.sbomFormat">sbomFormat</a></code> | <code><a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a></code> | Optional SBOM format to output in addition to scan logs. |
 
 ---
 
@@ -1004,6 +1005,19 @@ Optional prefix for S3 objects.
 
 ---
 
+##### `sbomFormat`<sup>Optional</sup> <a name="sbomFormat" id="image-scanner-with-trivy.S3OutputOptions.property.sbomFormat"></a>
+
+```typescript
+public readonly sbomFormat: SbomFormat;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a>
+- *Default:* No SBOM output
+
+Optional SBOM format to output in addition to scan logs.
+
+---
+
 ### S3OutputProps <a name="S3OutputProps" id="image-scanner-with-trivy.S3OutputProps"></a>
 
 Configuration for scan logs output to S3 bucket.
@@ -1022,6 +1036,7 @@ const s3OutputProps: S3OutputProps = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.S3OutputProps.property.bucket">bucket</a></code> | <code>aws-cdk-lib.aws_s3.IBucket</code> | The S3 bucket to output scan logs. |
 | <code><a href="#image-scanner-with-trivy.S3OutputProps.property.prefix">prefix</a></code> | <code>string</code> | Optional prefix for S3 objects. |
+| <code><a href="#image-scanner-with-trivy.S3OutputProps.property.sbomFormat">sbomFormat</a></code> | <code><a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a></code> | Optional SBOM format to output in addition to scan logs. |
 
 ---
 
@@ -1046,6 +1061,21 @@ public readonly prefix: string;
 - *Type:* string
 
 Optional prefix for S3 objects.
+
+---
+
+##### `sbomFormat`<sup>Optional</sup> <a name="sbomFormat" id="image-scanner-with-trivy.S3OutputProps.property.sbomFormat"></a>
+
+```typescript
+public readonly sbomFormat: SbomFormat;
+```
+
+- *Type:* <a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a>
+- *Default:* No SBOM output
+
+Optional SBOM format to output in addition to scan logs.
+
+When specified, SBOM will be generated and uploaded to S3.
 
 ---
 
@@ -1367,6 +1397,41 @@ Enum for ImageConfigScanners.
 
 
 ##### `SECRET` <a name="SECRET" id="image-scanner-with-trivy.ImageConfigScanners.SECRET"></a>
+
+---
+
+
+### SbomFormat <a name="SbomFormat" id="image-scanner-with-trivy.SbomFormat"></a>
+
+SBOM (Software Bill of Materials) output format for Trivy scans.
+
+#### Members <a name="Members" id="Members"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#image-scanner-with-trivy.SbomFormat.CYCLONEDX">CYCLONEDX</a></code> | CycloneDX JSON format. |
+| <code><a href="#image-scanner-with-trivy.SbomFormat.SPDX_JSON">SPDX_JSON</a></code> | SPDX JSON format. |
+| <code><a href="#image-scanner-with-trivy.SbomFormat.SPDX">SPDX</a></code> | SPDX Tag-Value format (human-readable). |
+
+---
+
+##### `CYCLONEDX` <a name="CYCLONEDX" id="image-scanner-with-trivy.SbomFormat.CYCLONEDX"></a>
+
+CycloneDX JSON format.
+
+---
+
+
+##### `SPDX_JSON` <a name="SPDX_JSON" id="image-scanner-with-trivy.SbomFormat.SPDX_JSON"></a>
+
+SPDX JSON format.
+
+---
+
+
+##### `SPDX` <a name="SPDX" id="image-scanner-with-trivy.SbomFormat.SPDX"></a>
+
+SPDX Tag-Value format (human-readable).
 
 ---
 

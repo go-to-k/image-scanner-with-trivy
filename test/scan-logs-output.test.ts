@@ -3,7 +3,7 @@ import { Match, Template } from 'aws-cdk-lib/assertions';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { ImageScannerWithTrivyV2, ScanLogsOutput } from '../src';
+import { ImageScannerWithTrivyV2, ScanLogsOutput, SbomFormat } from '../src';
 
 const getCloudWatchLogsTemplate = (): Template => {
   const app = new App();
@@ -19,7 +19,7 @@ const getCloudWatchLogsTemplate = (): Template => {
   return Template.fromStack(stack);
 };
 
-const getS3Template = (prefix?: string): Template => {
+const getS3Template = (prefix?: string, sbomFormat?: SbomFormat): Template => {
   const app = new App();
   const stack = new Stack(app, 'TestStack');
 
@@ -29,7 +29,7 @@ const getS3Template = (prefix?: string): Template => {
   new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
     imageUri: 'imageUri',
     repository: repository,
-    scanLogsOutput: ScanLogsOutput.s3({ bucket, prefix }),
+    scanLogsOutput: ScanLogsOutput.s3({ bucket, prefix, sbomFormat }),
   });
   return Template.fromStack(stack);
 };
@@ -130,6 +130,20 @@ describe('S3', () => {
           Ref: 'ScanLogsBucketD650306F',
         },
         prefix: 'scan-logs/',
+      },
+    });
+  });
+
+  test('correctly sets output configuration to S3 with SBOM format', () => {
+    const template = getS3Template(undefined, SbomFormat.CYCLONEDX);
+
+    template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+      output: {
+        type: 's3',
+        bucketName: {
+          Ref: 'ScanLogsBucketD650306F',
+        },
+        sbomFormat: 'cyclonedx',
       },
     });
   });
