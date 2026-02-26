@@ -155,18 +155,6 @@ You can configure an SNS topic to receive notifications when vulnerabilities or 
 The notification is sent **regardless of the `failOnVulnerability` setting**. This means you can receive notifications even when you don't want the deployment to fail.
 
 ```ts
-import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
-import { Topic } from 'aws-cdk-lib/aws-sns';
-
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
-
 const notificationTopic = new Topic(this, 'VulnerabilityNotificationTopic');
 
 new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
@@ -193,17 +181,6 @@ This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED stat
 when image scanning failures occur.
 
 ```ts
-import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
-
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
-
 new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
