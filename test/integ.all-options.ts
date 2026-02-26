@@ -10,6 +10,8 @@ import {
   TargetImagePlatform,
   TrivyIgnore,
 } from '../src';
+import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { Construct } from 'constructs';
 
 const IGNORE_FOR_PASSING_TESTS = [
   'CVE-2023-37920',
@@ -26,6 +28,9 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
   exclude: ['node_modules'],
   platform: Platform.LINUX_ARM64,
 });
+
+const blockedConstruct = new Construct(stack, 'BlockedConstruct');
+new Queue(blockedConstruct, 'BlockedQueue');
 
 new ImageScannerWithTrivyV2(stack, 'Scanner', {
   imageUri: image.imageUri,
@@ -46,6 +51,7 @@ new ImageScannerWithTrivyV2(stack, 'Scanner', {
     retention: RetentionDays.ONE_DAY,
   }),
   suppressErrorOnRollback: true,
+  blockConstructs: [blockedConstruct],
 });
 
 new IntegTest(app, 'AllOptionsTest', {
