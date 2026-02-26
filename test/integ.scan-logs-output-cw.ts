@@ -42,7 +42,19 @@ const test = new IntegTest(app, 'ScanLogsOutputCWTest', {
 test.assertions
   .awsApiCall('CloudWatchLogs', 'filterLogEvents', {
     logGroupName: scanLogsOutputLogGroup.logGroupName,
+    filterPattern: 'Vulnerability scanning is enabled',
     limit: 1,
   })
   .assertAtPath('events.0.message', ExpectedResult.stringLikeRegexp('.+'))
+  .waitForAssertions();
+
+// Assert that two log streams (stdout and stderr) exist
+test.assertions
+  .awsApiCall('CloudWatchLogs', 'describeLogStreams', {
+    logGroupName: scanLogsOutputLogGroup.logGroupName,
+  })
+  // Note: describeLogStreams returns log streams sorted by name in lexicographical order,
+  // so stderr comes before stdout (e < o)
+  .assertAtPath('logStreams.0.logStreamName', ExpectedResult.stringLikeRegexp('stderr'))
+  .assertAtPath('logStreams.1.logStreamName', ExpectedResult.stringLikeRegexp('stdout'))
   .waitForAssertions();

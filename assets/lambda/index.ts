@@ -55,7 +55,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const options = makeOptions(props);
   const response = executeTrivyCommand(props.imageUri, options);
 
-  await outputScanLogs(response, props.imageUri, props.output);
+  await outputScanLogs(response, props.imageUri, props.exitCode == undefined, props.output);
 
   if (response.status === 0) {
     return funcResponse;
@@ -143,11 +143,16 @@ const makeTrivyIgnoreFile = (trivyIgnore: string[], fileType?: string) => {
 const outputScanLogs = async (
   response: SpawnSyncReturns<Buffer>,
   imageUri: string,
+  isV2: boolean, // TODO: Remove this in the next major version
   output?: ScanLogsOutputOptions,
 ) => {
   switch (output?.type) {
     case ScanLogsOutputType.CLOUDWATCH_LOGS:
-      await outputScanLogsToCWLogs(response, output as CloudWatchLogsOutputOptions, imageUri);
+      if (isV2) {
+        await outputScanLogsToCWLogsV2(response, output as CloudWatchLogsOutputOptions, imageUri);
+      } else {
+        await outputScanLogsToCWLogs(response, output as CloudWatchLogsOutputOptions, imageUri);
+      }
       break;
     case ScanLogsOutputType.S3:
       await outputScanLogsToS3(response, output as S3OutputOptions, imageUri);
@@ -159,6 +164,7 @@ const outputScanLogs = async (
   }
 };
 
+// TODO: Remove this function in the next major version
 const outputScanLogsToCWLogs = async (
   response: SpawnSyncReturns<Buffer>,
   output: CloudWatchLogsOutputOptions,
@@ -209,6 +215,78 @@ const outputScanLogsToCWLogs = async (
   console.log(
     `Scan logs output to the log group: ${output.logGroupName}, log stream: ${logStreamName}`,
   );
+};
+
+const outputScanLogsToCWLogsV2 = async (
+  response: SpawnSyncReturns<Buffer>,
+  output: CloudWatchLogsOutputOptions,
+  imageUri: string,
+) => {
+  // LogStream name must satisfy regular expression pattern: `[^:*]*`.
+  // So, we can't use `:` in logStreamName.
+  const [uri, tag] = imageUri.split(':');
+  const baseLogStreamName = tag ? `uri=${uri},tag=${tag}` : `uri=${uri}`;
+  const stdoutLogStreamName = `${baseLogStreamName}/stdout`;
+  const stderrLogStreamName = `${baseLogStreamName}/stderr`;
+
+  const timestamp = new Date().getTime();
+
+  // Create stdout log stream and put log events
+  await createLogStreamAndPutEvents(
+    output.logGroupName,
+    stdoutLogStreamName,
+    timestamp,
+    response.stdout.toString(),
+  );
+
+  // Create stderr log stream and put log events
+  await createLogStreamAndPutEvents(
+    output.logGroupName,
+    stderrLogStreamName,
+    timestamp,
+    response.stderr.toString(),
+  );
+
+  console.log(
+    `Scan logs output to the log group: ${output.logGroupName}\n  stdout stream: ${stdoutLogStreamName}\n  stderr stream: ${stderrLogStreamName}`,
+  );
+};
+
+const createLogStreamAndPutEvents = async (
+  logGroupName: string,
+  logStreamName: string,
+  timestamp: number,
+  message: string,
+) => {
+  // Ensure log stream exists before putting log events.
+  try {
+    await cwClient.send(
+      new CreateLogStreamCommand({
+        logGroupName,
+        logStreamName,
+      }),
+    );
+  } catch (e) {
+    // If the log stream already exists, ignore the error.
+    if (e instanceof ResourceAlreadyExistsException) {
+      console.log(`Log stream ${logStreamName} already exists in log group ${logGroupName}.`);
+    } else {
+      throw e;
+    }
+  }
+
+  const input: PutLogEventsCommandInput = {
+    logGroupName,
+    logStreamName,
+    logEvents: [
+      {
+        timestamp,
+        message,
+      },
+    ],
+  };
+  const command = new PutLogEventsCommand(input);
+  await cwClient.send(command);
 };
 
 const outputScanLogsToS3 = async (

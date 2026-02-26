@@ -1,6 +1,6 @@
 {
  "Resources": {
-  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9": {
+  "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b": {
    "Type": "Custom::DeployAssert@SdkCallCloudWatchLogsfilterLogEvents",
    "Properties": {
     "ServiceToken": {
@@ -14,7 +14,7 @@
     "expected": "{\"$StringLike\":\".+\"}",
     "actualPath": "events.0.message",
     "stateMachineArn": {
-     "Ref": "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForE2DE9D23"
+     "Ref": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForC6284643"
     },
     "parameters": {
      "logGroupName": {
@@ -29,18 +29,19 @@
        ]
       ]
      },
+     "filterPattern": "\"Vulnerability scanning is enabled\"",
      "limit": "1"
     },
     "flattenResponse": "true",
     "outputPaths": [
      "events.0.message"
     ],
-    "salt": "1772020650175"
+    "salt": "1772084754441"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForIsCompleteProviderInvoke42EB9F5C": {
+  "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForIsCompleteProviderInvokeD77D093C": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -52,13 +53,13 @@
     },
     "Principal": {
      "Fn::GetAtt": [
-      "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F",
+      "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33",
       "Arn"
      ]
     }
    }
   },
-  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForTimeoutProviderInvokeDB4AF93A": {
+  "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForTimeoutProviderInvoke1F65CCA0": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -70,13 +71,13 @@
     },
     "Principal": {
      "Fn::GetAtt": [
-      "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F",
+      "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33",
       "Arn"
      ]
     }
    }
   },
-  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F": {
+  "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -121,7 +122,7 @@
     ]
    }
   },
-  "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForE2DE9D23": {
+  "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForC6284643": {
    "Type": "AWS::StepFunctions::StateMachine",
    "Properties": {
     "DefinitionString": {
@@ -148,13 +149,13 @@
     },
     "RoleArn": {
      "Fn::GetAtt": [
-      "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F",
+      "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33",
       "Arn"
      ]
     }
    },
    "DependsOn": [
-    "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9WaitForRoleE9E2C79F"
+    "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33"
    ]
   },
   "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73": {
@@ -186,6 +187,24 @@
         {
          "Action": [
           "logs:FilterLogEvents"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "states:StartExecution"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "logs:DescribeLogStreams"
          ],
          "Effect": "Allow",
          "Resource": [
@@ -264,6 +283,15 @@
         {
          "Action": [
           "logs:FilterLogEvents"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "logs:DescribeLogStreams"
          ],
          "Effect": "Allow",
          "Resource": [
@@ -353,13 +381,178 @@
      ]
     }
    }
+  },
+  "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f": {
+   "Type": "Custom::DeployAssert@SdkCallCloudWatchLogsdescribeLogStreams",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F",
+      "Arn"
+     ]
+    },
+    "service": "CloudWatchLogs",
+    "api": "describeLogStreams",
+    "expected": "{\"$StringLike\":\"stdout\"}",
+    "actualPath": "logStreams.1.logStreamName",
+    "stateMachineArn": {
+     "Ref": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitFor359AF91C"
+    },
+    "parameters": {
+     "logGroupName": {
+      "Fn::Join": [
+       "",
+       [
+        "\"",
+        {
+         "Fn::ImportValue": "ScanLogsOutputCWStack:ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
+        },
+        "\""
+       ]
+      ]
+     }
+    },
+    "flattenResponse": "true",
+    "outputPaths": [
+     "logStreams.0.logStreamName",
+     "logStreams.1.logStreamName"
+    ],
+    "salt": "1772084754442"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForIsCompleteProviderInvoke2C1F5A06": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForTimeoutProviderInvoke34404CF1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": "InlineInvokeFunctions",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Action": "lambda:InvokeFunction",
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+            "Arn"
+           ]
+          },
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitFor359AF91C": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"framework-isComplete-task\",\"States\":{\"framework-isComplete-task\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":5,\"MaxAttempts\":360,\"BackoffRate\":1}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"framework-onTimeout-task\"}],\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+         "Arn"
+        ]
+       },
+       "\"},\"framework-onTimeout-task\":{\"End\":true,\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+         "Arn"
+        ]
+       },
+       "\"}}}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C"
+   ]
   }
  },
  "Outputs": {
-  "AssertionResultsAwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9": {
+  "AssertionResultsAwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b": {
    "Value": {
     "Fn::GetAtt": [
-     "AwsApiCallCloudWatchLogsfilterLogEvents6571eef91b15a08e0ae33475f7e5c7a9",
+     "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b",
+     "assertion"
+    ]
+   }
+  },
+  "AssertionResultsAwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f": {
+   "Value": {
+    "Fn::GetAtt": [
+     "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f",
      "assertion"
     ]
    }
