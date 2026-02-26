@@ -1,7 +1,5 @@
 # image-scanner-with-trivy
 
-TODO: V2 migration and changes between V1 and V2.
-
 ## What is
 
 This is an AWS CDK Construct that allows you to **scan container images with Trivy in CDK deployment layer**.
@@ -24,10 +22,12 @@ npm install image-scanner-with-trivy
 
 ### CDK Code
 
+**Note: We recommend using `ImageScannerWithTrivyV2`.** See the [V2 Construct](#v2-construct) section for details and migration guide.
+
 The following code is a minimal example.
 
 ```ts
-import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 
 const repository = new Repository(this, 'ImageRepository', {
   removalPolicy: RemovalPolicy.DESTROY,
@@ -43,7 +43,7 @@ const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
   dest: new DockerImageName(`${repository.repositoryUri}:latest`),
 });
 
-const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // If vulnerabilities are detected, the following `ECRDeployment` will not be executed, deployment will fail.
@@ -67,7 +67,7 @@ You can output scan logs to a specific CloudWatch Logs log group using `ScanLogs
 ```ts
 const scanLogsLogGroup = new LogGroup(this, 'ScanLogsLogGroup');
 
-const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Use `ScanLogsOutput.cloudWatchLogs` method to specify the log group.
@@ -82,7 +82,7 @@ You can output scan logs to an S3 bucket using `ScanLogsOutput.s3`.
 ```ts
 const scanLogsBucket = new Bucket(this, 'ScanLogsBucket');
 
-const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Use `ScanLogsOutput.s3` method to specify the S3 bucket.
@@ -104,7 +104,7 @@ Available SBOM formats:
 ```ts
 const scanLogsBucket = new Bucket(this, 'ScanLogsBucket');
 
-const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Use `ScanLogsOutput.s3` method to specify the S3 bucket.
@@ -119,11 +119,11 @@ const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 
 If you want to use a custom log group for the Scanner Lambda function's default log group, you can specify the `defaultLogGroup` option.
 
-If you use ImageScannerWithTrivy construct multiple times in the same stack, you have to set the same log group for `defaultLogGroup` for each construct.
+If you use ImageScannerWithTrivyV2 construct multiple times in the same stack, you have to set the same log group for `defaultLogGroup` for each construct.
 When you set different log groups for each construct, a warning message will be displayed.
 
 ```ts
-import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 
 const repository = new Repository(this, 'ImageRepository', {
   removalPolicy: RemovalPolicy.DESTROY,
@@ -136,7 +136,7 @@ const image = new DockerImageAsset(this, 'DockerImage', {
 
 const logGroup = new LogGroup(this, 'LogGroup');
 
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Specify the log group to use as the default log group for Scanner Lambda.
@@ -144,8 +144,8 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 });
 
 // NG example
-// When multiple ImageScannerWithTrivy constructs have different default log groups, a warning will be displayed.
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivyWithAnotherDefaultLogGroup', {
+// When multiple ImageScannerWithTrivyV2 constructs have different default log groups, a warning will be displayed.
+new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivyWithAnotherDefaultLogGroup', {
   imageUri: image.imageUri,
   repository: image.repository,
   defaultLogGroup: new LogGroup(this, 'AnotherDefaultLogGroup'), // NG example - different log group from the previous construct
@@ -165,7 +165,7 @@ This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED stat
 when image scanning failures occur.
 
 ```ts
-import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 
 const repository = new Repository(this, 'ImageRepository', {
   removalPolicy: RemovalPolicy.DESTROY,
@@ -176,7 +176,7 @@ const image = new DockerImageAsset(this, 'DockerImage', {
   directory: resolve(__dirname, './'),
 });
 
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Default is true - suppress errors during rollback to prevent ROLLBACK_FAILED
@@ -193,7 +193,7 @@ You can configure an SNS topic to receive notifications when vulnerabilities or 
 The notification is sent **regardless of the `failOnVulnerability` setting**. This means you can receive notifications even when you don't want the deployment to fail.
 
 ```ts
-import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 
 const repository = new Repository(this, 'ImageRepository', {
@@ -207,7 +207,7 @@ const image = new DockerImageAsset(this, 'DockerImage', {
 
 const notificationTopic = new Topic(this, 'VulnerabilityNotificationTopic');
 
-new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Receive notifications for vulnerabilities and EOL detection
@@ -218,6 +218,125 @@ new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
 ```
 
 You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
+
+## V2 Construct
+
+### What's changed in V2?
+
+The `ImageScannerWithTrivyV2` construct introduces several API improvements and new features while maintaining the same core functionality:
+
+1. **Improved API Design**
+   - `exitCode` and `exitOnEol` → `failOnVulnerability` (boolean): More intuitive boolean property to control whether to fail on vulnerabilities or EOL
+   - `platform` → `targetImagePlatform`: Uses the new `TargetImagePlatform` class for better type safety
+
+2. **Improved Trivy Ignore Configuration**
+   - New `TrivyIgnore` class for more flexible ignore configuration
+   - Support for both inline rules (`TrivyIgnore.fromRules()`) and file paths (`TrivyIgnore.fromFilePath()`)
+   - Support for both `.trivyignore` and `.trivyignore.yaml` formats
+
+3. **Enhanced Log Management**
+   - `defaultLogGroup` property for Scanner Lambda's default log group
+   - Simplified log configuration by consolidating previous separate properties
+   - CloudWatch Logs output now supports separate log streams for stdout and stderr
+
+4. **New Features**
+   - S3 support for scan logs output with SBOM format support (`ScanLogsOutput.s3()`)
+   - SNS notification support for vulnerabilities (`vulnsNotificationTopic`): Receive notifications even when you don't want the deployment to fail by setting `failOnVulnerability: false`
+   - `blockConstructs` property to automatically block dependent constructs on vulnerability detection
+
+### Migration from V1 to V2
+
+To migrate from V1 to V2, follow these steps:
+
+1. **Update the import statement**:
+
+```ts
+// Before (V1)
+import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
+
+// After (V2)
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
+```
+
+1. **Update to new properties**:
+
+```ts
+// Before (V1)
+new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  exitCode: 1,  // or 0
+  exitOnEol: 1, // or 0
+  platform: 'linux/amd64',
+  trivyIgnore: [
+    'CVE-2021-12345',
+    'CVE-2021-67890',
+  ],
+});
+
+// After (V2)
+new ImageScannerWithTrivyV2(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  failOnVulnerability: true, // or false
+  // failOnEol behavior is now included in failOnVulnerability
+  targetImagePlatform: TargetImagePlatform.LINUX_AMD64,
+  trivyIgnore: TrivyIgnore.fromRules([
+    'CVE-2021-12345',
+    'CVE-2021-67890',
+  ]),
+});
+```
+
+1. **Update log group configuration** (if you were using custom log settings):
+
+```ts
+// Before (V1)
+new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  defaultLogGroupRetentionDays: RetentionDays.ONE_WEEK,
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY,
+});
+
+// After (V2)
+// Create a custom log group with retention and removal policy
+const logGroup = new LogGroup(this, 'DefaultLogGroup', {
+  retention: RetentionDays.ONE_WEEK,
+  removalPolicy: RemovalPolicy.DESTROY,
+});
+
+// Use `defaultLogGroup` for Scanner Lambda's default log group
+new ImageScannerWithTrivyV2(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  defaultLogGroup: logGroup,
+});
+```
+
+### Important Notes on Migration
+
+⚠️ **CloudWatch Logs Considerations**
+
+When you migrate from V1 to V2, the following log behavior changes occur:
+
+1. **Different Log Group**: V2 uses a new internal Lambda function (with different UUID). As a result, **scan logs will be output to a different log group** than V1.
+
+2. **Previous Log Group Retention**: The V1 log group behavior after migration depends on your `defaultLogGroupRemovalPolicy` setting:
+
+```ts
+// V1 construct configuration
+new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  defaultLogGroupRemovalPolicy: RemovalPolicy.DESTROY, // or RETAIN (default)
+});
+```
+
+- If you set `RemovalPolicy.DESTROY`, the V1 log group will be deleted when you remove the V1 construct.
+- If you used the **default** (`RemovalPolicy.RETAIN`), **the V1 log group will be retained** in your AWS account. You'll need to manually delete it if desired, or keep it for log history.
+
+If you want to preserve your V1 scan logs, make sure to use `RemovalPolicy.RETAIN` or back them up before migration.
 
 ## Trivy's official documentation
 
