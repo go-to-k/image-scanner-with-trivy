@@ -7,6 +7,7 @@ import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { Effect } from 'aws-cdk-lib/aws-iam';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { Topic } from 'aws-cdk-lib/aws-sns';
+import { Construct } from 'constructs';
 import {
   ImageScannerWithTrivyV2,
   ScanLogsOutput,
@@ -105,6 +106,29 @@ describe('ImageScannerWithTrivyV2', () => {
         },
       });
     });
+  });
+
+  test('blockConstructs adds dependency to specified constructs', () => {
+    const app = new App();
+    const stack = new Stack(app, 'TestStack');
+
+    const repository = new Repository(stack, 'ImageRepository', {});
+    const construct1 = new Construct(stack, 'Construct1');
+    const construct2 = new Construct(stack, 'Construct2');
+
+    const imageScanner = new ImageScannerWithTrivyV2(stack, 'ImageScannerWithTrivyV2', {
+      imageUri: 'imageUri',
+      repository: repository,
+      blockConstructs: [construct1, construct2],
+    });
+
+    const noDependencies = repository.node.dependencies;
+    const dependencies1 = construct1.node.dependencies;
+    const dependencies2 = construct2.node.dependencies;
+
+    expect(noDependencies).not.toContain(imageScanner);
+    expect(dependencies1).toContain(imageScanner);
+    expect(dependencies2).toContain(imageScanner);
   });
 
   describe('suppressErrorOnRollback', () => {

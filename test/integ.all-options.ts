@@ -3,6 +3,8 @@ import { IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { Construct } from 'constructs';
 import {
   ImageScannerWithTrivyV2,
   Scanners,
@@ -27,6 +29,9 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
   platform: Platform.LINUX_ARM64,
 });
 
+const blockedConstruct = new Construct(stack, 'BlockedConstruct');
+new Queue(blockedConstruct, 'BlockedQueue');
+
 new ImageScannerWithTrivyV2(stack, 'Scanner', {
   imageUri: image.imageUri,
   repository: image.repository,
@@ -46,6 +51,7 @@ new ImageScannerWithTrivyV2(stack, 'Scanner', {
     retention: RetentionDays.ONE_DAY,
   }),
   suppressErrorOnRollback: true,
+  blockConstructs: [blockedConstruct],
 });
 
 new IntegTest(app, 'AllOptionsTest', {

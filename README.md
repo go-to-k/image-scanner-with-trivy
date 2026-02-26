@@ -38,18 +38,18 @@ const image = new DockerImageAsset(this, 'DockerImage', {
   directory: resolve(__dirname, './'),
 });
 
-// Add properties you want for trivy options (ignoreUnfixed, severity, scanners, trivyIgnore, etc).
-const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-});
-
-// By adding `addDependency`, if the vulnerabilities are detected by `ImageScannerWithTrivy`, the following `ECRDeployment` will not be executed, deployment will fail.
 const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
   src: new DockerImageName(image.imageUri),
   dest: new DockerImageName(`${repository.repositoryUri}:latest`),
 });
-ecrDeployment.node.addDependency(imageScanner);
+
+const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // If vulnerabilities are detected, the following `ECRDeployment` will not be executed, deployment will fail.
+  // Note: This option only works when `failOnVulnerability` is `true` (default).
+  blockConstructs: [ecrDeployment],
+});
 ```
 
 ### Scan Logs Output

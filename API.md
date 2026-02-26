@@ -673,6 +673,7 @@ const imageScannerWithTrivyV2Props: ImageScannerWithTrivyV2Props = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.imageUri">imageUri</a></code> | <code>string</code> | Image URI for scan target. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.repository">repository</a></code> | <code>aws-cdk-lib.aws_ecr.IRepository</code> | Repository including the image URI for scan target. |
+| <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.blockConstructs">blockConstructs</a></code> | <code>constructs.IConstruct[]</code> | Constructs to block if vulnerabilities are detected. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.defaultLogGroup">defaultLogGroup</a></code> | <code>aws-cdk-lib.aws_logs.ILogGroup</code> | The Scanner Lambda function's default log group. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.failOnVulnerability">failOnVulnerability</a></code> | <code>boolean</code> | Whether to fail on vulnerabilities or EOL (End of Life) images. |
 | <code><a href="#image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.ignoreUnfixed">ignoreUnfixed</a></code> | <code>boolean</code> | The unfixed/unfixable vulnerabilities mean that the patch has not yet been provided on their distribution. |
@@ -711,6 +712,25 @@ public readonly repository: IRepository;
 Repository including the image URI for scan target.
 
 Because of grantPull to CustomResourceLambda.
+
+---
+
+##### `blockConstructs`<sup>Optional</sup> <a name="blockConstructs" id="image-scanner-with-trivy.ImageScannerWithTrivyV2Props.property.blockConstructs"></a>
+
+```typescript
+public readonly blockConstructs: IConstruct[];
+```
+
+- *Type:* constructs.IConstruct[]
+- *Default:* no constructs to block
+
+Constructs to block if vulnerabilities are detected.
+
+This is equivalent to calling `construct.node.addDependency(imageScanner)` for each construct.
+
+Note: This option only works when `failOnVulnerability` is `true` (default).
+If `failOnVulnerability` is set to `false`, the scanner will not fail on vulnerabilities,
+and the specified constructs will not be blocked.
 
 ---
 

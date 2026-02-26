@@ -14,7 +14,7 @@ import {
 import { ILogGroup } from 'aws-cdk-lib/aws-logs';
 import { ITopic } from 'aws-cdk-lib/aws-sns';
 import { Provider } from 'aws-cdk-lib/custom-resources';
-import { Construct } from 'constructs';
+import { Construct, IConstruct } from 'constructs';
 import { ScannerCustomResourceProps } from './custom-resource-props';
 import { ScanLogsOutput } from './scan-logs-output';
 import { Severity, Scanners, ImageConfigScanners } from './types';
@@ -283,6 +283,19 @@ export interface ImageScannerWithTrivyV2Props {
    * @default - no notification
    */
   readonly vulnsNotificationTopic?: ITopic;
+
+  /**
+   * Constructs to block if vulnerabilities are detected.
+   *
+   * This is equivalent to calling `construct.node.addDependency(imageScanner)` for each construct.
+   *
+   * Note: This option only works when `failOnVulnerability` is `true` (default).
+   * If `failOnVulnerability` is set to `false`, the scanner will not fail on vulnerabilities,
+   * and the specified constructs will not be blocked.
+   *
+   * @default - no constructs to block
+   */
+  readonly blockConstructs?: IConstruct[];
 }
 
 // Maximum Lambda memory size for default AWS account without quota limit increase
@@ -389,6 +402,11 @@ export class ImageScannerWithTrivyV2 extends Construct {
       resourceType: 'Custom::ImageScannerWithTrivyV2',
       properties: imageScannerProperties,
       serviceToken: imageScannerProvider.serviceToken,
+    });
+
+    // Block constructs if vulnerabilities are detected
+    props.blockConstructs?.forEach((construct) => {
+      construct.node.addDependency(this);
     });
   }
 

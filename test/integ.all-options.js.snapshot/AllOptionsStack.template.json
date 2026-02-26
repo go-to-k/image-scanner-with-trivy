@@ -1,5 +1,16 @@
 {
  "Resources": {
+  "BlockedConstructBlockedQueueCFDDC5AD": {
+   "Type": "AWS::SQS::Queue",
+   "DependsOn": [
+    "ScannerProviderframeworkonEvent93283B50",
+    "ScannerProviderframeworkonEventServiceRoleDefaultPolicy3BF43B7A",
+    "ScannerProviderframeworkonEventServiceRole5EA00D06",
+    "Scanner1EAEC57B"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
   "DefaultLogGroup696834B2": {
    "Type": "AWS::Logs::LogGroup",
    "Properties": {
