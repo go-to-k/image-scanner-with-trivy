@@ -293,6 +293,17 @@ exports[`ImageScannerWithTrivy Snapshot test 1`] = `
           ],
         },
         "addr": "c86a2a03c1252a9e84323d4e55c74690e11e4a44ce",
+        "defaultLogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3",
+              },
+            ],
+          ],
+        },
         "exitCode": 1,
         "exitOnEol": 1,
         "failOnVulnerability": "true",
