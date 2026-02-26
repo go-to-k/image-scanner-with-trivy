@@ -1,6 +1,15 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { Annotations, Aspects, CustomResource, Duration, Size, Stack, Token } from 'aws-cdk-lib';
+import {
+  Annotations,
+  Aspects,
+  CustomResource,
+  Duration,
+  IgnoreMode,
+  Size,
+  Stack,
+  Token,
+} from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
@@ -331,10 +340,7 @@ export class ImageScannerWithTrivyV2 extends Construct {
       handler: Handler.FROM_IMAGE,
       code: AssetCode.fromAssetImage(join(__dirname, '../assets/lambda'), {
         platform: Platform.LINUX_ARM64,
-        // exclude node_modules
-        // because the native binary of the installed esbuild changes depending on the cpu architecture
-        // and the hash value of the image asset changes depending on the execution environment.
-        exclude: ['node_modules'],
+        ignoreMode: IgnoreMode.DOCKER,
       }),
       architecture: Architecture.ARM_64,
       timeout: Duration.seconds(900),
