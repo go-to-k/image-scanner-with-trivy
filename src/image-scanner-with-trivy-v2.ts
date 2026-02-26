@@ -381,6 +381,8 @@ export class ImageScannerWithTrivyV2 extends Construct {
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),
       vulnsTopicArn: props.vulnsNotificationTopic?.topicArn,
+      defaultLogGroupName:
+        this.defaultLogGroup?.logGroupName ?? `/aws/lambda/${customResourceLambda.functionName}`,
     };
 
     new CustomResource(this, 'Resource', {

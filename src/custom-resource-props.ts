@@ -25,4 +25,5 @@ export interface ScannerCustomResourceProps {
   readonly output?: ScanLogsOutputOptions;
   readonly suppressErrorOnRollback: string;
   readonly vulnsTopicArn?: string;
+  readonly defaultLogGroupName: string;
 }

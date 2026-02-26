@@ -68,7 +68,13 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const errorMessage = `Error: ${response.error}\nSignal: ${response.signal}\nStatus: ${status}\nImage Scanner returned fatal errors. You may have vulnerabilities. See logs.`;
 
   if (props.vulnsTopicArn) {
-    await sendVulnsNotification(props.vulnsTopicArn, errorMessage, props.imageUri);
+    await sendVulnsNotification(
+      props.vulnsTopicArn,
+      errorMessage,
+      props.imageUri,
+      props.defaultLogGroupName,
+      props.output,
+    );
   }
 
   if (props.failOnVulnerability === 'false') {
@@ -372,7 +378,24 @@ const isRollbackInProgress = async (stackId: string): Promise<boolean> => {
   );
 };
 
-const sendVulnsNotification = async (topicArn: string, errorMessage: string, imageUri: string) => {
+const sendVulnsNotification = async (
+  topicArn: string,
+  errorMessage: string,
+  imageUri: string,
+  defaultLogGroupName: string,
+  output?: ScanLogsOutputOptions,
+) => {
+  // Generate scan logs location message
+  let scanLogsLocation = `CloudWatch Logs: ${defaultLogGroupName}`;
+  if (output?.type === ScanLogsOutputType.CLOUDWATCH_LOGS) {
+    const cwOutput = output as CloudWatchLogsOutputOptions;
+    scanLogsLocation = `CloudWatch Logs: ${cwOutput.logGroupName}`;
+  } else if (output?.type === ScanLogsOutputType.S3) {
+    const s3Output = output as S3OutputOptions;
+    const prefix = s3Output.prefix ? `/${s3Output.prefix}` : '';
+    scanLogsLocation = `S3: s3://${s3Output.bucketName}${prefix}`;
+  }
+
   // AWS Chatbot message format
   // Reference: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
   const chatbotMessage = {
@@ -380,12 +403,12 @@ const sendVulnsNotification = async (topicArn: string, errorMessage: string, ima
     source: 'custom',
     content: {
       title: '🔒 Image Scanner with Trivy - Vulnerability Alert',
-      description: `Image: ${imageUri}\n\nDetails:\n${errorMessage}`,
+      description: `Image: ${imageUri}\n\nScan Logs: ${scanLogsLocation}\n\nDetails:\n${errorMessage}`,
     },
   };
 
   // Email
-  const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\n${errorMessage}`;
+  const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\nScan Logs: ${scanLogsLocation}\n\n${errorMessage}`;
 
   // SNS message structure: Supports both Email and Chatbot
   // Default is plain text for Email

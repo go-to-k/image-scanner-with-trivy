@@ -268,6 +268,39 @@ describe('ImageScannerWithTrivyV2', () => {
         ),
       );
     });
+
+    test('passes defaultLogGroupName to custom resource props when defaultLogGroup is provided', () => {
+      template.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        defaultLogGroupName: {
+          Ref: 'DefaultLogGroup696834B2',
+        },
+      });
+    });
+
+    test('passes generated lambda log group name to custom resource props when defaultLogGroup is not provided', () => {
+      const app = new App();
+      const stack = new Stack(app, 'TestStack');
+
+      new ImageScannerWithTrivyV2(stack, 'WithoutDefaultLogGroup', {
+        imageUri: 'imageUri',
+        repository: new Repository(stack, 'ImageRepository', {}),
+      });
+
+      const templateWithoutLogGroup = Template.fromStack(stack);
+      templateWithoutLogGroup.hasResourceProperties('Custom::ImageScannerWithTrivyV2', {
+        defaultLogGroupName: {
+          'Fn::Join': [
+            '',
+            [
+              '/aws/lambda/',
+              {
+                Ref: 'CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1',
+              },
+            ],
+          ],
+        },
+      });
+    });
   });
 
   test('throws if memorySize > 10240', () => {

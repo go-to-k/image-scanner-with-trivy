@@ -324,6 +324,7 @@ export class ImageScannerWithTrivy extends Construct {
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),
+      defaultLogGroupName: `/aws/lambda/${customResourceLambda.functionName}`,
     };
 
     new CustomResource(this, 'Resource', {
