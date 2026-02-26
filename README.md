@@ -58,25 +58,60 @@ If you output the scan logs to other than the default log group, you can specify
 
 This option is useful when you want to choose where to output the scan logs.
 
-Currently, CloudWatch Logs is only supported as an output destination.
+You can output scan logs to CloudWatch Logs or S3.
+
+#### CloudWatch Logs
+
+You can output scan logs to a specific CloudWatch Logs log group using `ScanLogsOutput.cloudWatchLogs`.
 
 ```ts
-import { ImageScannerWithTrivy, ScanLogsOutput } from 'image-scanner-with-trivy';
-
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
+const scanLogsLogGroup = new LogGroup(this, 'ScanLogsLogGroup');
 
 const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
   // Use `ScanLogsOutput.cloudWatchLogs` method to specify the log group.
-  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: new LogGroup(this, 'LogGroup') }),
+  scanLogsOutput: ScanLogsOutput.cloudWatchLogs({ logGroup: scanLogsLogGroup }),
+});
+```
+
+#### S3
+
+You can output scan logs to an S3 bucket using `ScanLogsOutput.s3`.
+
+```ts
+const scanLogsBucket = new Bucket(this, 'ScanLogsBucket');
+
+const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // Use `ScanLogsOutput.s3` method to specify the S3 bucket.
+  scanLogsOutput: ScanLogsOutput.s3({
+    bucket: scanLogsBucket,
+    prefix: 'scan-logs/', // Optional: specify a prefix for S3 objects
+  }),
+});
+```
+
+Additionally, you can output SBOM (Software Bill of Materials) in various formats by specifying the `sbomFormat` option.
+
+Available SBOM formats:
+
+- `SbomFormat.CYCLONEDX` - CycloneDX JSON format
+- `SbomFormat.SPDX_JSON` - SPDX JSON format
+- `SbomFormat.SPDX` - SPDX Tag-Value format (human-readable)
+
+```ts
+const scanLogsBucket = new Bucket(this, 'ScanLogsBucket');
+
+const imageScanner = new ImageScannerWithTrivy(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // Use `ScanLogsOutput.s3` method to specify the S3 bucket.
+  scanLogsOutput: ScanLogsOutput.s3({
+    bucket: scanLogsBucket,
+    sbomFormat: SbomFormat.CYCLONEDX, // Optional: output SBOM in CycloneDX format
+  }),
 });
 ```
 
