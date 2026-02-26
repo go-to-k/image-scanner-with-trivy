@@ -6,6 +6,8 @@ This is an AWS CDK Construct that allows you to **scan container images with Tri
 
 If it detects vulnerabilities, it can **prevent the image from being pushed to the ECR for the application**. You can also choose to **receive notifications without failing the deployment**.
 
+Scan results and **SBOM (Software Bill of Materials) can be output to S3** for further analysis and compliance reporting.
+
 Since it takes an `imageUri` for ECR as an argument, it can also be used to **simply scan an existing image in the repository**.
 
 ## Trivy
@@ -153,39 +155,6 @@ new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivyWithAnotherDefaultLogGro
 });
 ```
 
-### Rollback Error Suppression
-
-By default, the `suppressErrorOnRollback` property is set to `true`.
-
-When image scanning fails, CloudFormation triggers a rollback and executes the previous version
-of the scanner Lambda. If this property is set to `true`, the previous version of the scanner
-Lambda will not throw an error, even if the image scanning for the previous version fails.
-
-This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
-when image scanning failures occur.
-
-```ts
-import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
-
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
-
-new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  // Default is true - suppress errors during rollback to prevent ROLLBACK_FAILED
-  suppressErrorOnRollback: true,
-  // Set to false if you want rollback errors to be thrown
-  suppressErrorOnRollback: false,
-});
-```
-
 ### SNS Notification for Vulnerabilities
 
 You can configure an SNS topic to receive notifications when vulnerabilities or EOL (End of Life) OS are detected.
@@ -218,6 +187,39 @@ new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
 ```
 
 You can specify an SNS topic associated with AWS Chatbot, as notifications are sent in AWS Chatbot message format.
+
+### Rollback Error Suppression
+
+By default, the `suppressErrorOnRollback` property is set to `true`.
+
+When image scanning fails, CloudFormation triggers a rollback and executes the previous version
+of the scanner Lambda. If this property is set to `true`, the previous version of the scanner
+Lambda will not throw an error, even if the image scanning for the previous version fails.
+
+This allows the rollback to complete successfully, avoiding ROLLBACK_FAILED state
+when image scanning failures occur.
+
+```ts
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
+
+const repository = new Repository(this, 'ImageRepository', {
+  removalPolicy: RemovalPolicy.DESTROY,
+  autoDeleteImages: true,
+});
+
+const image = new DockerImageAsset(this, 'DockerImage', {
+  directory: resolve(__dirname, './'),
+});
+
+new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // Default is true - suppress errors during rollback to prevent ROLLBACK_FAILED
+  suppressErrorOnRollback: true,
+  // Set to false if you want rollback errors to be thrown
+  suppressErrorOnRollback: false,
+});
+```
 
 ## V2 Construct
 
