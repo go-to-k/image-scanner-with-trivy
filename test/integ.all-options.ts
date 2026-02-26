@@ -3,6 +3,8 @@ import { IntegTest } from '@aws-cdk/integ-tests-alpha';
 import { App, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { DockerImageAsset, Platform } from 'aws-cdk-lib/aws-ecr-assets';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { Construct } from 'constructs';
 import {
   ImageScannerWithTrivyV2,
   Scanners,
@@ -10,8 +12,6 @@ import {
   TargetImagePlatform,
   TrivyIgnore,
 } from '../src';
-import { Queue } from 'aws-cdk-lib/aws-sqs';
-import { Construct } from 'constructs';
 
 const IGNORE_FOR_PASSING_TESTS = [
   'CVE-2023-37920',
