@@ -28,7 +28,38 @@ npm install image-scanner-with-trivy
 
 **Note: We recommend using `ImageScannerWithTrivyV2`.** See the [V2 Construct](#v2-construct) section for details and migration guide.
 
-The following code is a minimal example.
+The following code is a minimal example using ECS Fargate.
+
+```ts
+import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
+
+const image = new DockerImageAsset(this, 'DockerImage', {
+  directory: resolve(__dirname, './'),
+});
+
+const cluster = new Cluster(this, 'Cluster');
+const taskDefinition = new FargateTaskDefinition(this, 'TaskDef');
+taskDefinition.addContainer('app', {
+  image: ContainerImage.fromDockerImageAsset(image),
+});
+const fargateService = new FargateService(this, 'Service', {
+  cluster,
+  taskDefinition,
+});
+
+// Scan the image before deploying to ECS
+const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  // If vulnerabilities are detected, the ECS service deployment will be blocked
+  // Note: This option only works when `failOnVulnerability` is `true` (default).
+  blockConstructs: [fargateService],
+});
+```
+
+#### Other Use Cases
+
+For copying images from DockerImageAsset ECR to another ECR repository using ECRDeployment:
 
 ```ts
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
@@ -50,8 +81,7 @@ const ecrDeployment = new ECRDeployment(this, 'DeployImage', {
 const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
-  // If vulnerabilities are detected, the following `ECRDeployment` will not be executed, deployment will fail.
-  // Note: This option only works when `failOnVulnerability` is `true` (default).
+  // If vulnerabilities are detected, the ECRDeployment will be blocked
   blockConstructs: [ecrDeployment],
 });
 ```
