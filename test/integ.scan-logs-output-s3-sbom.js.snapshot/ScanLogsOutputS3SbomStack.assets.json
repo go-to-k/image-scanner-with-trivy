@@ -27,7 +27,7 @@
         }
       }
     },
-    "966fdf15d63c649db9e0c1690793df3b899aa3455f1cf4d091aeb4a82d95548b": {
+    "8f14b3b6019c8c1611f2d45fee84acf029c55cdac9bd77d3c29b539d69e454a3": {
       "source": {
         "path": "ScanLogsOutputS3SbomStack.template.json",
         "packaging": "file"
@@ -35,35 +35,22 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "966fdf15d63c649db9e0c1690793df3b899aa3455f1cf4d091aeb4a82d95548b.json",
+          "objectKey": "8f14b3b6019c8c1611f2d45fee84acf029c55cdac9bd77d3c29b539d69e454a3.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
     }
   },
   "dockerImages": {
-    "cd04968e2e3b700099655fe19f72fa971714f5e26a537de9a92b23cdb8789170": {
+    "fb1fc522890afb1ed6a6d22cd449c47a7361388d0303747b38fef7eb23a4fe01": {
       "source": {
-        "directory": "asset.cd04968e2e3b700099655fe19f72fa971714f5e26a537de9a92b23cdb8789170",
+        "directory": "asset.fb1fc522890afb1ed6a6d22cd449c47a7361388d0303747b38fef7eb23a4fe01",
         "platform": "linux/arm64"
       },
       "destinations": {
         "current_account-current_region": {
           "repositoryName": "cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}",
-          "imageTag": "cd04968e2e3b700099655fe19f72fa971714f5e26a537de9a92b23cdb8789170",
-          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
-        }
-      }
-    },
-    "d5c828e7ee0e2e563a65c87a5034567494701f19028cea8d8779141115f70efa": {
-      "source": {
-        "directory": "asset.d5c828e7ee0e2e563a65c87a5034567494701f19028cea8d8779141115f70efa",
-        "platform": "linux/arm64"
-      },
-      "destinations": {
-        "current_account-current_region": {
-          "repositoryName": "cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}",
-          "imageTag": "d5c828e7ee0e2e563a65c87a5034567494701f19028cea8d8779141115f70efa",
+          "imageTag": "fb1fc522890afb1ed6a6d22cd449c47a7361388d0303747b38fef7eb23a4fe01",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
