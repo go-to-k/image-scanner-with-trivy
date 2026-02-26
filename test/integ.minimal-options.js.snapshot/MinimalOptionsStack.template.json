@@ -137,7 +137,7 @@
     },
     "addr": "c88630cd7637c571a9fec999a676002ea2f509abc8",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9d6e891ec3963355e3be25d3127ac2e7d95f3736fd0d33f58d142e86bd8978df"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:cd04968e2e3b700099655fe19f72fa971714f5e26a537de9a92b23cdb8789170"
     },
     "ignoreUnfixed": "false",
     "severity": [
