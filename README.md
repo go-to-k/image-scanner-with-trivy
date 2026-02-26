@@ -14,6 +14,8 @@ Since it takes an `imageUri` for ECR as an argument, it can also be used to **si
 
 [Trivy](https://github.com/aquasecurity/trivy) is a comprehensive and versatile security scanner.
 
+**This library is featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!**
+
 ## Usage
 
 ### Install
@@ -339,10 +341,6 @@ new ImageScannerWithTrivy(this, 'Scanner', {
 - If you used the **default** (`RemovalPolicy.RETAIN`), **the V1 log group will be retained** in your AWS account. You'll need to manually delete it if desired, or keep it for log history.
 
 If you want to preserve your V1 scan logs, make sure to use `RemovalPolicy.RETAIN` or back them up before migration.
-
-## Trivy's official documentation
-
-To my surprise, this library was featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!
 
 ## API Reference
 
