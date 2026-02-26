@@ -76,7 +76,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
     compilerOptions: {},
     exclude: ['test/integ.*.snapshot', 'test/cdk-integ.*.snapshot'],
   },
-  devDeps: ['@aws-cdk/integ-runner@2.178.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0'],
+  devDeps: [
+    '@aws-cdk/integ-runner@2.178.1-alpha.0',
+    '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0',
+    'aws-sdk-client-mock',
+  ],
   packageManager: NodePackageManager.PNPM,
   workflowNodeVersion: '24',
   npmTrustedPublishing: true,
