@@ -4,7 +4,7 @@
 
 This is an AWS CDK Construct that allows you to **scan container images with Trivy in CDK deployment layer**.
 
-If it detects vulnerabilities, it can **prevent the image from being pushed to the ECR for the application**.
+If it detects vulnerabilities, it can **prevent the image from being pushed to the ECR for the application**. You can also choose to **receive notifications without failing the deployment**.
 
 Since it takes an `imageUri` for ECR as an argument, it can also be used to **simply scan an existing image in the repository**.
 
