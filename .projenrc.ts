@@ -36,7 +36,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     configFilePath: 'jest.config.json',
     jestConfig: {
       testEnvironment: 'node',
-      roots: ['<rootDir>/test'],
+      roots: ['<rootDir>/test', '<rootDir>/assets/lambda/test'],
       testMatch: ['**/*.test.ts'],
       transform: {
         '^.+\\.tsx?$': new Transform('ts-jest'),

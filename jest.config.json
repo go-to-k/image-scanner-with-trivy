@@ -2,7 +2,8 @@
   "coverageProvider": "v8",
   "testEnvironment": "node",
   "roots": [
-    "<rootDir>/test"
+    "<rootDir>/test",
+    "<rootDir>/assets/lambda/test"
   ],
   "testMatch": [
     "**/*.test.ts",
