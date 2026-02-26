@@ -66,15 +66,6 @@ When you set different log groups for each construct, a warning message will be 
 ```ts
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 
-const repository = new Repository(this, 'ImageRepository', {
-  removalPolicy: RemovalPolicy.DESTROY,
-  autoDeleteImages: true,
-});
-
-const image = new DockerImageAsset(this, 'DockerImage', {
-  directory: resolve(__dirname, './'),
-});
-
 const logGroup = new LogGroup(this, 'LogGroup');
 
 new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
@@ -87,8 +78,8 @@ new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
 // NG example
 // When multiple ImageScannerWithTrivyV2 constructs have different default log groups, a warning will be displayed.
 new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivyWithAnotherDefaultLogGroup', {
-  imageUri: image.imageUri,
-  repository: image.repository,
+  imageUri: anotherImage.imageUri,
+  repository: anotherImage.repository,
   defaultLogGroup: new LogGroup(this, 'AnotherDefaultLogGroup'), // NG example - different log group from the previous construct
   // defaultLogGroup: logGroup, // OK example - use the same log group for all constructs
 });
