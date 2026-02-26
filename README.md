@@ -28,7 +28,7 @@ npm install image-scanner-with-trivy
 
 **Note: We recommend using `ImageScannerWithTrivyV2`.** See the [V2 Construct](#v2-construct) section for details and migration guide.
 
-The following code is a minimal example using ECS Fargate.
+The following code is a minimal example that scans the image and blocks the ECS deployment if vulnerabilities are detected.
 
 ```ts
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
@@ -51,7 +51,7 @@ const fargateService = new FargateService(this, 'Service', {
 const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', {
   imageUri: image.imageUri,
   repository: image.repository,
-  // If vulnerabilities are detected, the ECS service deployment will be blocked
+  // If vulnerabilities are detected, the ECS deployment will be blocked
   // Note: This option only works when `failOnVulnerability` is `true` (default).
   blockConstructs: [fargateService],
 });
@@ -59,7 +59,7 @@ const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', 
 
 #### Other Use Cases
 
-For copying images from DockerImageAsset ECR to another ECR repository using ECRDeployment:
+For scanning the image and blocking `ECRDeployment` (copying images from `DockerImageAsset` ECR to another ECR repository) if vulnerabilities are detected:
 
 ```ts
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
