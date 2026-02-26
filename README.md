@@ -33,18 +33,15 @@ The following code is a minimal example that scans the image and blocks the ECS 
 ```ts
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 
+// Target image to scan
 const image = new DockerImageAsset(this, 'DockerImage', {
   directory: resolve(__dirname, './'),
 });
 
-const cluster = new Cluster(this, 'Cluster');
-const taskDefinition = new FargateTaskDefinition(this, 'TaskDef');
-taskDefinition.addContainer('app', {
-  image: ContainerImage.fromDockerImageAsset(image),
-});
-const fargateService = new FargateService(this, 'Service', {
-  cluster,
-  taskDefinition,
+// Example of an ECS construct that uses the image
+const ecs = new YourECSConstruct(this, 'YourECSConstruct', {
+  dockerImage: image,
+  // ...
 });
 
 // Scan the image before deploying to ECS
@@ -53,7 +50,7 @@ const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', 
   repository: image.repository,
   // If vulnerabilities are detected, the ECS deployment will be blocked
   // Note: This option only works when `failOnVulnerability` is `true` (default).
-  blockConstructs: [fargateService],
+  blockConstructs: [ecs],
 });
 ```
 
