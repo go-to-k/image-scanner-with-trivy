@@ -4,7 +4,7 @@
 
 This is an AWS CDK Construct that allows you to **scan container images with Trivy in CDK deployment layer**.
 
-If it detects vulnerabilities, it can **prevent the image from being pushed to the ECR for the application**. You can also choose to **receive notifications without failing the deployment**.
+If it detects vulnerabilities, it can **prevent the image from being pushed to ECR, or block deployments to ECS, Lambda, and other services**. You can also choose to **receive notifications without failing the deployment**.
 
 Scan results and **SBOM (Software Bill of Materials) can be output to S3** for further analysis and compliance reporting.
 
