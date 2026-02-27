@@ -8,7 +8,7 @@ import { Topic } from 'aws-cdk-lib/aws-sns';
 import { SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
-import { ImageScannerWithTrivyV2, ScanLogsOutput, SbomFormat } from '../src';
+import { ImageScannerWithTrivyV2, ScanLogsOutput } from '../src';
 
 class NotificationTestSetup extends Construct {
   public readonly topic: Topic;
@@ -70,20 +70,6 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerS3', {
   scanLogsOutput: ScanLogsOutput.s3({ bucket: logsBucket, prefix: 'scan-logs/' }),
 });
 
-// Test 4: S3 output with SBOM
-const sbomTest = new NotificationTestSetup(stack, 'SBOMTest');
-new ImageScannerWithTrivyV2(stack, 'ImageScannerSBOM', {
-  imageUri: image.imageUri,
-  repository: image.repository,
-  failOnVulnerability: false,
-  vulnsNotificationTopic: sbomTest.topic,
-  scanLogsOutput: ScanLogsOutput.s3({
-    bucket: logsBucket,
-    prefix: 'sbom/',
-    sbomFormat: SbomFormat.CYCLONEDX,
-  }),
-});
-
 const test = new IntegTest(app, 'NotificationTopicTest', {
   testCases: [stack],
   diffAssets: true,
@@ -118,18 +104,6 @@ test.assertions
 test.assertions
   .awsApiCall('SQS', 'receiveMessage', {
     QueueUrl: s3Test.queue.queueUrl,
-    WaitTimeSeconds: 20,
-  })
-  .assertAtPath('Messages.0.Body.Message', ExpectedResult.stringLikeRegexp('aws s3 cp'))
-  .waitForAssertions({
-    interval: Duration.seconds(5),
-    totalTimeout: Duration.minutes(3),
-  });
-
-// Verify that SNS notification was sent for SBOM output
-test.assertions
-  .awsApiCall('SQS', 'receiveMessage', {
-    QueueUrl: sbomTest.queue.queueUrl,
     WaitTimeSeconds: 20,
   })
   .assertAtPath('Messages.0.Body.Message', ExpectedResult.stringLikeRegexp('aws s3 cp'))

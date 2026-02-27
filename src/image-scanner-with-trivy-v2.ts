@@ -199,6 +199,10 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
    *
+   * **Note**: When `sbomFormat` is specified in `scanLogsOutput.s3()`, SBOM generation mode is used instead of
+   * vulnerability scanning. In SBOM mode, Trivy always exits with code 0 regardless of this setting, and
+   * no SNS notifications will be sent even if `vulnsNotificationTopic` is configured.
+   *
    * @default true
    *
    * @see https://trivy.dev/docs/latest/configuration/others/#exit-code

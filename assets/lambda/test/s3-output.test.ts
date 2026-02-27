@@ -117,11 +117,10 @@ describe('s3-output', () => {
       expect((sbomCall!.args[0] as PutObjectCommand).input.ContentType).toBe('text/plain');
 
       // Verify return value
-      expect(result.type).toBe('s3-sbom');
+      expect(result.type).toBe('s3');
       expect(result.bucketName).toBe('test-bucket');
-      expect((result as any).sbomFormat).toBe(SbomFormat.SPDX);
-      expect((result as any).sbomKey).toMatch(/sbom\.spdx$/);
-      expect((result as any).stderrKey).toMatch(/stderr\.txt$/);
+      expect(result.stderrKey).toMatch(/stderr\.txt$/);
+      expect(result.stdoutKey).toMatch(/sbom\.spdx$/);
     });
 
     test('should use .json extension and application/json ContentType for non-SPDX SBOM format', async () => {
@@ -143,11 +142,10 @@ describe('s3-output', () => {
       expect((sbomCall!.args[0] as PutObjectCommand).input.ContentType).toBe('application/json');
 
       // Verify return value
-      expect(result.type).toBe('s3-sbom');
+      expect(result.type).toBe('s3');
       expect(result.bucketName).toBe('test-bucket');
-      expect((result as any).sbomFormat).toBe(SbomFormat.CYCLONEDX);
-      expect((result as any).sbomKey).toMatch(/sbom\.json$/);
-      expect((result as any).stderrKey).toMatch(/stderr\.txt$/);
+      expect(result.stderrKey).toMatch(/stderr\.txt$/);
+      expect(result.stdoutKey).toMatch(/sbom\.json$/);
     });
   });
 });

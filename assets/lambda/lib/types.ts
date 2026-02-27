@@ -18,14 +18,6 @@ export interface S3LogsDetails {
   stdoutKey: string;
 }
 
-export interface S3SbomLogsDetails {
-  type: 's3-sbom';
-  bucketName: string;
-  stderrKey: string;
-  sbomKey: string;
-  sbomFormat: string;
-}
-
 export interface DefaultLogsDetails {
   type: 'default';
   logGroupName: string;
@@ -35,5 +27,4 @@ export type ScanLogsDetails =
   | CloudWatchLogsDetails
   | CloudWatchLogsV2Details
   | S3LogsDetails
-  | S3SbomLogsDetails
   | DefaultLogsDetails;
