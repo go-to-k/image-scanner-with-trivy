@@ -1,6 +1,6 @@
 {
  "Resources": {
-  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43": {
+  "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fd": {
    "Type": "Custom::DeployAssert@SdkCallSQSreceiveMessage",
    "Properties": {
     "ServiceToken": {
@@ -11,10 +11,10 @@
     },
     "service": "SQS",
     "api": "receiveMessage",
-    "expected": "{\"$StringLike\":\"Image Scanner with Trivy detected vulnerabilities\"}",
+    "expected": "{\"$StringLike\":\"aws logs tail\"}",
     "actualPath": "Messages.0.Body.Message",
     "stateMachineArn": {
-     "Ref": "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitFor5CFF4F48"
+     "Ref": "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForAD78F051"
     },
     "parameters": {
      "QueueUrl": {
@@ -23,7 +23,7 @@
        [
         "\"",
         {
-         "Fn::ImportValue": "NotificationTopicStack:ExportsOutputRefNotificationQueue36610CC1185DED79"
+         "Fn::ImportValue": "NotificationTopicStack:ExportsOutputRefDefaultTestQueue7D2FA966BFD3FCA1"
         },
         "\""
        ]
@@ -35,12 +35,12 @@
     "outputPaths": [
      "Messages.0.Body.Message"
     ],
-    "salt": "1772099985458"
+    "salt": "1772174286215"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForIsCompleteProviderInvoke9CAFD8CD": {
+  "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForIsCompleteProviderInvoke5E41E019": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -52,13 +52,13 @@
     },
     "Principal": {
      "Fn::GetAtt": [
-      "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11",
+      "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForRoleB6839C69",
       "Arn"
      ]
     }
    }
   },
-  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForTimeoutProviderInvoke08F0A5C8": {
+  "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForTimeoutProviderInvokeD251199A": {
    "Type": "AWS::Lambda::Permission",
    "Properties": {
     "Action": "lambda:InvokeFunction",
@@ -70,13 +70,13 @@
     },
     "Principal": {
      "Fn::GetAtt": [
-      "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11",
+      "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForRoleB6839C69",
       "Arn"
      ]
     }
    }
   },
-  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11": {
+  "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForRoleB6839C69": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -121,14 +121,14 @@
     ]
    }
   },
-  "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitFor5CFF4F48": {
+  "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForAD78F051": {
    "Type": "AWS::StepFunctions::StateMachine",
    "Properties": {
     "DefinitionString": {
      "Fn::Join": [
       "",
       [
-       "{\"StartAt\":\"framework-isComplete-task\",\"States\":{\"framework-isComplete-task\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":5,\"MaxAttempts\":24,\"BackoffRate\":1}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"framework-onTimeout-task\"}],\"Type\":\"Task\",\"Resource\":\"",
+       "{\"StartAt\":\"framework-isComplete-task\",\"States\":{\"framework-isComplete-task\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":5,\"MaxAttempts\":36,\"BackoffRate\":1}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"framework-onTimeout-task\"}],\"Type\":\"Task\",\"Resource\":\"",
        {
         "Fn::GetAtt": [
          "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
@@ -148,13 +148,13 @@
     },
     "RoleArn": {
      "Fn::GetAtt": [
-      "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11",
+      "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForRoleB6839C69",
       "Arn"
      ]
     }
    },
    "DependsOn": [
-    "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43WaitForRoleF899AE11"
+    "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fdWaitForRoleB6839C69"
    ]
   },
   "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73": {
@@ -183,6 +183,42 @@
       "PolicyDocument": {
        "Version": "2012-10-17",
        "Statement": [
+        {
+         "Action": [
+          "sqs:ReceiveMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "states:StartExecution"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "sqs:ReceiveMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "states:StartExecution"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
         {
          "Action": [
           "sqs:ReceiveMessage"
@@ -261,6 +297,24 @@
       "PolicyDocument": {
        "Version": "2012-10-17",
        "Statement": [
+        {
+         "Action": [
+          "sqs:ReceiveMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
+        {
+         "Action": [
+          "sqs:ReceiveMessage"
+         ],
+         "Effect": "Allow",
+         "Resource": [
+          "*"
+         ]
+        },
         {
          "Action": [
           "sqs:ReceiveMessage"
@@ -353,13 +407,343 @@
      ]
     }
    }
+  },
+  "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdef": {
+   "Type": "Custom::DeployAssert@SdkCallSQSreceiveMessage",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F",
+      "Arn"
+     ]
+    },
+    "service": "SQS",
+    "api": "receiveMessage",
+    "expected": "{\"$StringLike\":\"aws logs tail\"}",
+    "actualPath": "Messages.0.Body.Message",
+    "stateMachineArn": {
+     "Ref": "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForC097D60E"
+    },
+    "parameters": {
+     "QueueUrl": {
+      "Fn::Join": [
+       "",
+       [
+        "\"",
+        {
+         "Fn::ImportValue": "NotificationTopicStack:ExportsOutputRefCloudWatchTestQueue41F9307C843C24C8"
+        },
+        "\""
+       ]
+      ]
+     },
+     "WaitTimeSeconds": "20"
+    },
+    "flattenResponse": "true",
+    "outputPaths": [
+     "Messages.0.Body.Message"
+    ],
+    "salt": "1772174286216"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForIsCompleteProviderInvokeD4C2CA5F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForRoleB6DC86A6",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForTimeoutProviderInvokeDD056BBD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForRoleB6DC86A6",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForRoleB6DC86A6": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": "InlineInvokeFunctions",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Action": "lambda:InvokeFunction",
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+            "Arn"
+           ]
+          },
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForC097D60E": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"framework-isComplete-task\",\"States\":{\"framework-isComplete-task\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":5,\"MaxAttempts\":36,\"BackoffRate\":1}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"framework-onTimeout-task\"}],\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+         "Arn"
+        ]
+       },
+       "\"},\"framework-onTimeout-task\":{\"End\":true,\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+         "Arn"
+        ]
+       },
+       "\"}}}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForRoleB6DC86A6",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdefWaitForRoleB6DC86A6"
+   ]
+  },
+  "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2f": {
+   "Type": "Custom::DeployAssert@SdkCallSQSreceiveMessage",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F",
+      "Arn"
+     ]
+    },
+    "service": "SQS",
+    "api": "receiveMessage",
+    "expected": "{\"$StringLike\":\"aws s3 cp\"}",
+    "actualPath": "Messages.0.Body.Message",
+    "stateMachineArn": {
+     "Ref": "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitFor57B443BA"
+    },
+    "parameters": {
+     "QueueUrl": {
+      "Fn::Join": [
+       "",
+       [
+        "\"",
+        {
+         "Fn::ImportValue": "NotificationTopicStack:ExportsOutputRefS3TestQueue66C874895336FF02"
+        },
+        "\""
+       ]
+      ]
+     },
+     "WaitTimeSeconds": "20"
+    },
+    "flattenResponse": "true",
+    "outputPaths": [
+     "Messages.0.Body.Message"
+    ],
+    "salt": "1772174286216"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForIsCompleteProviderInvokeE83843F9": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForRoleD7BB5931",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForTimeoutProviderInvoke6C367449": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+      "Arn"
+     ]
+    },
+    "Principal": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForRoleD7BB5931",
+      "Arn"
+     ]
+    }
+   }
+  },
+  "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForRoleD7BB5931": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": "InlineInvokeFunctions",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Action": "lambda:InvokeFunction",
+         "Effect": "Allow",
+         "Resource": [
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+            "Arn"
+           ]
+          },
+          {
+           "Fn::GetAtt": [
+            "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+            "Arn"
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitFor57B443BA": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"framework-isComplete-task\",\"States\":{\"framework-isComplete-task\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"States.ALL\"],\"IntervalSeconds\":5,\"MaxAttempts\":36,\"BackoffRate\":1}],\"Catch\":[{\"ErrorEquals\":[\"States.ALL\"],\"Next\":\"framework-onTimeout-task\"}],\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE",
+         "Arn"
+        ]
+       },
+       "\"},\"framework-onTimeout-task\":{\"End\":true,\"Type\":\"Task\",\"Resource\":\"",
+       {
+        "Fn::GetAtt": [
+         "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA",
+         "Arn"
+        ]
+       },
+       "\"}}}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForRoleD7BB5931",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2fWaitForRoleD7BB5931"
+   ]
   }
  },
  "Outputs": {
-  "AssertionResultsAwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43": {
+  "AssertionResultsAwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fd": {
    "Value": {
     "Fn::GetAtt": [
-     "AwsApiCallSQSreceiveMessage0277c42ceb3f5b455bec46d3ee663e43",
+     "AwsApiCallSQSreceiveMessage83b73ae1fb82a7fcc007e0924badd8fd",
+     "assertion"
+    ]
+   }
+  },
+  "AssertionResultsAwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdef": {
+   "Value": {
+    "Fn::GetAtt": [
+     "AwsApiCallSQSreceiveMessage19b1e3190d26f0b61116490fdbf7bdef",
+     "assertion"
+    ]
+   }
+  },
+  "AssertionResultsAwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2f": {
+   "Value": {
+    "Fn::GetAtt": [
+     "AwsApiCallSQSreceiveMessage301dff1ff704f68b93d726672ba49f2f",
      "assertion"
     ]
    }

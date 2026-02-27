@@ -161,6 +161,13 @@ Available SBOM formats:
 - `SbomFormat.SPDX_JSON` - SPDX JSON format
 - `SbomFormat.SPDX` - SPDX Tag-Value format (human-readable)
 
+**Important**: SBOM generation is not a vulnerability scan. When `sbomFormat` is specified:
+
+- Trivy generates a Software Bill of Materials (SBOM) instead of performing a vulnerability scan
+- The scan will not fail regardless of the `failOnVulnerability` setting
+- SNS notifications (`vulnsNotificationTopic`) will not be sent since no vulnerabilities are detected
+- The SBOM file and stderr logs will be uploaded to S3
+
 ```ts
 const scanLogsBucket = new Bucket(this, 'ScanLogsBucket');
 

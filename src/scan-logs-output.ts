@@ -100,6 +100,12 @@ export interface S3OutputProps {
    * Optional SBOM format to output in addition to scan logs.
    * When specified, SBOM will be generated and uploaded to S3.
    *
+   * **Note**: SBOM generation is not a vulnerability scan. When this option is specified:
+   * - Trivy generates a Software Bill of Materials (SBOM) instead of performing a vulnerability scan
+   * - The scan will not fail regardless of the `failOnVulnerability` setting
+   * - SNS notifications (`vulnsNotificationTopic`) will not be sent since no vulnerabilities are detected
+   * - The SBOM file and stderr logs will be uploaded to S3
+   *
    * @default - No SBOM output
    */
   readonly sbomFormat?: SbomFormat;

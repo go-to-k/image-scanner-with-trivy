@@ -769,6 +769,10 @@ If set to `false`, Trivy exits with a zero exit code even when vulnerabilities o
 
 It defaults to `true` IN THIS CONSTRUCT for safety in CI/CD. In the original trivy, it is `false` (exit code 0).
 
+**Note**: When `sbomFormat` is specified in `scanLogsOutput.s3()`, SBOM generation mode is used instead of
+vulnerability scanning. In SBOM mode, Trivy always exits with code 0 regardless of this setting, and
+no SNS notifications will be sent even if `vulnsNotificationTopic` is configured.
+
 > [https://trivy.dev/docs/latest/configuration/others/#exit-code](https://trivy.dev/docs/latest/configuration/others/#exit-code)
 
 ---
@@ -1056,7 +1060,7 @@ const s3OutputProps: S3OutputProps = { ... }
 | --- | --- | --- |
 | <code><a href="#image-scanner-with-trivy.S3OutputProps.property.bucket">bucket</a></code> | <code>aws-cdk-lib.aws_s3.IBucket</code> | The S3 bucket to output scan logs. |
 | <code><a href="#image-scanner-with-trivy.S3OutputProps.property.prefix">prefix</a></code> | <code>string</code> | Optional prefix for S3 objects. |
-| <code><a href="#image-scanner-with-trivy.S3OutputProps.property.sbomFormat">sbomFormat</a></code> | <code><a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a></code> | Optional SBOM format to output in addition to scan logs. |
+| <code><a href="#image-scanner-with-trivy.S3OutputProps.property.sbomFormat">sbomFormat</a></code> | <code><a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a></code> | Optional SBOM format to output in addition to scan logs. When specified, SBOM will be generated and uploaded to S3. |
 
 ---
 
@@ -1093,9 +1097,13 @@ public readonly sbomFormat: SbomFormat;
 - *Type:* <a href="#image-scanner-with-trivy.SbomFormat">SbomFormat</a>
 - *Default:* No SBOM output
 
-Optional SBOM format to output in addition to scan logs.
+Optional SBOM format to output in addition to scan logs. When specified, SBOM will be generated and uploaded to S3.
 
-When specified, SBOM will be generated and uploaded to S3.
+**Note**: SBOM generation is not a vulnerability scan. When this option is specified:
+- Trivy generates a Software Bill of Materials (SBOM) instead of performing a vulnerability scan
+- The scan will not fail regardless of the `failOnVulnerability` setting
+- SNS notifications (`vulnsNotificationTopic`) will not be sent since no vulnerabilities are detected
+- The SBOM file and stderr logs will be uploaded to S3
 
 ---
 

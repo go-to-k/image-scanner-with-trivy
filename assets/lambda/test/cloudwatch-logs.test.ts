@@ -41,18 +41,14 @@ describe('cloudwatch-logs', () => {
         logGroupName: '/aws/lambda/test',
       };
 
-      await outputScanLogsToCWLogsV2(response, output, 'my-image:v1.0');
+      const result = await outputScanLogsToCWLogsV2(response, output, 'my-image:v1.0');
 
-      const createCalls = cwMock.commandCalls(CreateLogStreamCommand);
-      const stdoutStream = createCalls.find(call =>
-        call.args[0].input.logStreamName?.includes('/stdout')
-      );
-      const stderrStream = createCalls.find(call =>
-        call.args[0].input.logStreamName?.includes('/stderr')
-      );
-
-      expect(stdoutStream!.args[0].input.logStreamName).toBe('uri=my-image,tag=v1.0/stdout');
-      expect(stderrStream!.args[0].input.logStreamName).toBe('uri=my-image,tag=v1.0/stderr');
+      expect(result).toEqual({
+        type: 'cloudwatch-v2',
+        logGroupName: '/aws/lambda/test',
+        stdoutLogStreamName: 'uri=my-image,tag=v1.0/stdout',
+        stderrLogStreamName: 'uri=my-image,tag=v1.0/stderr',
+      });
     });
 
     test('should generate log stream names without tag for stdout and stderr', async () => {
@@ -65,18 +61,14 @@ describe('cloudwatch-logs', () => {
         logGroupName: '/aws/lambda/test',
       };
 
-      await outputScanLogsToCWLogsV2(response, output, 'my-image');
+      const result = await outputScanLogsToCWLogsV2(response, output, 'my-image');
 
-      const createCalls = cwMock.commandCalls(CreateLogStreamCommand);
-      const stdoutStream = createCalls.find(call =>
-        call.args[0].input.logStreamName?.includes('/stdout')
-      );
-      const stderrStream = createCalls.find(call =>
-        call.args[0].input.logStreamName?.includes('/stderr')
-      );
-
-      expect(stdoutStream!.args[0].input.logStreamName).toBe('uri=my-image/stdout');
-      expect(stderrStream!.args[0].input.logStreamName).toBe('uri=my-image/stderr');
+      expect(result).toEqual({
+        type: 'cloudwatch-v2',
+        logGroupName: '/aws/lambda/test',
+        stdoutLogStreamName: 'uri=my-image/stdout',
+        stderrLogStreamName: 'uri=my-image/stderr',
+      });
     });
 
     test('should handle ResourceAlreadyExistsException gracefully', async () => {

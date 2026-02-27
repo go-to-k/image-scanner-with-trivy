@@ -7,6 +7,7 @@ import {
   ResourceAlreadyExistsException,
 } from '@aws-sdk/client-cloudwatch-logs';
 import { CloudWatchLogsOutputOptions } from '../../../src/scan-logs-output';
+import { CloudWatchLogsDetails, CloudWatchLogsV2Details } from './types';
 
 const cwClient = new CloudWatchLogsClient();
 
@@ -15,7 +16,7 @@ export const outputScanLogsToCWLogs = async (
   response: SpawnSyncReturns<Buffer>,
   output: CloudWatchLogsOutputOptions,
   imageUri: string,
-) => {
+): Promise<CloudWatchLogsDetails> => {
   // LogStream name must satisfy regular expression pattern: `[^:*]*`.
   // So, we can't use `:` in logStreamName.
   const [uri, tag] = imageUri.split(':');
@@ -61,13 +62,19 @@ export const outputScanLogsToCWLogs = async (
   console.log(
     `Scan logs output to the log group: ${output.logGroupName}, log stream: ${logStreamName}`,
   );
+
+  return {
+    type: 'cloudwatch',
+    logGroupName: output.logGroupName,
+    logStreamName,
+  };
 };
 
 export const outputScanLogsToCWLogsV2 = async (
   response: SpawnSyncReturns<Buffer>,
   output: CloudWatchLogsOutputOptions,
   imageUri: string,
-) => {
+): Promise<CloudWatchLogsV2Details> => {
   // LogStream name must satisfy regular expression pattern: `[^:*]*`.
   // So, we can't use `:` in logStreamName.
   const [uri, tag] = imageUri.split(':');
@@ -96,6 +103,13 @@ export const outputScanLogsToCWLogsV2 = async (
   console.log(
     `Scan logs output to the log group: ${output.logGroupName}\n  stdout stream: ${stdoutLogStreamName}\n  stderr stream: ${stderrLogStreamName}`,
   );
+
+  return {
+    type: 'cloudwatch-v2',
+    logGroupName: output.logGroupName,
+    stdoutLogStreamName,
+    stderrLogStreamName,
+  };
 };
 
 const createLogStreamAndPutEvents = async (

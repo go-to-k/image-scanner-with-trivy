@@ -1,14 +1,14 @@
 {
  "Resources": {
-  "TopicBFC7AF6E": {
+  "DefaultTestTopic526B72B8": {
    "Type": "AWS::SNS::Topic"
   },
-  "NotificationQueue36610CC1": {
+  "DefaultTestQueue7D2FA966": {
    "Type": "AWS::SQS::Queue",
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
   },
-  "NotificationQueuePolicyCC060EA6": {
+  "DefaultTestQueuePolicy80DAB950": {
    "Type": "AWS::SQS::QueuePolicy",
    "Properties": {
     "PolicyDocument": {
@@ -18,7 +18,7 @@
        "Condition": {
         "ArnEquals": {
          "aws:SourceArn": {
-          "Ref": "TopicBFC7AF6E"
+          "Ref": "DefaultTestTopic526B72B8"
          }
         }
        },
@@ -28,7 +28,7 @@
        },
        "Resource": {
         "Fn::GetAtt": [
-         "NotificationQueue36610CC1",
+         "DefaultTestQueue7D2FA966",
          "Arn"
         ]
        }
@@ -38,30 +38,30 @@
     },
     "Queues": [
      {
-      "Ref": "NotificationQueue36610CC1"
+      "Ref": "DefaultTestQueue7D2FA966"
      }
     ]
    }
   },
-  "NotificationQueueNotificationTopicStackTopic113DD6556A485313": {
+  "DefaultTestQueueNotificationTopicStackDefaultTestTopic6357885D5C71C88A": {
    "Type": "AWS::SNS::Subscription",
    "Properties": {
     "Endpoint": {
      "Fn::GetAtt": [
-      "NotificationQueue36610CC1",
+      "DefaultTestQueue7D2FA966",
       "Arn"
      ]
     },
     "Protocol": "sqs",
     "TopicArn": {
-     "Ref": "TopicBFC7AF6E"
+     "Ref": "DefaultTestTopic526B72B8"
     }
    },
    "DependsOn": [
-    "NotificationQueuePolicyCC060EA6"
+    "DefaultTestQueuePolicy80DAB950"
    ]
   },
-  "ImageScannerProviderframeworkonEventServiceRoleFCB1902E": {
+  "ImageScannerDefaultProviderframeworkonEventServiceRoleED248659": {
    "Type": "AWS::IAM::Role",
    "Properties": {
     "AssumeRolePolicyDocument": {
@@ -92,7 +92,7 @@
     ]
    }
   },
-  "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3": {
+  "ImageScannerDefaultProviderframeworkonEventServiceRoleDefaultPolicy925EFEC8": {
    "Type": "AWS::IAM::Policy",
    "Properties": {
     "PolicyDocument": {
@@ -136,15 +136,15 @@
      ],
      "Version": "2012-10-17"
     },
-    "PolicyName": "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3",
+    "PolicyName": "ImageScannerDefaultProviderframeworkonEventServiceRoleDefaultPolicy925EFEC8",
     "Roles": [
      {
-      "Ref": "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
+      "Ref": "ImageScannerDefaultProviderframeworkonEventServiceRoleED248659"
      }
     ]
    }
   },
-  "ImageScannerProviderframeworkonEvent6D1AC9AC": {
+  "ImageScannerDefaultProviderframeworkonEvent2A11E860": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
     "Code": {
@@ -153,7 +153,7 @@
      },
      "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
     },
-    "Description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScanner/Provider)",
+    "Description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScannerDefault/Provider)",
     "Environment": {
      "Variables": {
       "USER_ON_EVENT_FUNCTION_ARN": {
@@ -167,7 +167,7 @@
     "Handler": "framework.onEvent",
     "Role": {
      "Fn::GetAtt": [
-      "ImageScannerProviderframeworkonEventServiceRoleFCB1902E",
+      "ImageScannerDefaultProviderframeworkonEventServiceRoleED248659",
       "Arn"
      ]
     },
@@ -183,22 +183,22 @@
     "Timeout": 900
    },
    "DependsOn": [
-    "ImageScannerProviderframeworkonEventServiceRoleDefaultPolicy2B069AF3",
-    "ImageScannerProviderframeworkonEventServiceRoleFCB1902E"
+    "ImageScannerDefaultProviderframeworkonEventServiceRoleDefaultPolicy925EFEC8",
+    "ImageScannerDefaultProviderframeworkonEventServiceRoleED248659"
    ]
   },
-  "ImageScanner4A30E3A5": {
+  "ImageScannerDefault24BE0649": {
    "Type": "Custom::ImageScannerWithTrivyV2",
    "Properties": {
     "ServiceToken": {
      "Fn::GetAtt": [
-      "ImageScannerProviderframeworkonEvent6D1AC9AC",
+      "ImageScannerDefaultProviderframeworkonEvent2A11E860",
       "Arn"
      ]
     },
-    "addr": "c8a447d4b9ddcd890ce073be7f8ab8eff47506b828",
+    "addr": "c8033dd1748b0f47dd4142770ef087ffe525bfc6a5",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fb1fc522890afb1ed6a6d22cd449c47a7361388d0303747b38fef7eb23a4fe01"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -211,7 +211,7 @@
     "platform": "",
     "suppressErrorOnRollback": "true",
     "vulnsTopicArn": {
-     "Ref": "TopicBFC7AF6E"
+     "Ref": "DefaultTestTopic526B72B8"
     },
     "defaultLogGroupName": {
      "Fn::Join": [
@@ -303,9 +303,17 @@
       {
        "Action": "sns:Publish",
        "Effect": "Allow",
-       "Resource": {
-        "Ref": "TopicBFC7AF6E"
-       }
+       "Resource": [
+        {
+         "Ref": "CloudWatchTestTopic2B35EBBF"
+        },
+        {
+         "Ref": "DefaultTestTopic526B72B8"
+        },
+        {
+         "Ref": "S3TestTopicA3D195CE"
+        }
+       ]
       },
       {
        "Action": "cloudformation:DescribeStacks",
@@ -313,6 +321,53 @@
        "Resource": {
         "Ref": "AWS::StackId"
        }
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CustomLogGroupD466F813",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "LogsBucket9C4D8843",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "LogsBucket9C4D8843",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
       }
      ],
      "Version": "2012-10-17"
@@ -333,7 +388,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:fb1fc522890afb1ed6a6d22cd449c47a7361388d0303747b38fef7eb23a4fe01"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
      }
     },
     "EphemeralStorage": {
@@ -363,6 +418,633 @@
     "MaximumRetryAttempts": 0,
     "Qualifier": "$LATEST"
    }
+  },
+  "CloudWatchTestTopic2B35EBBF": {
+   "Type": "AWS::SNS::Topic"
+  },
+  "CloudWatchTestQueue41F9307C": {
+   "Type": "AWS::SQS::Queue",
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "CloudWatchTestQueuePolicyF788205B": {
+   "Type": "AWS::SQS::QueuePolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sqs:SendMessage",
+       "Condition": {
+        "ArnEquals": {
+         "aws:SourceArn": {
+          "Ref": "CloudWatchTestTopic2B35EBBF"
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "sns.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "CloudWatchTestQueue41F9307C",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Queues": [
+     {
+      "Ref": "CloudWatchTestQueue41F9307C"
+     }
+    ]
+   }
+  },
+  "CloudWatchTestQueueNotificationTopicStackCloudWatchTestTopicFF9AEB6D1612B291": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "CloudWatchTestQueue41F9307C",
+      "Arn"
+     ]
+    },
+    "Protocol": "sqs",
+    "TopicArn": {
+     "Ref": "CloudWatchTestTopic2B35EBBF"
+    }
+   },
+   "DependsOn": [
+    "CloudWatchTestQueuePolicyF788205B"
+   ]
+  },
+  "CustomLogGroupD466F813": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "ImageScannerCloudWatchProviderframeworkonEventServiceRoleA71329C7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "ImageScannerCloudWatchProviderframeworkonEventServiceRoleDefaultPolicy963FECEC": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ImageScannerCloudWatchProviderframeworkonEventServiceRoleDefaultPolicy963FECEC",
+    "Roles": [
+     {
+      "Ref": "ImageScannerCloudWatchProviderframeworkonEventServiceRoleA71329C7"
+     }
+    ]
+   }
+  },
+  "ImageScannerCloudWatchProviderframeworkonEventA4E4EFD5": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScannerCloudWatch/Provider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "ImageScannerCloudWatchProviderframeworkonEventServiceRoleA71329C7",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ImageScannerCloudWatchProviderframeworkonEventServiceRoleDefaultPolicy963FECEC",
+    "ImageScannerCloudWatchProviderframeworkonEventServiceRoleA71329C7"
+   ]
+  },
+  "ImageScannerCloudWatch71E567BD": {
+   "Type": "Custom::ImageScannerWithTrivyV2",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "ImageScannerCloudWatchProviderframeworkonEventA4E4EFD5",
+      "Arn"
+     ]
+    },
+    "addr": "c845bb83b77fbb201cc890c2cf3fc036ae645b3b9d",
+    "imageUri": {
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+    },
+    "ignoreUnfixed": "false",
+    "severity": [
+     "CRITICAL"
+    ],
+    "scanners": [],
+    "imageConfigScanners": [],
+    "failOnVulnerability": "false",
+    "trivyIgnore": [],
+    "platform": "",
+    "output": {
+     "type": "cloudWatchLogs",
+     "logGroupName": {
+      "Ref": "CustomLogGroupD466F813"
+     }
+    },
+    "suppressErrorOnRollback": "true",
+    "vulnsTopicArn": {
+     "Ref": "CloudWatchTestTopic2B35EBBF"
+    },
+    "defaultLogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
+       }
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "S3TestTopicA3D195CE": {
+   "Type": "AWS::SNS::Topic"
+  },
+  "S3TestQueue66C87489": {
+   "Type": "AWS::SQS::Queue",
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "S3TestQueuePolicyE549F998": {
+   "Type": "AWS::SQS::QueuePolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sqs:SendMessage",
+       "Condition": {
+        "ArnEquals": {
+         "aws:SourceArn": {
+          "Ref": "S3TestTopicA3D195CE"
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "sns.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "S3TestQueue66C87489",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Queues": [
+     {
+      "Ref": "S3TestQueue66C87489"
+     }
+    ]
+   }
+  },
+  "S3TestQueueNotificationTopicStackS3TestTopic32AC266EA6CC33D5": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "S3TestQueue66C87489",
+      "Arn"
+     ]
+    },
+    "Protocol": "sqs",
+    "TopicArn": {
+     "Ref": "S3TestTopicA3D195CE"
+    }
+   },
+   "DependsOn": [
+    "S3TestQueuePolicyE549F998"
+   ]
+  },
+  "LogsBucket9C4D8843": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "LogsBucketPolicyD70D9252": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "LogsBucket9C4D8843"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "LogsBucket9C4D8843",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "LogsBucket9C4D8843",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   }
+  },
+  "LogsBucketAutoDeleteObjectsCustomResource7D54FB85": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "LogsBucket9C4D8843"
+    }
+   },
+   "DependsOn": [
+    "LogsBucketPolicyD70D9252"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "LogsBucket9C4D8843"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ]
+  },
+  "ImageScannerS3ProviderframeworkonEventServiceRole546B4E30": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "ImageScannerS3ProviderframeworkonEventServiceRoleDefaultPolicyB9D4CB66": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "lambda:GetFunction",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ImageScannerS3ProviderframeworkonEventServiceRoleDefaultPolicyB9D4CB66",
+    "Roles": [
+     {
+      "Ref": "ImageScannerS3ProviderframeworkonEventServiceRole546B4E30"
+     }
+    ]
+   }
+  },
+  "ImageScannerS3ProviderframeworkonEventD27DEF30": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "bdc104ed9cab1b5b6421713c8155f0b753380595356f710400609664d3635eca.zip"
+    },
+    "Description": "AWS CDK resource provider framework - onEvent (NotificationTopicStack/ImageScannerS3/Provider)",
+    "Environment": {
+     "Variables": {
+      "USER_ON_EVENT_FUNCTION_ARN": {
+       "Fn::GetAtt": [
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "Handler": "framework.onEvent",
+    "Role": {
+     "Fn::GetAtt": [
+      "ImageScannerS3ProviderframeworkonEventServiceRole546B4E30",
+      "Arn"
+     ]
+    },
+    "Runtime": {
+     "Fn::FindInMap": [
+      "LatestNodeRuntimeMap",
+      {
+       "Ref": "AWS::Region"
+      },
+      "value"
+     ]
+    },
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "ImageScannerS3ProviderframeworkonEventServiceRoleDefaultPolicyB9D4CB66",
+    "ImageScannerS3ProviderframeworkonEventServiceRole546B4E30"
+   ]
+  },
+  "ImageScannerS3B338B6C2": {
+   "Type": "Custom::ImageScannerWithTrivyV2",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "ImageScannerS3ProviderframeworkonEventD27DEF30",
+      "Arn"
+     ]
+    },
+    "addr": "c8ee0d2617ecb6b47190949465d605631ee2b4fd27",
+    "imageUri": {
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+    },
+    "ignoreUnfixed": "false",
+    "severity": [
+     "CRITICAL"
+    ],
+    "scanners": [],
+    "imageConfigScanners": [],
+    "failOnVulnerability": "false",
+    "trivyIgnore": [],
+    "platform": "",
+    "output": {
+     "type": "s3",
+     "bucketName": {
+      "Ref": "LogsBucket9C4D8843"
+     },
+     "prefix": "scan-logs/"
+    },
+    "suppressErrorOnRollback": "true",
+    "vulnsTopicArn": {
+     "Ref": "S3TestTopicA3D195CE"
+    },
+    "defaultLogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
+       }
+      ]
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete"
   }
  },
  "Mappings": {
@@ -490,12 +1172,28 @@
   }
  },
  "Outputs": {
-  "ExportsOutputRefNotificationQueue36610CC1185DED79": {
+  "ExportsOutputRefDefaultTestQueue7D2FA966BFD3FCA1": {
    "Value": {
-    "Ref": "NotificationQueue36610CC1"
+    "Ref": "DefaultTestQueue7D2FA966"
    },
    "Export": {
-    "Name": "NotificationTopicStack:ExportsOutputRefNotificationQueue36610CC1185DED79"
+    "Name": "NotificationTopicStack:ExportsOutputRefDefaultTestQueue7D2FA966BFD3FCA1"
+   }
+  },
+  "ExportsOutputRefCloudWatchTestQueue41F9307C843C24C8": {
+   "Value": {
+    "Ref": "CloudWatchTestQueue41F9307C"
+   },
+   "Export": {
+    "Name": "NotificationTopicStack:ExportsOutputRefCloudWatchTestQueue41F9307C843C24C8"
+   }
+  },
+  "ExportsOutputRefS3TestQueue66C874895336FF02": {
+   "Value": {
+    "Ref": "S3TestQueue66C87489"
+   },
+   "Export": {
+    "Name": "NotificationTopicStack:ExportsOutputRefS3TestQueue66C874895336FF02"
    }
   }
  },

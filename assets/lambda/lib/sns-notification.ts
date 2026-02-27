@@ -1,10 +1,5 @@
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
-import {
-  ScanLogsOutputOptions,
-  ScanLogsOutputType,
-  CloudWatchLogsOutputOptions,
-  S3OutputOptions,
-} from '../../../src/scan-logs-output';
+import { ScanLogsDetails } from './types';
 
 const snsClient = new SNSClient();
 
@@ -12,19 +7,27 @@ export const sendVulnsNotification = async (
   topicArn: string,
   errorMessage: string,
   imageUri: string,
-  defaultLogGroupName: string,
-  output?: ScanLogsOutputOptions,
+  logsDetails: ScanLogsDetails,
 ) => {
-  // Generate scan logs location message
-  let scanLogsLocation = `CloudWatch Logs: ${defaultLogGroupName}`;
-  if (output?.type === ScanLogsOutputType.CLOUDWATCH_LOGS) {
-    const cwOutput = output as CloudWatchLogsOutputOptions;
-    scanLogsLocation = `CloudWatch Logs: ${cwOutput.logGroupName}`;
-  } else if (output?.type === ScanLogsOutputType.S3) {
-    const s3Output = output as S3OutputOptions;
-    const prefix = s3Output.prefix ? `/${s3Output.prefix}` : '';
-    scanLogsLocation = `S3: s3://${s3Output.bucketName}${prefix}`;
+  // Generate scan logs location message with AWS CLI commands
+  let scanLogsLocation = '';
+  let awsCliCommand = '';
+
+  if (logsDetails.type === 'cloudwatch') {
+    scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}\n  Log Stream: ${logsDetails.logStreamName}`;
+    awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.logStreamName} --since 1h`;
+  } else if (logsDetails.type === 'cloudwatch-v2') {
+    scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}\n  Stdout Stream: ${logsDetails.stdoutLogStreamName}\n  Stderr Stream: ${logsDetails.stderrLogStreamName}`;
+    awsCliCommand = `# View stdout:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stdoutLogStreamName} --since 1h\n\n# View stderr:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stderrLogStreamName} --since 1h`;
+  } else if (logsDetails.type === 's3') {
+    scanLogsLocation = `S3:\n  Bucket: ${logsDetails.bucketName}\n  stderr: s3://${logsDetails.bucketName}/${logsDetails.stderrKey}\n  stdout: s3://${logsDetails.bucketName}/${logsDetails.stdoutKey}`;
+    awsCliCommand = `# View stderr:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -\n\n# View stdout:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stdoutKey} -`;
+  } else if (logsDetails.type === 'default') {
+    scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}`;
+    awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --since 1h`;
   }
+
+  const logsInfo = `${scanLogsLocation}\n\nHow to view logs:\n${awsCliCommand}`;
 
   // AWS Chatbot message format
   // Reference: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
@@ -33,12 +36,12 @@ export const sendVulnsNotification = async (
     source: 'custom',
     content: {
       title: '🔒 Image Scanner with Trivy - Vulnerability Alert',
-      description: `Image: ${imageUri}\n\nScan Logs: ${scanLogsLocation}\n\nDetails:\n${errorMessage}`,
+      description: `Image: ${imageUri}\n\n${logsInfo}\n\nDetails:\n${errorMessage}`,
     },
   };
 
   // Email
-  const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\nScan Logs: ${scanLogsLocation}\n\n${errorMessage}`;
+  const plainTextMessage = `Image Scanner with Trivy detected vulnerabilities in ${imageUri}\n\n${logsInfo}\n\n${errorMessage}`;
 
   // SNS message structure: Supports both Email and Chatbot
   // Default is plain text for Email
