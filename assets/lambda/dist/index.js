@@ -9,22 +9,34 @@
   stderr: s3://${t.bucketName}/${S}
   stdout: s3://${t.bucketName}/${g}`);return{type:"s3",bucketName:t.bucketName,stderrKey:S,stdoutKey:g}};var h=require("@aws-sdk/client-sns"),H=new h.SNSClient,v=async(e,t,n,o)=>{let r="",s="";o.type==="cloudwatch"?(r=`CloudWatch Logs:
   Log Group: ${o.logGroupName}
-  Log Stream: ${o.logStreamName}`,s=`aws logs tail ${o.logGroupName} --log-stream-names ${o.logStreamName} --since 1h`):o.type==="cloudwatch-v2"?(r=`CloudWatch Logs:
+  Log Stream: ${o.logStreamName}`,s=`\`\`\`
+aws logs tail ${o.logGroupName} --log-stream-names ${o.logStreamName} --since 1h
+\`\`\``):o.type==="cloudwatch-v2"?(r=`CloudWatch Logs:
   Log Group: ${o.logGroupName}
   Stdout Stream: ${o.stdoutLogStreamName}
   Stderr Stream: ${o.stderrLogStreamName}`,s=`# View stdout:
+\`\`\`
 aws logs tail ${o.logGroupName} --log-stream-names ${o.stdoutLogStreamName} --since 1h
+\`\`\`
 
 # View stderr:
-aws logs tail ${o.logGroupName} --log-stream-names ${o.stderrLogStreamName} --since 1h`):o.type==="s3"?(r=`S3:
+\`\`\`
+aws logs tail ${o.logGroupName} --log-stream-names ${o.stderrLogStreamName} --since 1h
+\`\`\``):o.type==="s3"?(r=`S3:
   Bucket: ${o.bucketName}
   stderr: s3://${o.bucketName}/${o.stderrKey}
   stdout: s3://${o.bucketName}/${o.stdoutKey}`,s=`# View stderr:
+\`\`\`
 aws s3 cp s3://${o.bucketName}/${o.stderrKey} -
+\`\`\`
 
 # View stdout:
-aws s3 cp s3://${o.bucketName}/${o.stdoutKey} -`):o.type==="default"&&(r=`CloudWatch Logs:
-  Log Group: ${o.logGroupName}`,s=`aws logs tail ${o.logGroupName} --since 1h`);let a=`${r}
+\`\`\`
+aws s3 cp s3://${o.bucketName}/${o.stdoutKey} -
+\`\`\``):o.type==="default"&&(r=`CloudWatch Logs:
+  Log Group: ${o.logGroupName}`,s=`\`\`\`
+aws logs tail ${o.logGroupName} --since 1h
+\`\`\``);let a=`${r}
 
 How to view logs:
 ${s}`,c={version:"1.0",source:"custom",content:{title:"\u{1F512} Image Scanner with Trivy - Vulnerability Alert",description:`Image: ${n}
