@@ -22,7 +22,7 @@ aws s3 cp s3://${o.bucketName}/${o.stderrKey} -
 
 # View stdout:
 aws s3 cp s3://${o.bucketName}/${o.stdoutKey} -`):o.type==="default"&&(s=`CloudWatch Logs:
-  Log Group: ${o.logGroupName}`,r=`aws logs tail ${o.logGroupName} --follow`);let a=r?`${s}
+  Log Group: ${o.logGroupName}`,r=`aws logs tail ${o.logGroupName}`);let a=r?`${s}
 
 How to view logs:
 ${r}`:s,u={version:"1.0",source:"custom",content:{title:"\u{1F512} Image Scanner with Trivy - Vulnerability Alert",description:`Image: ${n}
