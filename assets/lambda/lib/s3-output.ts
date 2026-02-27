@@ -1,6 +1,7 @@
 import { SpawnSyncReturns } from 'child_process';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { S3OutputOptions, SbomFormat } from '../../../src/scan-logs-output';
+import { S3LogsDetails } from './types';
 
 const s3Client = new S3Client();
 
@@ -8,7 +9,7 @@ export const outputScanLogsToS3 = async (
   response: SpawnSyncReturns<Buffer>,
   output: S3OutputOptions,
   imageUri: string,
-) => {
+): Promise<S3LogsDetails> => {
   const timestamp = new Date().toISOString();
   // S3 object key: Replace ':' with '/' for better organization
   const [uri, tag] = imageUri.split(':');
@@ -25,6 +26,9 @@ export const outputScanLogsToS3 = async (
 
   const stderrContent = response.stderr.toString();
   const stdoutContent = response.stdout.toString();
+
+  const stderrKey = `${basePath}/stderr.txt`;
+  const stdoutKey = `${basePath}/stdout.txt`;
 
   if (output.sbomFormat) {
     // SBOM mode: stdout contains SBOM JSON
@@ -47,7 +51,7 @@ export const outputScanLogsToS3 = async (
       s3Client.send(
         new PutObjectCommand({
           Bucket: output.bucketName,
-          Key: `${basePath}/stderr.txt`,
+          Key: stderrKey,
           Body: stderrContent,
           ContentType: 'text/plain',
         }),
@@ -55,7 +59,7 @@ export const outputScanLogsToS3 = async (
       s3Client.send(
         new PutObjectCommand({
           Bucket: output.bucketName,
-          Key: `${basePath}/stdout.txt`,
+          Key: stdoutKey,
           Body: stdoutContent,
           ContentType: 'text/plain',
         }),
@@ -63,7 +67,14 @@ export const outputScanLogsToS3 = async (
     ]);
 
     console.log(
-      `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${basePath}/stderr.txt\n  stdout: s3://${output.bucketName}/${basePath}/stdout.txt`,
+      `Scan logs output to S3:\n  stderr: s3://${output.bucketName}/${stderrKey}\n  stdout: s3://${output.bucketName}/${stdoutKey}`,
     );
   }
+
+  return {
+    type: 's3',
+    bucketName: output.bucketName,
+    stderrKey,
+    stdoutKey,
+  };
 };

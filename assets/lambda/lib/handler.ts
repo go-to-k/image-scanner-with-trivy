@@ -7,6 +7,7 @@ import { outputScanLogsToCWLogs, outputScanLogsToCWLogsV2 } from './cloudwatch-l
 import { outputScanLogsToS3 } from './s3-output';
 import { sendVulnsNotification } from './sns-notification';
 import { isRollbackInProgress } from './cloudformation-utils';
+import { ScanLogsDetails } from './types';
 
 export const handler: CdkCustomResourceHandler = async function (event) {
   const requestType = event.RequestType;
@@ -31,7 +32,13 @@ export const handler: CdkCustomResourceHandler = async function (event) {
   const options = makeOptions(props);
   const response = executeTrivyCommand(props.imageUri, options);
 
-  await outputScanLogs(response, props.imageUri, props.exitCode == undefined, props.output);
+  const logsDetails = await outputScanLogs(
+    response,
+    props.imageUri,
+    props.exitCode == undefined,
+    props.output,
+    props.defaultLogGroupName,
+  );
 
   if (response.status === 0) {
     return funcResponse;
@@ -48,8 +55,7 @@ export const handler: CdkCustomResourceHandler = async function (event) {
       props.vulnsTopicArn,
       errorMessage,
       props.imageUri,
-      props.defaultLogGroupName,
-      props.output,
+      logsDetails,
     );
   }
 
@@ -71,22 +77,25 @@ const outputScanLogs = async (
   response: SpawnSyncReturns<Buffer>,
   imageUri: string,
   isV2: boolean, // TODO: Remove this in the next major version
-  output?: ScanLogsOutputOptions,
-) => {
+  output: ScanLogsOutputOptions | undefined,
+  defaultLogGroupName: string,
+): Promise<ScanLogsDetails> => {
   switch (output?.type) {
     case ScanLogsOutputType.CLOUDWATCH_LOGS:
       if (isV2) {
-        await outputScanLogsToCWLogsV2(response, output as CloudWatchLogsOutputOptions, imageUri);
+        return await outputScanLogsToCWLogsV2(response, output as CloudWatchLogsOutputOptions, imageUri);
       } else {
-        await outputScanLogsToCWLogs(response, output as CloudWatchLogsOutputOptions, imageUri);
+        return await outputScanLogsToCWLogs(response, output as CloudWatchLogsOutputOptions, imageUri);
       }
-      break;
     case ScanLogsOutputType.S3:
-      await outputScanLogsToS3(response, output as S3OutputOptions, imageUri);
-      break;
+      return await outputScanLogsToS3(response, output as S3OutputOptions, imageUri);
     default:
       // Scan logs output to lambda default log group
       console.log('stderr:\n' + response.stderr.toString());
       console.log('stdout:\n' + response.stdout.toString());
+      return {
+        type: 'default',
+        logGroupName: defaultLogGroupName,
+      };
   }
 };

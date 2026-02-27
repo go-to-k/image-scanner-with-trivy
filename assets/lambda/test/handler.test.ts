@@ -165,8 +165,10 @@ describe('handler', () => {
       'arn:aws:sns:us-east-1:123456789012:test-topic',
       expect.stringContaining('vulnerabilities or end-of-life (EOL) image detected'),
       'my-image:v1.0',
-      '/aws/lambda/default',
-      undefined,
+      {
+        type: 'default',
+        logGroupName: '/aws/lambda/default',
+      },
     );
   });
 
