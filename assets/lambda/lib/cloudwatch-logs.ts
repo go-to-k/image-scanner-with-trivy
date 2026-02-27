@@ -112,6 +112,43 @@ export const outputScanLogsToCWLogsV2 = async (
   };
 };
 
+/**
+ * CloudWatch Logs has a limit of 1 MB per log event.
+ * If the message exceeds this limit, it will be split into multiple log events.
+ * Each chunk will be prefixed with [part X/Y] to indicate the sequence.
+ */
+export const MAX_LOG_EVENT_SIZE = 1048576; // 1 MB in bytes
+
+/**
+ * Splits a message into chunks that fit within CloudWatch Logs size limits.
+ * @param message - The message to split
+ * @returns Array of message chunks, each within the size limit
+ */
+export const splitMessageIntoChunks = (message: string): string[] => {
+  const encoder = new TextEncoder();
+  const messageBytes = encoder.encode(message);
+
+  if (messageBytes.length <= MAX_LOG_EVENT_SIZE) {
+    return [message];
+  }
+
+  const chunks: string[] = [];
+  let currentPosition = 0;
+
+  // Reserve space for the prefix like "[part 1/10] "
+  const prefixReserve = 20;
+  const chunkSize = MAX_LOG_EVENT_SIZE - prefixReserve;
+
+  while (currentPosition < messageBytes.length) {
+    const chunkBytes = messageBytes.slice(currentPosition, currentPosition + chunkSize);
+    const decoder = new TextDecoder('utf-8', { fatal: false });
+    chunks.push(decoder.decode(chunkBytes));
+    currentPosition += chunkSize;
+  }
+
+  return chunks;
+};
+
 const createLogStreamAndPutEvents = async (
   logGroupName: string,
   logStreamName: string,
@@ -135,15 +172,22 @@ const createLogStreamAndPutEvents = async (
     }
   }
 
+  const chunks = splitMessageIntoChunks(message);
+  const totalChunks = chunks.length;
+
+  if (totalChunks > 1) {
+    console.log(`Message size exceeds 1 MB limit. Splitting into ${totalChunks} chunks.`);
+  }
+
+  const logEvents = chunks.map((chunk, index) => ({
+    timestamp: timestamp + index, // Increment timestamp slightly to maintain order
+    message: totalChunks > 1 ? `[part ${index + 1}/${totalChunks}] ${chunk}` : chunk,
+  }));
+
   const input: PutLogEventsCommandInput = {
     logGroupName,
     logStreamName,
-    logEvents: [
-      {
-        timestamp,
-        message,
-      },
-    ],
+    logEvents,
   };
   const command = new PutLogEventsCommand(input);
   await cwClient.send(command);

@@ -261,7 +261,10 @@ export interface ImageScannerWithTrivyV2Props {
    *
    * Specify this if you want to send scan logs to other than the default log group.
    *
-   * Currently, only `cloudWatchLogs` is supported.
+   * **Note**: CloudWatch Logs has a 1 MB per log event limit. Large scan results will be
+   * automatically split into multiple events with `[part X/Y]` prefixes. **For large scan
+   * results, we recommend using S3 output** to avoid fragmentation and make it easier to
+   * view complete results.
    *
    * @default - scan logs output to `defaultLogGroup` if specified, otherwise to the default
    * log group created by Scanner Lambda.

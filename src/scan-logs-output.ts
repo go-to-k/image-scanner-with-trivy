@@ -117,6 +117,13 @@ export interface S3OutputProps {
 export abstract class ScanLogsOutput {
   /**
    * Scan logs output to CloudWatch Logs log group.
+   *
+   * **Note on Large Scan Results**: CloudWatch Logs has a limit of 1 MB per log event.
+   * If Trivy scan results (stdout/stderr) exceed this limit, they will be automatically
+   * split into multiple log events. Each chunk will be prefixed with `[part X/Y]` to
+   * indicate the sequence, ensuring no data loss while staying within CloudWatch Logs quotas.
+   * **For large scan results, we recommend using S3 output instead** to avoid fragmentation
+   * and make it easier to view complete results.
    */
   public static cloudWatchLogs(options: CloudWatchLogsOutputProps): ScanLogsOutput {
     return new CloudWatchLogsOutput(options);
