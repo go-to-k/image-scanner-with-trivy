@@ -10,15 +10,11 @@ import { Queue } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
 import { ImageScannerWithTrivyV2, ScanLogsOutput, SbomFormat } from '../src';
 
-interface NotificationTestSetupProps {
-  readonly image: DockerImageAsset;
-}
-
 class NotificationTestSetup extends Construct {
   public readonly topic: Topic;
   public readonly queue: Queue;
 
-  constructor(scope: Construct, id: string, props: NotificationTestSetupProps) {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     this.topic = new Topic(this, 'Topic');
@@ -37,7 +33,7 @@ const image = new DockerImageAsset(stack, 'DockerImage', {
 });
 
 // Test 1: Default CloudWatch Logs (no scanLogsOutput specified)
-const defaultTest = new NotificationTestSetup(stack, 'DefaultTest', { image });
+const defaultTest = new NotificationTestSetup(stack, 'DefaultTest');
 new ImageScannerWithTrivyV2(stack, 'ImageScannerDefault', {
   imageUri: image.imageUri,
   repository: image.repository,
@@ -47,7 +43,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerDefault', {
 });
 
 // Test 2: CloudWatch Logs with custom log group
-const cloudwatchTest = new NotificationTestSetup(stack, 'CloudWatchTest', { image });
+const cloudwatchTest = new NotificationTestSetup(stack, 'CloudWatchTest');
 const customLogGroup = new LogGroup(stack, 'CustomLogGroup', {
   retention: RetentionDays.ONE_WEEK,
   removalPolicy: RemovalPolicy.DESTROY,
@@ -61,7 +57,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerCloudWatch', {
 });
 
 // Test 3: S3 output
-const s3Test = new NotificationTestSetup(stack, 'S3Test', { image });
+const s3Test = new NotificationTestSetup(stack, 'S3Test');
 const logsBucket = new Bucket(stack, 'LogsBucket', {
   removalPolicy: RemovalPolicy.DESTROY,
   autoDeleteObjects: true,
@@ -75,7 +71,7 @@ new ImageScannerWithTrivyV2(stack, 'ImageScannerS3', {
 });
 
 // Test 4: S3 output with SBOM
-const sbomTest = new NotificationTestSetup(stack, 'SBOMTest', { image });
+const sbomTest = new NotificationTestSetup(stack, 'SBOMTest');
 new ImageScannerWithTrivyV2(stack, 'ImageScannerSBOM', {
   imageUri: image.imageUri,
   repository: image.repository,
