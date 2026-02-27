@@ -27,9 +27,7 @@ export const sendVulnsNotification = async (
     awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --since 1h`;
   }
 
-  const logsInfo = awsCliCommand
-    ? `${scanLogsLocation}\n\nHow to view logs:\n${awsCliCommand}`
-    : scanLogsLocation;
+  const logsInfo = `${scanLogsLocation}\n\nHow to view logs:\n${awsCliCommand}`;
 
   // AWS Chatbot message format
   // Reference: https://docs.aws.amazon.com/chatbot/latest/adminguide/custom-notifs.html
