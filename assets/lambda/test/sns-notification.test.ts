@@ -33,10 +33,7 @@ describe('sns-notification', () => {
       const call = snsMock.call(0);
       const messageStructure = JSON.parse((call.args[0] as PublishCommand).input.Message!);
 
-      expect(messageStructure.default).toContain('CloudWatch Logs:');
-      expect(messageStructure.default).toContain('/aws/lambda/default-log-group');
-      expect(messageStructure.default).toContain('How to view logs:');
-      expect(messageStructure.default).toContain('aws logs tail');
+      expect(messageStructure.default).toContain('aws logs tail /aws/lambda/default-log-group --since 1h');
     });
 
     test('should generate scan logs location for CloudWatch Logs V1 with log stream details', async () => {
@@ -53,11 +50,7 @@ describe('sns-notification', () => {
       const call = snsMock.call(0);
       const messageStructure = JSON.parse((call.args[0] as PublishCommand).input.Message!);
 
-      expect(messageStructure.default).toContain('CloudWatch Logs:');
-      expect(messageStructure.default).toContain('Log Group: /custom/log/group');
-      expect(messageStructure.default).toContain('Log Stream: uri=test-image,tag=latest');
-      expect(messageStructure.default).toContain('How to view logs:');
-      expect(messageStructure.default).toContain('aws logs get-log-events --log-group-name /custom/log/group --log-stream-name uri=test-image,tag=latest');
+      expect(messageStructure.default).toContain('aws logs tail /custom/log/group --log-stream-names uri=test-image,tag=latest --since 1h');
     });
 
     test('should generate scan logs location for CloudWatch Logs V2 with separate stdout/stderr streams', async () => {
@@ -75,13 +68,8 @@ describe('sns-notification', () => {
       const call = snsMock.call(0);
       const messageStructure = JSON.parse((call.args[0] as PublishCommand).input.Message!);
 
-      expect(messageStructure.default).toContain('CloudWatch Logs:');
-      expect(messageStructure.default).toContain('Log Group: /custom/log/group');
-      expect(messageStructure.default).toContain('Stdout Stream: uri=test-image,tag=latest/stdout');
-      expect(messageStructure.default).toContain('Stderr Stream: uri=test-image,tag=latest/stderr');
-      expect(messageStructure.default).toContain('How to view logs:');
-      expect(messageStructure.default).toContain('# View stdout:');
-      expect(messageStructure.default).toContain('# View stderr:');
+      expect(messageStructure.default).toContain('aws logs tail /custom/log/group --log-stream-names uri=test-image,tag=latest/stdout --since 1h');
+      expect(messageStructure.default).toContain('aws logs tail /custom/log/group --log-stream-names uri=test-image,tag=latest/stderr --since 1h');
     });
 
     test('should generate scan logs location for S3 with detailed keys', async () => {
@@ -99,12 +87,8 @@ describe('sns-notification', () => {
       const call = snsMock.call(0);
       const messageStructure = JSON.parse((call.args[0] as PublishCommand).input.Message!);
 
-      expect(messageStructure.default).toContain('S3:');
-      expect(messageStructure.default).toContain('Bucket: test-bucket');
-      expect(messageStructure.default).toContain('stderr: s3://test-bucket/scan-logs/test-image/latest/2024-01-01T00:00:00.000Z/stderr.txt');
-      expect(messageStructure.default).toContain('stdout: s3://test-bucket/scan-logs/test-image/latest/2024-01-01T00:00:00.000Z/stdout.txt');
-      expect(messageStructure.default).toContain('How to view logs:');
-      expect(messageStructure.default).toContain('aws s3 cp');
+      expect(messageStructure.default).toContain('aws s3 cp s3://test-bucket/scan-logs/test-image/latest/2024-01-01T00:00:00.000Z/stderr.txt -');
+      expect(messageStructure.default).toContain('aws s3 cp s3://test-bucket/scan-logs/test-image/latest/2024-01-01T00:00:00.000Z/stdout.txt -');
     });
 
     test('should handle SNS publish errors gracefully', async () => {

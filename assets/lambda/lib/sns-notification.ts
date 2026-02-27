@@ -15,16 +15,16 @@ export const sendVulnsNotification = async (
 
   if (logsDetails.type === 'cloudwatch') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}\n  Log Stream: ${logsDetails.logStreamName}`;
-    awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.logStreamName}`;
+    awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.logStreamName} --since 1h`;
   } else if (logsDetails.type === 'cloudwatch-v2') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}\n  Stdout Stream: ${logsDetails.stdoutLogStreamName}\n  Stderr Stream: ${logsDetails.stderrLogStreamName}`;
-    awsCliCommand = `# View stdout:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stdoutLogStreamName}\n\n# View stderr:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stderrLogStreamName}`;
+    awsCliCommand = `# View stdout:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stdoutLogStreamName} --since 1h\n\n# View stderr:\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stderrLogStreamName} --since 1h`;
   } else if (logsDetails.type === 's3') {
     scanLogsLocation = `S3:\n  Bucket: ${logsDetails.bucketName}\n  stderr: s3://${logsDetails.bucketName}/${logsDetails.stderrKey}\n  stdout: s3://${logsDetails.bucketName}/${logsDetails.stdoutKey}`;
     awsCliCommand = `# View stderr:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -\n\n# View stdout:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stdoutKey} -`;
   } else if (logsDetails.type === 'default') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}`;
-    awsCliCommand = `aws logs tail ${logsDetails.logGroupName}`;
+    awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --since 1h`;
   }
 
   const logsInfo = awsCliCommand
