@@ -18,10 +18,10 @@ export const sendVulnsNotification = async (
     awsCliCommand = `\`\`\`\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.logStreamName} --since 1h\n\`\`\``;
   } else if (logsDetails.type === 'cloudwatch-v2') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}\n  Stdout Stream: ${logsDetails.stdoutLogStreamName}\n  Stderr Stream: ${logsDetails.stderrLogStreamName}`;
-    awsCliCommand = `# View stdout:\n\`\`\`\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stdoutLogStreamName} --since 1h\n\`\`\`\n\n# View stderr:\n\`\`\`\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stderrLogStreamName} --since 1h\n\`\`\``;
+    awsCliCommand = `- View stdout:\n\`\`\`\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stdoutLogStreamName} --since 1h\n\`\`\`\n\n- View stderr:\n\`\`\`\naws logs tail ${logsDetails.logGroupName} --log-stream-names ${logsDetails.stderrLogStreamName} --since 1h\n\`\`\``;
   } else if (logsDetails.type === 's3') {
     scanLogsLocation = `S3:\n  Bucket: ${logsDetails.bucketName}\n  stderr: s3://${logsDetails.bucketName}/${logsDetails.stderrKey}\n  stdout: s3://${logsDetails.bucketName}/${logsDetails.stdoutKey}`;
-    awsCliCommand = `# View stderr:\n\`\`\`\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -\n\`\`\`\n\n# View stdout:\n\`\`\`\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stdoutKey} -\n\`\`\``;
+    awsCliCommand = `- View stderr:\n\`\`\`\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -\n\`\`\`\n\n- View stdout:\n\`\`\`\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stdoutKey} -\n\`\`\``;
   } else if (logsDetails.type === 'default') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}`;
     awsCliCommand = `\`\`\`\naws logs tail ${logsDetails.logGroupName} --since 1h\n\`\`\``;
@@ -36,7 +36,7 @@ export const sendVulnsNotification = async (
     source: 'custom',
     content: {
       title: '🔒 Image Scanner with Trivy - Vulnerability Alert',
-      description: `Image: ${imageUri}\n\n${logsInfo}\n\nDetails:\n${errorMessage}`,
+      description: `## Scanned Image\n${imageUri}\n\n## Scan Logs\n${logsInfo}\n\n## Details\n${errorMessage}`,
     },
   };
 
