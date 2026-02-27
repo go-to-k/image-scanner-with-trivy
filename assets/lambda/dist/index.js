@@ -14,23 +14,23 @@ aws logs tail ${o.logGroupName} --log-stream-names ${o.logStreamName} --since 1h
 \`\`\``):o.type==="cloudwatch-v2"?(r=`CloudWatch Logs:
   Log Group: ${o.logGroupName}
   Stdout Stream: ${o.stdoutLogStreamName}
-  Stderr Stream: ${o.stderrLogStreamName}`,s=`# View stdout:
+  Stderr Stream: ${o.stderrLogStreamName}`,s=`- View stdout:
 \`\`\`
 aws logs tail ${o.logGroupName} --log-stream-names ${o.stdoutLogStreamName} --since 1h
 \`\`\`
 
-# View stderr:
+- View stderr:
 \`\`\`
 aws logs tail ${o.logGroupName} --log-stream-names ${o.stderrLogStreamName} --since 1h
 \`\`\``):o.type==="s3"?(r=`S3:
   Bucket: ${o.bucketName}
   stderr: s3://${o.bucketName}/${o.stderrKey}
-  stdout: s3://${o.bucketName}/${o.stdoutKey}`,s=`# View stderr:
+  stdout: s3://${o.bucketName}/${o.stdoutKey}`,s=`- View stderr:
 \`\`\`
 aws s3 cp s3://${o.bucketName}/${o.stderrKey} -
 \`\`\`
 
-# View stdout:
+- View stdout:
 \`\`\`
 aws s3 cp s3://${o.bucketName}/${o.stdoutKey} -
 \`\`\``):o.type==="default"&&(r=`CloudWatch Logs:
@@ -39,11 +39,13 @@ aws logs tail ${o.logGroupName} --since 1h
 \`\`\``);let a=`${r}
 
 How to view logs:
-${s}`,c={version:"1.0",source:"custom",content:{title:"\u{1F512} Image Scanner with Trivy - Vulnerability Alert",description:`Image: ${n}
+${s}`,c={version:"1.0",source:"custom",content:{title:"\u{1F512} Image Scanner with Trivy - Vulnerability Alert",description:`## Scanned Image
+${n}
 
+## Scan Logs
 ${a}
 
-Details:
+## Details
 ${t}`}},i=`Image Scanner with Trivy detected vulnerabilities in ${n}
 
 ${a}

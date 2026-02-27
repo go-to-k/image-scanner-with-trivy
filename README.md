@@ -256,7 +256,7 @@ The `ImageScannerWithTrivyV2` construct introduces several API improvements and 
 
 To migrate from V1 to V2, follow these steps:
 
-1. **Update the import statement**:
+**Update the import statement**:
 
 ```ts
 // Before (V1)
@@ -266,7 +266,7 @@ import { ImageScannerWithTrivy } from 'image-scanner-with-trivy';
 import { ImageScannerWithTrivyV2 } from 'image-scanner-with-trivy';
 ```
 
-1. **Update to new properties**:
+**Update to new properties**:
 
 ```ts
 // Before (V1)
@@ -296,7 +296,7 @@ new ImageScannerWithTrivyV2(this, 'Scanner', {
 });
 ```
 
-1. **Update log group configuration** (if you were using custom log settings):
+**Update log group configuration** (if you were using custom log settings):
 
 ```ts
 // Before (V1)
@@ -320,6 +320,29 @@ new ImageScannerWithTrivyV2(this, 'Scanner', {
   repository: image.repository,
   defaultLogGroup: logGroup,
 });
+```
+
+**Update dependencies using `blockConstructs`** (if you were using `construct.node.addDependency()` to block deployments):
+
+```ts
+// Before (V1)
+const constructToBlock = new YourConstruct(this, 'YourConstruct');
+const scanner = new ImageScannerWithTrivy(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+});
+
+// Manually add dependencies to block constructs on vulnerability detection
+constructToBlock.node.addDependency(scanner);
+
+// After (V2)
+new ImageScannerWithTrivyV2(this, 'Scanner', {
+  imageUri: image.imageUri,
+  repository: image.repository,
+  blockConstructs: [constructToBlock], // Automatically block the construct on vulnerability detection
+});
+
+// constructToBlock.node.addDependency(scanner); // No longer needed - blockConstructs handles this automatically
 ```
 
 ### Important Notes on Migration
