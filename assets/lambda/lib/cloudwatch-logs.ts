@@ -117,14 +117,14 @@ export const outputScanLogsToCWLogsV2 = async (
  * If the message exceeds this limit, it will be split into multiple log events.
  * Each chunk will be prefixed with [part X/Y] to indicate the sequence.
  */
-export const MAX_LOG_EVENT_SIZE = 1048576; // 1 MB in bytes
+const MAX_LOG_EVENT_SIZE = 1048576; // 1 MB in bytes
 
 /**
  * Splits a message into chunks that fit within CloudWatch Logs size limits.
  * @param message - The message to split
  * @returns Array of message chunks, each within the size limit
  */
-export const splitMessageIntoChunks = (message: string): string[] => {
+const splitMessageIntoChunks = (message: string): string[] => {
   const encoder = new TextEncoder();
   const messageBytes = encoder.encode(message);
 

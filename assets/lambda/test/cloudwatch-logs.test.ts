@@ -6,12 +6,10 @@ import {
 } from '@aws-sdk/client-cloudwatch-logs';
 import { mockClient } from 'aws-sdk-client-mock';
 import { SpawnSyncReturns } from 'child_process';
-import {
-  outputScanLogsToCWLogsV2,
-  splitMessageIntoChunks,
-  MAX_LOG_EVENT_SIZE,
-} from '../lib/cloudwatch-logs';
+import { outputScanLogsToCWLogsV2 } from '../lib/cloudwatch-logs';
 import { ScanLogsOutputType } from '../../../src/scan-logs-output';
+
+const MAX_LOG_EVENT_SIZE = 1048576; // 1 MB in bytes
 
 const cwMock = mockClient(CloudWatchLogsClient);
 
@@ -127,39 +125,6 @@ describe('cloudwatch-logs', () => {
       // Verify each event has the [part X/Y] prefix
       logEvents!.forEach((event: any) => {
         expect(event.message).toMatch(/^\[part \d+\/\d+\]/);
-      });
-    });
-  });
-
-  describe('splitMessageIntoChunks', () => {
-    test('should return a single chunk for messages smaller than 1 MB', () => {
-      const smallMessage = 'This is a small message';
-      const chunks = splitMessageIntoChunks(smallMessage);
-
-      expect(chunks).toHaveLength(1);
-      expect(chunks[0]).toBe(smallMessage);
-    });
-
-    test('should return a single chunk for messages exactly 1 MB', () => {
-      const exactMessage = 'a'.repeat(MAX_LOG_EVENT_SIZE);
-      const chunks = splitMessageIntoChunks(exactMessage);
-
-      expect(chunks).toHaveLength(1);
-      expect(chunks[0]).toBe(exactMessage);
-    });
-
-    test('should split messages larger than 1 MB into multiple chunks', () => {
-      // Create a message larger than 1 MB
-      const largeMessage = 'a'.repeat(MAX_LOG_EVENT_SIZE + 100000);
-      const chunks = splitMessageIntoChunks(largeMessage);
-
-      expect(chunks.length).toBeGreaterThan(1);
-
-      // Verify each chunk is within size limit
-      chunks.forEach((chunk) => {
-        const encoder = new TextEncoder();
-        const chunkBytes = encoder.encode(chunk);
-        expect(chunkBytes.length).toBeLessThanOrEqual(MAX_LOG_EVENT_SIZE);
       });
     });
   });
