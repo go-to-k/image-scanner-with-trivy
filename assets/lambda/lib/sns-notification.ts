@@ -22,6 +22,9 @@ export const sendVulnsNotification = async (
   } else if (logsDetails.type === 's3') {
     scanLogsLocation = `S3:\n  Bucket: ${logsDetails.bucketName}\n  stderr: s3://${logsDetails.bucketName}/${logsDetails.stderrKey}\n  stdout: s3://${logsDetails.bucketName}/${logsDetails.stdoutKey}`;
     awsCliCommand = `# View stderr:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -\n\n# View stdout:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stdoutKey} -`;
+  } else if (logsDetails.type === 's3-sbom') {
+    scanLogsLocation = `S3:\n  Bucket: ${logsDetails.bucketName}\n  SBOM (${logsDetails.sbomFormat}): s3://${logsDetails.bucketName}/${logsDetails.sbomKey}\n  stderr: s3://${logsDetails.bucketName}/${logsDetails.stderrKey}`;
+    awsCliCommand = `# View SBOM:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.sbomKey} -\n\n# View stderr:\naws s3 cp s3://${logsDetails.bucketName}/${logsDetails.stderrKey} -`;
   } else if (logsDetails.type === 'default') {
     scanLogsLocation = `CloudWatch Logs:\n  Log Group: ${logsDetails.logGroupName}`;
     awsCliCommand = `aws logs tail ${logsDetails.logGroupName} --since 1h`;

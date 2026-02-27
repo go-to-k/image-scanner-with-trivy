@@ -37,10 +37,12 @@ describe('s3-output', () => {
 
       const result = await outputScanLogsToS3(response, output, 'my-image:v1.0');
 
+      expect(result.type).toBe('s3');
       expect(result.stderrKey).toMatch(/^scan-logs\//);
       expect(result.stderrKey).not.toMatch(/^scan-logs\/\//);
-      expect(result.stdoutKey).toMatch(/^scan-logs\//);
-      expect(result.stdoutKey).not.toMatch(/^scan-logs\/\//);
+      expect(result).toHaveProperty('stdoutKey');
+      expect((result as any).stdoutKey).toMatch(/^scan-logs\//);
+      expect((result as any).stdoutKey).not.toMatch(/^scan-logs\/\//);
     });
 
     test('should not duplicate trailing slash when prefix ends with slash', async () => {
@@ -54,10 +56,12 @@ describe('s3-output', () => {
 
       const result = await outputScanLogsToS3(response, output, 'my-image:v1.0');
 
+      expect(result.type).toBe('s3');
       expect(result.stderrKey).toMatch(/^scan-logs\//);
       expect(result.stderrKey).not.toMatch(/^scan-logs\/\//);
-      expect(result.stdoutKey).toMatch(/^scan-logs\//);
-      expect(result.stdoutKey).not.toMatch(/^scan-logs\/\//);
+      expect(result).toHaveProperty('stdoutKey');
+      expect((result as any).stdoutKey).toMatch(/^scan-logs\//);
+      expect((result as any).stdoutKey).not.toMatch(/^scan-logs\/\//);
     });
 
     test('should upload stderr and stdout when sbomFormat is not provided', async () => {
@@ -105,15 +109,19 @@ describe('s3-output', () => {
 
       const result = await outputScanLogsToS3(response, output, 'my-image:v1.0');
 
-      expect(s3Mock.calls()).toHaveLength(1);
-      const call = s3Mock.call(0);
-      const input = (call.args[0] as PutObjectCommand).input;
-      expect(input.Key).toMatch(/sbom\.spdx$/);
-      expect(input.ContentType).toBe('text/plain');
+      // Verify ContentType is set correctly
+      const sbomCall = s3Mock.calls().find(call =>
+        (call.args[0] as PutObjectCommand).input.Key?.includes('sbom.spdx')
+      );
+      expect(sbomCall).toBeDefined();
+      expect((sbomCall!.args[0] as PutObjectCommand).input.ContentType).toBe('text/plain');
 
       // Verify return value
-      expect(result.type).toBe('s3');
+      expect(result.type).toBe('s3-sbom');
       expect(result.bucketName).toBe('test-bucket');
+      expect((result as any).sbomFormat).toBe(SbomFormat.SPDX);
+      expect((result as any).sbomKey).toMatch(/sbom\.spdx$/);
+      expect((result as any).stderrKey).toMatch(/stderr\.txt$/);
     });
 
     test('should use .json extension and application/json ContentType for non-SPDX SBOM format', async () => {
@@ -127,15 +135,19 @@ describe('s3-output', () => {
 
       const result = await outputScanLogsToS3(response, output, 'my-image:v1.0');
 
-      expect(s3Mock.calls()).toHaveLength(1);
-      const call = s3Mock.call(0);
-      const input = (call.args[0] as PutObjectCommand).input;
-      expect(input.Key).toMatch(/sbom\.json$/);
-      expect(input.ContentType).toBe('application/json');
+      // Verify ContentType is set correctly
+      const sbomCall = s3Mock.calls().find(call =>
+        (call.args[0] as PutObjectCommand).input.Key?.includes('sbom.json')
+      );
+      expect(sbomCall).toBeDefined();
+      expect((sbomCall!.args[0] as PutObjectCommand).input.ContentType).toBe('application/json');
 
       // Verify return value
-      expect(result.type).toBe('s3');
+      expect(result.type).toBe('s3-sbom');
       expect(result.bucketName).toBe('test-bucket');
+      expect((result as any).sbomFormat).toBe(SbomFormat.CYCLONEDX);
+      expect((result as any).sbomKey).toMatch(/sbom\.json$/);
+      expect((result as any).stderrKey).toMatch(/stderr\.txt$/);
     });
   });
 });
