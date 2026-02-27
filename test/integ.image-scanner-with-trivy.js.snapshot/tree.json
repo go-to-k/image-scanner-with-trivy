@@ -747,7 +747,7 @@
                     ],
                     "code": {
                       "imageUri": {
-                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+                        "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
                       }
                     },
                     "ephemeralStorage": {
@@ -1624,17 +1624,17 @@
           "version": "2.178.1"
         }
       },
-      "Test": {
-        "id": "Test",
-        "path": "Test",
+      "ImageScannerWithTrivyTest": {
+        "id": "ImageScannerWithTrivyTest",
+        "path": "ImageScannerWithTrivyTest",
         "children": {
           "DefaultTest": {
             "id": "DefaultTest",
-            "path": "Test/DefaultTest",
+            "path": "ImageScannerWithTrivyTest/DefaultTest",
             "children": {
               "Default": {
                 "id": "Default",
-                "path": "Test/DefaultTest/Default",
+                "path": "ImageScannerWithTrivyTest/DefaultTest/Default",
                 "constructInfo": {
                   "fqn": "constructs.Construct",
                   "version": "10.0.5"
@@ -1642,19 +1642,19 @@
               },
               "DeployAssert": {
                 "id": "DeployAssert",
-                "path": "Test/DefaultTest/DeployAssert",
+                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert",
                 "children": {
                   "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16": {
                     "id": "AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16",
-                    "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16",
                     "children": {
                       "SdkProvider": {
                         "id": "SdkProvider",
-                        "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider",
                         "children": {
                           "AssertionsProvider": {
                             "id": "AssertionsProvider",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider/AssertionsProvider",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/SdkProvider/AssertionsProvider",
                             "constructInfo": {
                               "fqn": "constructs.Construct",
                               "version": "10.0.5"
@@ -1668,11 +1668,11 @@
                       },
                       "Default": {
                         "id": "Default",
-                        "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default",
                         "children": {
                           "Default": {
                             "id": "Default",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default/Default",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/Default/Default",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1691,15 +1691,15 @@
                       },
                       "WaitFor": {
                         "id": "WaitFor",
-                        "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor",
                         "children": {
                           "IsCompleteProvider": {
                             "id": "IsCompleteProvider",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/AssertionsProvider",
+                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1707,7 +1707,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/Invoke",
+                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/IsCompleteProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1721,11 +1721,11 @@
                           },
                           "TimeoutProvider": {
                             "id": "TimeoutProvider",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider",
                             "children": {
                               "AssertionsProvider": {
                                 "id": "AssertionsProvider",
-                                "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/AssertionsProvider",
+                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/AssertionsProvider",
                                 "constructInfo": {
                                   "fqn": "constructs.Construct",
                                   "version": "10.0.5"
@@ -1733,7 +1733,7 @@
                               },
                               "Invoke": {
                                 "id": "Invoke",
-                                "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/Invoke",
+                                "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/TimeoutProvider/Invoke",
                                 "constructInfo": {
                                   "fqn": "aws-cdk-lib.CfnResource",
                                   "version": "2.178.1"
@@ -1747,7 +1747,7 @@
                           },
                           "Role": {
                             "id": "Role",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Role",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Role",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1755,7 +1755,7 @@
                           },
                           "Resource": {
                             "id": "Resource",
-                            "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Resource",
+                            "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/WaitFor/Resource",
                             "constructInfo": {
                               "fqn": "aws-cdk-lib.CfnResource",
                               "version": "2.178.1"
@@ -1769,7 +1769,7 @@
                       },
                       "AssertionResults": {
                         "id": "AssertionResults",
-                        "path": "Test/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/AssertionResults",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents9dfb04693aa1e1b495757169187e3a16/AssertionResults",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnOutput",
                           "version": "2.178.1"
@@ -1783,11 +1783,11 @@
                   },
                   "SingletonFunction1488541a7b23466481b69b4408076b81": {
                     "id": "SingletonFunction1488541a7b23466481b69b4408076b81",
-                    "path": "Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1795,7 +1795,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1803,7 +1803,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1817,7 +1817,7 @@
                   },
                   "LatestNodeRuntimeMap": {
                     "id": "LatestNodeRuntimeMap",
-                    "path": "Test/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnMapping",
                       "version": "2.178.1"
@@ -1825,11 +1825,11 @@
                   },
                   "SingletonFunction76b3e830a873425f8453eddd85c86925": {
                     "id": "SingletonFunction76b3e830a873425f8453eddd85c86925",
-                    "path": "Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1837,7 +1837,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1845,7 +1845,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1859,11 +1859,11 @@
                   },
                   "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a": {
                     "id": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
-                    "path": "Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a",
                     "children": {
                       "Staging": {
                         "id": "Staging",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Staging",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.AssetStaging",
                           "version": "2.178.1"
@@ -1871,7 +1871,7 @@
                       },
                       "Role": {
                         "id": "Role",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1879,7 +1879,7 @@
                       },
                       "Handler": {
                         "id": "Handler",
-                        "path": "Test/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
+                        "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.CfnResource",
                           "version": "2.178.1"
@@ -1893,7 +1893,7 @@
                   },
                   "BootstrapVersion": {
                     "id": "BootstrapVersion",
-                    "path": "Test/DefaultTest/DeployAssert/BootstrapVersion",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/BootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnParameter",
                       "version": "2.178.1"
@@ -1901,7 +1901,7 @@
                   },
                   "CheckBootstrapVersion": {
                     "id": "CheckBootstrapVersion",
-                    "path": "Test/DefaultTest/DeployAssert/CheckBootstrapVersion",
+                    "path": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert/CheckBootstrapVersion",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.CfnRule",
                       "version": "2.178.1"

@@ -11,7 +11,7 @@ import {
 } from 'aws-cdk-lib';
 import { IRepository } from 'aws-cdk-lib/aws-ecr';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
-import { IGrantable, PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import {
   Architecture,
   AssetCode,
@@ -19,102 +19,18 @@ import {
   Runtime,
   SingletonFunction,
 } from 'aws-cdk-lib/aws-lambda';
-import { CfnLogGroup, ILogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { CfnLogGroup, LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
-import {
-  CloudWatchLogsOutputOptions,
-  ScanLogsOutputOptions,
-  ScanLogsOutputType,
-  ScannerCustomResourceProps,
-} from './types';
+import { ScannerCustomResourceProps } from './custom-resource-props';
+import { ScanLogsOutput } from './scan-logs-output';
+import { Severity, Scanners, ImageConfigScanners } from './types';
 
 /**
- * Enum for Severity Selection
+ * Properties for ImageScannerWithTrivy Construct.
  *
- * @see https://aquasecurity.github.io/trivy/latest/docs/scanner/vulnerability/#severity-selection
+ * @deprecated Use ImageScannerWithTrivyV2Props instead. This will be removed in the next major version.
  */
-export enum Severity {
-  UNKNOWN = 'UNKNOWN',
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
-
-/**
- * Enum for Scanners
- *
- * @see https://aquasecurity.github.io/trivy/latest/docs/configuration/others/#enabledisable-scanners
- */
-export enum Scanners {
-  VULN = 'vuln',
-  CONFIG = 'config',
-  SECRET = 'secret',
-  LICENSE = 'license',
-}
-
-/**
- * Enum for ImageConfigScanners
- *
- * @see https://aquasecurity.github.io/trivy/latest/docs/target/container_image/#container-image-metadata
- */
-export enum ImageConfigScanners {
-  CONFIG = 'config',
-  SECRET = 'secret',
-}
-
-/**
- * Configuration for scan logs output to CloudWatch Logs log group.
- */
-export interface CloudWatchLogsOutputProps {
-  /**
-   * The log group to output scan logs.
-   */
-  readonly logGroup: ILogGroup;
-}
-
-/**
- * Represents the output of the scan logs.
- */
-export abstract class ScanLogsOutput {
-  /**
-   * Scan logs output to CloudWatch Logs log group.
-   */
-  public static cloudWatchLogs(options: CloudWatchLogsOutputProps): ScanLogsOutput {
-    return new CloudWatchLogsOutput(options);
-  }
-
-  /**
-   * Returns the output configuration for scan logs.
-   */
-  public abstract bind(grantee: IGrantable): ScanLogsOutputOptions;
-}
-
-class CloudWatchLogsOutput extends ScanLogsOutput {
-  /**
-   * The log group to output scan logs.
-   */
-  private readonly logGroup: ILogGroup;
-
-  constructor(options: CloudWatchLogsOutputProps) {
-    super();
-
-    this.logGroup = options.logGroup;
-  }
-
-  public bind(grantee: IGrantable): CloudWatchLogsOutputOptions {
-    // Most Lambdas are granted AWSLambdaBasicExecutionRole and can write to any CloudWatch Logs.
-    // However, just in case AWSLambdaBasicExecutionRole is not granted, allow writing to CloudWatch Logs.
-    this.logGroup.grantWrite(grantee);
-
-    return {
-      type: ScanLogsOutputType.CLOUDWATCH_LOGS,
-      logGroupName: this.logGroup.logGroupName,
-    };
-  }
-}
-
 export interface ImageScannerWithTrivyProps {
   /**
    * Image URI for scan target.
@@ -326,6 +242,12 @@ export interface ImageScannerWithTrivyProps {
 // Maximum Lambda memory size for default AWS account without quota limit increase
 const DEFAULT_MEMORY_SIZE = 3008;
 
+/**
+ * A Construct that scans container images with Trivy.
+ * It uses a Lambda function as a Custom Resource provider to run Trivy and scan container images.
+ *
+ * @deprecated Use ImageScannerWithTrivyV2 instead. This will be removed in the next major version.
+ */
 export class ImageScannerWithTrivy extends Construct {
   constructor(scope: Construct, id: string, props: ImageScannerWithTrivyProps) {
     super(scope, id);
@@ -395,12 +317,14 @@ export class ImageScannerWithTrivy extends Construct {
       severity: props.severity ?? [Severity.CRITICAL],
       scanners: props.scanners ?? [],
       imageConfigScanners: props.imageConfigScanners ?? [],
-      exitCode: props.exitCode ?? 1,
-      exitOnEol: props.exitOnEol ?? 1,
+      exitCode: props.exitCode ?? 1, // TODO: Remove exitCode and exitOnEol properties in the next major version, as they are now controlled by failOnVulnerability.
+      exitOnEol: props.exitOnEol ?? 1, // TODO: Remove exitCode and exitOnEol properties in the next major version, as they are now controlled by failOnVulnerability.
+      failOnVulnerability: 'true', // dummy value for v2 property
       trivyIgnore: props.trivyIgnore ?? [],
       platform: props.platform ?? '',
       output: props.scanLogsOutput?.bind(customResourceLambda),
       suppressErrorOnRollback: String(suppressErrorOnRollback),
+      defaultLogGroupName: `/aws/lambda/${customResourceLambda.functionName}`,
     };
 
     new CustomResource(this, 'Resource', {

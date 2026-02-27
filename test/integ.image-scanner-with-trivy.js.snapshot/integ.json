@@ -1,13 +1,14 @@
 {
   "version": "39.0.0",
   "testCases": {
-    "Test/DefaultTest": {
+    "ImageScannerWithTrivyTest/DefaultTest": {
       "stacks": [
         "ImageScannerWithTrivyStack"
       ],
       "diffAssets": true,
-      "assertionStack": "Test/DefaultTest/DeployAssert",
-      "assertionStackName": "TestDefaultTestDeployAssert12909640"
+      "stackUpdateWorkflow": false,
+      "assertionStack": "ImageScannerWithTrivyTest/DefaultTest/DeployAssert",
+      "assertionStackName": "ImageScannerWithTrivyTestDefaultTestDeployAssert899A4CC0"
     }
   }
 }

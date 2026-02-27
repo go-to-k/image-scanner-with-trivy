@@ -1,12 +1,12 @@
 import { awscdk } from 'projen';
-import { TrailingComma, Transform } from 'projen/lib/javascript';
+import { NodePackageManager, TrailingComma, Transform } from 'projen/lib/javascript';
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'go-to-k',
   authorAddress: '24818752+go-to-k@users.noreply.github.com',
   majorVersion: 2,
   cdkVersion: '2.178.1',
   defaultReleaseBranch: 'main',
-  jsiiVersion: '~5.8.0',
+  jsiiVersion: '~5.9.0',
   name: 'image-scanner-with-trivy',
   projenrcTs: true,
   repositoryUrl: 'https://github.com/go-to-k/image-scanner-with-trivy',
@@ -36,7 +36,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     configFilePath: 'jest.config.json',
     jestConfig: {
       testEnvironment: 'node',
-      roots: ['<rootDir>/test'],
+      roots: ['<rootDir>/test', '<rootDir>/assets/lambda/test'],
       testMatch: ['**/*.test.ts'],
       transform: {
         '^.+\\.tsx?$': new Transform('ts-jest'),
@@ -57,7 +57,14 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'container',
     'security',
   ],
-  gitignore: ['*.js', '*.d.ts', 'cdk.out/', '!test/integ.*.snapshot/**/*'],
+  gitignore: [
+    '*.js',
+    '*.d.ts',
+    'cdk.out/',
+    '.DS_Store',
+    'test/cdk-integ.*.snapshot/**/*',
+    '!test/integ.*.snapshot/**/*',
+  ],
   githubOptions: {
     pullRequestLintOptions: {
       semanticTitleOptions: {
@@ -67,9 +74,14 @@ const project = new awscdk.AwsCdkConstructLibrary({
   },
   tsconfigDev: {
     compilerOptions: {},
-    exclude: ['test/integ.*.snapshot'],
+    exclude: ['test/integ.*.snapshot', 'test/cdk-integ.*.snapshot'],
   },
-  devDeps: ['@aws-cdk/integ-runner@2.178.1-alpha.0', '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0'],
+  devDeps: [
+    '@aws-cdk/integ-runner@2.178.1-alpha.0',
+    '@aws-cdk/integ-tests-alpha@2.178.1-alpha.0',
+    'aws-sdk-client-mock',
+  ],
+  packageManager: NodePackageManager.PNPM,
   workflowNodeVersion: '24',
   npmTrustedPublishing: true,
   // deps: [],                /* Runtime dependencies of this module. */
@@ -77,13 +89,17 @@ const project = new awscdk.AwsCdkConstructLibrary({
   // packageName: undefined,  /* The "name" in package.json. */
 });
 project.setScript('cdk', 'cdk');
-project.setScript('integ', 'integ-runner');
-project.projectBuild.compileTask.prependExec(
-  'yarn install --non-interactive --frozen-lockfile && yarn build',
-  {
-    cwd: 'assets/lambda',
-  },
+project.setScript('build', 'tsc -p tsconfig.dev.json && npx projen build');
+project.setScript('test', 'tsc -p tsconfig.dev.json && npx projen test');
+project.setScript('test:watch', 'tsc -p tsconfig.dev.json && npx projen test:watch');
+project.setScript(
+  'integ',
+  'tsc -p tsconfig.dev.json && cd assets/lambda && pnpm install --frozen-lockfile && pnpm build && cd - && integ-runner',
 );
-project.projectBuild.testTask.exec('yarn tsc -p tsconfig.dev.json && yarn integ');
+project.setScript('integ:update', 'pnpm integ --update-on-failed');
+project.projectBuild.compileTask.prependExec('pnpm install --frozen-lockfile && pnpm build', {
+  cwd: 'assets/lambda',
+});
+project.projectBuild.testTask.exec('pnpm integ');
 
 project.synth();

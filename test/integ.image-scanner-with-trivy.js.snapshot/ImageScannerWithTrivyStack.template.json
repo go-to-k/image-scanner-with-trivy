@@ -145,7 +145,7 @@
     },
     "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -155,12 +155,26 @@
     "imageConfigScanners": [],
     "exitCode": 1,
     "exitOnEol": 1,
+    "failOnVulnerability": "true",
     "trivyIgnore": [
      "CVE-2023-37920",
-     "CVE-2025-7783"
+     "CVE-2025-7783",
+     "CVE-2025-68121",
+     "CVE-2026-25896"
     ],
     "platform": "",
-    "suppressErrorOnRollback": "true"
+    "suppressErrorOnRollback": "true",
+    "defaultLogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+       }
+      ]
+     ]
+    }
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -276,7 +290,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
      }
     },
     "EphemeralStorage": {
@@ -444,7 +458,7 @@
     },
     "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -457,9 +471,12 @@
     "imageConfigScanners": [],
     "exitCode": 1,
     "exitOnEol": 1,
+    "failOnVulnerability": "true",
     "trivyIgnore": [
      "CVE-2023-37920",
      "CVE-2025-7783",
+     "CVE-2025-68121",
+     "CVE-2026-25896",
      "CVE-2019-14697 exp:2023-01-01",
      "generic-unwanted-rule"
     ],
@@ -470,7 +487,18 @@
       "Ref": "LogGroupF5B46931"
      }
     },
-    "suppressErrorOnRollback": "true"
+    "suppressErrorOnRollback": "true",
+    "defaultLogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+       }
+      ]
+     ]
+    }
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -631,7 +659,7 @@
     },
     "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:92320f6fc09ca1d5cea7aaabcc2adb75398b53014db65697a118e117eab39c5c"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -641,12 +669,26 @@
     "imageConfigScanners": [],
     "exitCode": 1,
     "exitOnEol": 1,
+    "failOnVulnerability": "true",
     "trivyIgnore": [
      "CVE-2023-37920",
-     "CVE-2025-7783"
+     "CVE-2025-7783",
+     "CVE-2025-68121",
+     "CVE-2026-25896"
     ],
     "platform": "",
-    "suppressErrorOnRollback": "true"
+    "suppressErrorOnRollback": "true",
+    "defaultLogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "CustomImageScannerWithTrivyCustomResourceLambda470b6343d267f753226c1e99f09f319a884A34E3"
+       }
+      ]
+     ]
+    }
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"

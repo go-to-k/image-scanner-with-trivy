@@ -1,0 +1,19 @@
+# Accept the risk
+CVE-2023-37920
+CVE-2025-7783
+CVE-2025-68121
+CVE-2026-25896
+CVE-2018-14618
+
+# Accept the risk until 2023-01-01
+CVE-2019-14697 exp:2023-01-01
+
+# No impact in our settings
+CVE-2019-1543
+
+# Ignore misconfigurations
+AVD-DS-0002
+
+# Ignore secrets
+generic-unwanted-rule
+aws-account-id

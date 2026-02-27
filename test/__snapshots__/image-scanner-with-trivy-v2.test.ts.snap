@@ -1,0 +1,497 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageScannerWithTrivyV2 Snapshot test 1`] = `
+{
+  "Mappings": {
+    "LatestNodeRuntimeMap": {
+      "af-south-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-east-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-northeast-3": {
+        "value": "nodejs20.x",
+      },
+      "ap-south-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-south-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-1": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-2": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-3": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-4": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-5": {
+        "value": "nodejs20.x",
+      },
+      "ap-southeast-7": {
+        "value": "nodejs20.x",
+      },
+      "ca-central-1": {
+        "value": "nodejs20.x",
+      },
+      "ca-west-1": {
+        "value": "nodejs20.x",
+      },
+      "cn-north-1": {
+        "value": "nodejs20.x",
+      },
+      "cn-northwest-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-central-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-central-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-isoe-west-1": {
+        "value": "nodejs18.x",
+      },
+      "eu-north-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-south-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-south-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-1": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-2": {
+        "value": "nodejs20.x",
+      },
+      "eu-west-3": {
+        "value": "nodejs20.x",
+      },
+      "il-central-1": {
+        "value": "nodejs20.x",
+      },
+      "me-central-1": {
+        "value": "nodejs20.x",
+      },
+      "me-south-1": {
+        "value": "nodejs20.x",
+      },
+      "mx-central-1": {
+        "value": "nodejs20.x",
+      },
+      "sa-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-east-2": {
+        "value": "nodejs20.x",
+      },
+      "us-gov-east-1": {
+        "value": "nodejs20.x",
+      },
+      "us-gov-west-1": {
+        "value": "nodejs20.x",
+      },
+      "us-iso-east-1": {
+        "value": "nodejs18.x",
+      },
+      "us-iso-west-1": {
+        "value": "nodejs18.x",
+      },
+      "us-isob-east-1": {
+        "value": "nodejs18.x",
+      },
+      "us-west-1": {
+        "value": "nodejs20.x",
+      },
+      "us-west-2": {
+        "value": "nodejs20.x",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1": {
+      "DependsOn": [
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D",
+        "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "ImageUri": {
+            "Fn::Sub": "registry.hub.docker.com/library/busybox",
+          },
+        },
+        "EphemeralStorage": {
+          "Size": 10240,
+        },
+        "LoggingConfig": {
+          "LogGroup": {
+            "Ref": "DefaultLogGroup696834B2",
+          },
+        },
+        "MemorySize": 3008,
+        "PackageType": "Image",
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB",
+            "Arn",
+          ],
+        },
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1EventInvokeConfig658F865C": {
+      "Properties": {
+        "FunctionName": {
+          "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+        },
+        "MaximumRetryAttempts": 0,
+        "Qualifier": "$LATEST",
+      },
+      "Type": "AWS::Lambda::EventInvokeConfig",
+    },
+    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "ImageRepositoryBBCBC9DF",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "TopicBFC7AF6E",
+              },
+            },
+            {
+              "Action": "cloudformation:DescribeStacks",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "AWS::StackId",
+              },
+            },
+            {
+              "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LogGroupF5B46931",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D",
+        "Roles": [
+          {
+            "Ref": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "DefaultLogGroup696834B2": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "ImageRepositoryBBCBC9DF": {
+      "DeletionPolicy": "Retain",
+      "Type": "AWS::ECR::Repository",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "ImageScannerWithTrivyV22B2D0DEF": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "ImageScannerWithTrivyV2ProviderframeworkonEvent1EBF5FF6",
+            "Arn",
+          ],
+        },
+        "addr": "c8975ed5ca70f5b7fb62b5850d4eb8b6e7a6f39e54",
+        "defaultLogGroupName": {
+          "Ref": "DefaultLogGroup696834B2",
+        },
+        "failOnVulnerability": "true",
+        "ignoreUnfixed": "true",
+        "imageConfigScanners": [],
+        "imageUri": "imageUri",
+        "output": {
+          "logGroupName": {
+            "Ref": "LogGroupF5B46931",
+          },
+          "type": "cloudWatchLogs",
+        },
+        "platform": "linux/arm64",
+        "scanners": [
+          "vuln",
+          "secret",
+        ],
+        "severity": [
+          "CRITICAL",
+          "HIGH",
+        ],
+        "suppressErrorOnRollback": "true",
+        "trivyIgnore": [
+          "CVE-2023-37920",
+          "CVE-2019-14697 exp:2023-01-01",
+        ],
+        "vulnsTopicArn": {
+          "Ref": "TopicBFC7AF6E",
+        },
+      },
+      "Type": "Custom::ImageScannerWithTrivyV2",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "ImageScannerWithTrivyV2ProviderframeworkonEvent1EBF5FF6": {
+      "DependsOn": [
+        "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleDefaultPolicy4FA9FF5F",
+        "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleD7A59989",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "HASH-REPLACED.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (TestStack/ImageScannerWithTrivyV2/Provider)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleD7A59989",
+            "Arn",
+          ],
+        },
+        "Runtime": {
+          "Fn::FindInMap": [
+            "LatestNodeRuntimeMap",
+            {
+              "Ref": "AWS::Region",
+            },
+            "value",
+          ],
+        },
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleD7A59989": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleDefaultPolicy4FA9FF5F": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "lambda:GetFunction",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleDefaultPolicy4FA9FF5F",
+        "Roles": [
+          {
+            "Ref": "ImageScannerWithTrivyV2ProviderframeworkonEventServiceRoleD7A59989",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "LogGroupF5B46931": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "TopicBFC7AF6E": {
+      "Type": "AWS::SNS::Topic",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

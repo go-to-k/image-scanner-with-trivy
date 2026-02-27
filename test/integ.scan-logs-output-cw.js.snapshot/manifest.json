@@ -1,0 +1,620 @@
+{
+  "version": "39.0.0",
+  "artifacts": {
+    "ScanLogsOutputCWStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ScanLogsOutputCWStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ScanLogsOutputCWStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ScanLogsOutputCWStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/2dba5d96350ac85b4805e91d3dcf523709318f1224451dc638e25c11d00d8d32.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ScanLogsOutputCWStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ScanLogsOutputCWStack.assets"
+      ],
+      "metadata": {
+        "/ScanLogsOutputCWStack/ScanLogsOutputLogGroup": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "removalPolicy": "destroy"
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/ScanLogsOutputLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScanLogsOutputLogGroup242F0DED"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/CustomResourceLambda": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "uuid": "*",
+              "lambdaPurpose": "*",
+              "runtime": "*",
+              "handler": "*",
+              "code": "*",
+              "architecture": "*",
+              "timeout": "*",
+              "retryAttempts": "*",
+              "memorySize": "*",
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "code": "*",
+              "description": "*",
+              "runtime": "*",
+              "handler": "*",
+              "timeout": "*",
+              "logGroup": "*",
+              "vpc": "*",
+              "vpcSubnets": "*",
+              "securityGroups": "*",
+              "role": "*",
+              "functionName": "*",
+              "environmentEncryption": "*"
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addEnvironment": [
+                "*",
+                "*"
+              ]
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScannerProviderframeworkonEventServiceRole5EA00D06"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScannerProviderframeworkonEventServiceRoleDefaultPolicy3BF43B7A"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Provider/framework-onEvent/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ScannerProviderframeworkonEvent93283B50"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Resource": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Scanner/Resource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "Scanner1EAEC57B"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "runtime": "*",
+              "handler": "*",
+              "code": "*",
+              "architecture": "*",
+              "timeout": "*",
+              "retryAttempts": "*",
+              "memorySize": "*",
+              "ephemeralStorageSize": "*",
+              "logGroup": "*"
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "assumedBy": {
+                "principalAccount": "*",
+                "assumeRoleAction": "*"
+              },
+              "managedPolicies": [
+                {
+                  "managedPolicyArn": "*"
+                }
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachInlinePolicy": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addToPrincipalPolicy": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/ImportServiceRole": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRole718666BB"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "attachToRole": [
+                "*"
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": {
+              "addStatements": [
+                {}
+              ]
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1ServiceRoleDefaultPolicy6CEAEA9D"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f15AFD22F1"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": {
+              "function": "*",
+              "onFailure": "*",
+              "onSuccess": "*",
+              "maxEventAge": "*",
+              "retryAttempts": "*"
+            }
+          }
+        ],
+        "/ScanLogsOutputCWStack/Custom::ImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomImageScannerWithTrivyV2CustomResourceLambdacc3b41b54701d86ffe243a04f4a573f1EventInvokeConfig658F865C"
+          }
+        ],
+        "/ScanLogsOutputCWStack/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/ScanLogsOutputCWStack/Exports/Output{\"Ref\":\"ScanLogsOutputLogGroup242F0DED\"}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ExportsOutputRefScanLogsOutputLogGroup242F0DEDEEBCB67E"
+          }
+        ],
+        "/ScanLogsOutputCWStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ScanLogsOutputCWStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ScanLogsOutputCWStack"
+    },
+    "ScanLogsOutputCWTestDefaultTestDeployAssert86601087.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ScanLogsOutputCWTestDefaultTestDeployAssert86601087.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ScanLogsOutputCWTestDefaultTestDeployAssert86601087": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ScanLogsOutputCWTestDefaultTestDeployAssert86601087.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/6868b1203e9e9347589545f7379ecb0ad76265d5fd5ea9021d381aae298868d5.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ScanLogsOutputCWTestDefaultTestDeployAssert86601087.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ScanLogsOutputCWStack",
+        "ScanLogsOutputCWTestDefaultTestDeployAssert86601087.assets"
+      ],
+      "metadata": {
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/WaitFor/IsCompleteProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForIsCompleteProviderInvokeD77D093C"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/WaitFor/TimeoutProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForTimeoutProviderInvoke1F65CCA0"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/WaitFor/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForRole9AF9DA33"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/WaitFor/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263bWaitForC6284643"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsAwsApiCallCloudWatchLogsfilterLogEvents8c61e68a84d120f68fd340f6a2e4263b"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/LatestNodeRuntimeMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LatestNodeRuntimeMap"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Role918961BB"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction76b3e830a873425f8453eddd85c86925/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction76b3e830a873425f8453eddd85c86925Handler81461ECE"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aRoleB84BD8CE"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41a/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SingletonFunction5c1898e096fb4e3e95d5f6c67f3ce41aHandlerADF3E6EA"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/Default": [
+          {
+            "type": "aws:cdk:analytics:construct",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          },
+          {
+            "type": "aws:cdk:analytics:method",
+            "data": "*"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/Default/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/WaitFor/IsCompleteProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForIsCompleteProviderInvoke2C1F5A06"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/WaitFor/TimeoutProvider/Invoke": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForTimeoutProviderInvoke34404CF1"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/WaitFor/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitForRole209A1F3C"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/WaitFor/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4fWaitFor359AF91C"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/AwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f/AssertionResults": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AssertionResultsAwsApiCallCloudWatchLogsdescribeLogStreams7c714b2a56b4500743b211f89c61dc4f"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ScanLogsOutputCWTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ScanLogsOutputCWTest/DefaultTest/DeployAssert"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
