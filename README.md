@@ -135,6 +135,8 @@ const imageScanner = new ImageScannerWithTrivyV2(this, 'ImageScannerWithTrivy', 
 });
 ```
 
+**Note on Large Scan Results**: CloudWatch Logs has a limit of 1 MB per log event. If Trivy scan results exceed this limit, they will be automatically split into multiple log events. Each chunk will be prefixed with `[part X/Y]` to indicate the sequence, ensuring no data loss while staying within CloudWatch Logs quotas. **For large scan results, we recommend using S3 output instead** to avoid fragmentation and make it easier to view complete results.
+
 #### S3
 
 You can output scan logs to an S3 bucket using `ScanLogsOutput.s3`.

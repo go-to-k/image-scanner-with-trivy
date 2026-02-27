@@ -145,7 +145,7 @@
     },
     "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -290,7 +290,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
      }
     },
     "EphemeralStorage": {
@@ -458,7 +458,7 @@
     },
     "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -659,7 +659,7 @@
     },
     "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:f4347e992047e321b8df7f1d24837b19e07b5127c77bbf33de4e274823019d6a"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:be19b198aeda8b11a69919f77fd87ff22c7c11b90b5ce2956d8d96189eab0176"
     },
     "ignoreUnfixed": "false",
     "severity": [
