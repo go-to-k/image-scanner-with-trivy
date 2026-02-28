@@ -4,13 +4,13 @@
 
 This is an AWS CDK Construct that allows you to **scan container images with [Trivy](https://github.com/aquasecurity/trivy) in CDK deployment layer**.
 
-If it detects vulnerabilities, it can **block deployments** to ECS, Lambda, and other services, or prevent the image from being pushed to ECR. You can also choose to receive **notifications without failing the deployment**.
+If it detects vulnerabilities, it can **block deployments** to ECS, Lambda, and other services, or prevent the image from being pushed to the application ECR. You can also choose to receive **notifications without failing the deployment**.
 
-- **Block deployments on vulnerability detection** — works with ECS, Lambda, ECR push, or any construct via `blockConstructs`
-- **Notify without failing** — set `failOnVulnerability: false` with an SNS topic to get alerts without blocking deployment. Great for gradual adoption
+- **Block deployments on vulnerability detection** — works with ECS, Lambda, application ECR push, or any construct
+- **Notify without failing** — get alerts via SNS without blocking deployment. Great for gradual adoption
 - **Scan logs output** — results go to CloudWatch Logs or S3
 - **SBOM generation** — output Software Bill of Materials in CycloneDX or SPDX format to S3 for compliance reporting
-- **Works with any ECR image** — not just images built in the same stack. Pass any `imageUri` to scan existing repository images
+- **Works with any ECR image** — not just images built in the same stack. Scan existing repository images too
 
 **This library is featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!**
 
