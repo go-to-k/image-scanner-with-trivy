@@ -2,19 +2,23 @@
 
 ## What is
 
-This is an AWS CDK Construct that allows you to **scan container images with Trivy in CDK deployment layer**.
+This is an AWS CDK Construct that allows you to **scan container images with [Trivy](https://github.com/aquasecurity/trivy) in CDK deployment layer**.
 
-If it detects vulnerabilities, it can **block deployments to ECS, Lambda, and other services, or prevent the image from being pushed to ECR**. You can also choose to **receive notifications without failing the deployment**.
+If it detects vulnerabilities, it can **block deployments** to ECS, Lambda, and other services, or prevent the image from being pushed to ECR. You can also choose to receive **notifications without failing the deployment**.
 
-Scan results and **SBOM (Software Bill of Materials) can be output to S3** for further analysis and compliance reporting.
-
-Since it takes an `imageUri` for ECR as an argument, it can also be used to **simply scan an existing image in the repository**.
-
-## Trivy
-
-[Trivy](https://github.com/aquasecurity/trivy) is a comprehensive and versatile security scanner.
+- **Block deployments on vulnerability detection** — works with ECS, Lambda, ECR push, or any construct via `blockConstructs`
+- **Notify without failing** — set `failOnVulnerability: false` with an SNS topic to get alerts without blocking deployment. Great for gradual adoption
+- **Scan logs output** — results go to CloudWatch Logs or S3
+- **SBOM generation** — output Software Bill of Materials in CycloneDX or SPDX format to S3 for compliance reporting
+- **Works with any ECR image** — not just images built in the same stack. Pass any `imageUri` to scan existing repository images
 
 **This library is featured on the ecosystem page of [Trivy's official documentation](https://trivy.dev/docs/latest/ecosystem/ide/#image-scanner-with-trivy-community)!**
+
+## Why not ECR scanning?
+
+ECR's basic scanning is asynchronous and does not block deployments. ECR Enhanced Scanning (Amazon Inspector) costs money per scan and still does not natively integrate with CloudFormation deployment flow.
+
+This construct runs Trivy as a CloudFormation Custom Resource during `cdk deploy`. If vulnerabilities are found, **CloudFormation rolls back automatically** — no one can bypass the scan. It gives you **synchronous, deployment-blocking scans at no additional cost**.
 
 ## Usage
 
