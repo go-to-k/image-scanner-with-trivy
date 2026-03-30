@@ -287,7 +287,7 @@
     },
     "addr": "c8fb10390dda33b749a3d48616ff1e53e93a5edcc4",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -457,7 +457,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
      }
     },
     "EphemeralStorage": {
