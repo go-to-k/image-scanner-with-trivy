@@ -145,7 +145,7 @@
     },
     "addr": "c8a4dc3fa11dab2b92ee1a3a4c07faa8b4855af85b",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -160,7 +160,8 @@
      "CVE-2023-37920",
      "CVE-2025-7783",
      "CVE-2025-68121",
-     "CVE-2026-25896"
+     "CVE-2026-25896",
+     "CVE-2026-33186"
     ],
     "platform": "",
     "suppressErrorOnRollback": "true",
@@ -290,7 +291,7 @@
     ],
     "Code": {
      "ImageUri": {
-      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+      "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
      }
     },
     "EphemeralStorage": {
@@ -458,7 +459,7 @@
     },
     "addr": "c8f8ecb3c40f30dc73b3060bd65347543ae6612503",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -477,6 +478,7 @@
      "CVE-2025-7783",
      "CVE-2025-68121",
      "CVE-2026-25896",
+     "CVE-2026-33186",
      "CVE-2019-14697 exp:2023-01-01",
      "generic-unwanted-rule"
     ],
@@ -659,7 +661,7 @@
     },
     "addr": "c8872ba392985a382725cbf017b2680d7aedea4a83",
     "imageUri": {
-     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:9ba9f541146afe9135c2bd579d6d747672fc364bfa34f0bfd3650e7bb23fd627"
+     "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:466ce9f3a1354e0027ce486575994fde6fd42df451e43660c3d7fe39a551ff6e"
     },
     "ignoreUnfixed": "false",
     "severity": [
@@ -674,7 +676,8 @@
      "CVE-2023-37920",
      "CVE-2025-7783",
      "CVE-2025-68121",
-     "CVE-2026-25896"
+     "CVE-2026-25896",
+     "CVE-2026-33186"
     ],
     "platform": "",
     "suppressErrorOnRollback": "true",

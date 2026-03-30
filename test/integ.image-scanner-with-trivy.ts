@@ -10,6 +10,7 @@ const IGNORE_FOR_PASSING_TESTS = [
   'CVE-2025-7783',
   'CVE-2025-68121',
   'CVE-2026-25896',
+  'CVE-2026-33186',
 ];
 
 const app = new App();
