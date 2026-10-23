@@ -27,8 +27,7 @@ const app = new App();
 const stack = new Stack(app, 'NotificationTopicStack');
 
 const image = new DockerImageAsset(stack, 'DockerImage', {
-  directory: resolve(__dirname, '../assets/lambda'),
-  exclude: ['node_modules'],
+  directory: resolve(__dirname, 'assets/vulnerable-image'),
   platform: Platform.LINUX_ARM64,
 });
 
